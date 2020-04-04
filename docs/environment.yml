@@ -1,0 +1,14 @@
+name: ml4chem
+
+channels:
+    - anaconda
+
+dependencies:
+    - python==3.7
+    - pip:
+        - pyyaml
+        - sphinx-gallery
+        - sphinxcontrib-napoleon
+        - sphinxcontrib-bibtex
+        - sphinxcontrib-inlinesyntaxhighlight
+        - m2r
