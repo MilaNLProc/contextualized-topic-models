@@ -5,7 +5,6 @@ python:
   - 3.8
   - 3.7
   - 3.6
-  - 3.5
 
 # Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
@@ -27,5 +26,5 @@ deploy:
     secure: PLEASE_REPLACE_ME
   on:
     tags: true
-    repo: vinid/contextualized_topic_models
+    repo: MilaNLProc/contextualized_topic_models
     python: 3.8
