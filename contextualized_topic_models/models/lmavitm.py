@@ -13,7 +13,7 @@ from torch import optim
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
-from pytorchavitm.avitm.decoder_network import DecoderNetwork
+from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 
 class LMAVITM(object):

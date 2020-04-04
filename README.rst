@@ -14,13 +14,14 @@ Contextualized Topic Models
         :alt: Documentation Status
 
 
-
-
 Contextualized Topic Models
 
 
 * Free software: MIT license
 * Documentation: https://contextualized-topic-models.readthedocs.io.
+
+Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package
+from which we constructed the foundations of this package. We are happy to redistribute again this software under the MIT License.
 
 
 Features
@@ -31,7 +32,9 @@ Features
 Credits
 -------
 
+
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+.. _`Stephen Carrow` : https://github.com/estebandito22
