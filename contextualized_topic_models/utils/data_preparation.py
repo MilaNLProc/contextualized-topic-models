@@ -1,10 +1,22 @@
 import numpy as np
+from sentence_transformers import SentenceTransformer
+
 
 def to_bow(data, min_length):
     """Convert index lists to bag of words representation of documents."""
     vect = [np.bincount(x[x != np.array(None)].astype('int'), minlength=min_length)
             for x in data if np.sum(x[x != np.array(None)]) != 0]
     return np.array(vect)
+
+
+def embed_documents(text_file, sbert_model_to_load):
+    model = SentenceTransformer(sbert_model_to_load)
+
+    with open(text_file, encoding="latin") as filino:
+        train_text = list(map(lambda x: x, filino.readlines()))
+
+    return np.array(model.encode(train_text))
+
 
 class VocabAndTextFromFile:
 
@@ -40,5 +52,7 @@ class VocabAndTextFromFile:
             self.vocab_dict[vocab] = index
 
         self.index_dd = np.array(list(map(lambda y: np.array(list(map(lambda x : self.dict_to_dump[x], y.split()))), data)))
+
+
 
 

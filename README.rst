@@ -29,12 +29,24 @@ Features
 
 * TODO
 
+
+TEAM
+----
+
+* Federico Bianchi <f.bianchi@unibocconi.it> Bocconi University
+* Silvia Terragni <s.terragni4@campus.unimib.it> University of Milan-Bicocca
+* Dirk Hovy <dirk.hovy@unibocconi.it> Bocconi University
+
 Credits
 -------
 
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+To ease the use of the library we have also incuded the `rbo`_ package, all the rights reserved to the author of that package.
+
+
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`Stephen Carrow` : https://github.com/estebandito22
+.. _`rbo` : https://github.com/dlukes/rbo
