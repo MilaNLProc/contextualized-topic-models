@@ -13,7 +13,7 @@ def embed_documents(text_file, sbert_model_to_load):
     model = SentenceTransformer(sbert_model_to_load)
 
     with open(text_file, encoding="latin") as filino:
-        train_text = list(map(lambda x : x, text_file))
+        train_text = list(map(lambda x: x, filino.readlines()))
 
     return np.array(model.encode(train_text))
 
