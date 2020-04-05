@@ -1,17 +1,13 @@
-"""Class for loading BOW dataset."""
-
 import torch
 from torch.utils.data import Dataset
 
 
-class LMTopicDataset(Dataset):
+class COTMDataset(Dataset):
 
     """Class to load BOW dataset."""
 
     def __init__(self, X, X_bert, idx2token):
         """
-        Initialize NewsGroupDataset.
-
         Args
             X : array-like, shape=(n_samples, n_features)
                 Document word matrix.
