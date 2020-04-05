@@ -44,7 +44,7 @@ The contextual neural topic model can be easily instantiated using few parameter
 
 .. code-block:: python
 
-    cotm = COTM(input_size=1000, bert_input_size=512, inferencetype="contextual")
+    cotm = COTM(input_size=1000, bert_input_size=512, inference_type="contextual")
     cotm.fit()
 
 

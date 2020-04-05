@@ -18,7 +18,7 @@ class COTM(object):
 
     """Class to train COTM model."""
 
-    def __init__(self, input_size, bert_input_size, inferencetype, n_components=10, model_type='prodLDA',
+    def __init__(self, input_size, bert_input_size, inference_type, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
@@ -83,7 +83,7 @@ class COTM(object):
 
         # init inference avitm network
         self.model = DecoderNetwork(
-            input_size, self.bert_size, inferencetype, n_components, model_type, hidden_sizes, activation,
+            input_size, self.bert_size, inference_type, n_components, model_type, hidden_sizes, activation,
             dropout, learn_priors)
 
         # init optimizer
