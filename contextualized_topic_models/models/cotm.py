@@ -1,5 +1,3 @@
-"""Class to train LMAVITM models."""
-
 import os
 from collections import defaultdict
 import multiprocessing as mp
@@ -16,16 +14,16 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 
-class LMAVITM(object):
+class COTM(object):
 
-    """Class to train LMAVITM model."""
+    """Class to train COTM model."""
 
     def __init__(self, input_size, bert_input_size, inferencetype, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False):
         """
-        Initialize LMAVITM model.
+        Initialize COTM model.
 
         Args
             input_size : int, dimension of input

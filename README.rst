@@ -30,7 +30,15 @@ Features
 * TODO
 
 
-TEAM
+Quick Guide
+-----------
+
+.. code-block:: python
+
+    cotm = COTM(input_size=1000, bert_input_size=512, inferencetype="contextual")
+    cotm.fit()
+
+Team
 ----
 
 * Federico Bianchi <f.bianchi@unibocconi.it> Bocconi University
