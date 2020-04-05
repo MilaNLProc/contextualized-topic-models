@@ -40,8 +40,8 @@ Install the package using pip
     pip install -U contextualized_topic_models
 
 
-The contextual neural topic model can be easily instantiated using few parameters (although there is a wide range of parameters you can
- use to change the behaviour of the neural topic model.
+
+The contextual neural topic model can be easily instantiated using few parameters (although there is a wide range of parameters you can use to change the behaviour of the neural topic model.
 
 .. code-block:: python
 
