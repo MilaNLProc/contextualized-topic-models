@@ -348,6 +348,23 @@ class COTM(object):
             topics[i] = component_words
         return topics
 
+    def get_topic_lists(self, k=10):
+        """
+        Retrieve the lists of topic words.
+
+        Args
+            k : (int) number of words to return per topic, default 10.
+        """
+        assert k <= self.input_size, "k must be <= input size."
+        component_dists = self.best_components
+        topics = []
+        for i in range(self.n_components):
+            _, idxs = torch.topk(component_dists[i], k)
+            component_words = [self.train_data.idx2token[idx]
+                               for idx in idxs.cpu().numpy()]
+            topics.append(component_words)
+        return topics
+
     def _format_file(self):
         model_dir = "AVITM_nc_{}_tpm_{}_tpv_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}".\
             format(self.n_components, 0.0, 1 - (1./self.n_components),

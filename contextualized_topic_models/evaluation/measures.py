@@ -24,15 +24,17 @@ class TopicDiversity(Measure):
 
     def score(self, topk=25):
         """
-
         :param topk: topk words on which the topic diversity will be computed
         :return:
         """
-        unique_words = set()
-        for t in self.topics:
-            unique_words = unique_words.union(set(t[:topk]))
-        td = len(unique_words) / (topk * len(self.topics))
-        return td
+        if topk > len(self.topics[0]):
+            raise Exception('Words in topics are less than topk')
+        else:
+            unique_words = set()
+            for t in self.topics:
+                unique_words = unique_words.union(set(t[:topk]))
+            td = len(unique_words) / (topk * len(self.topics))
+            return td
 
 
 class CoherenceNPMI(Measure):
@@ -49,10 +51,13 @@ class CoherenceNPMI(Measure):
         :param topk: how many most likely words to consider in the evaluation
         :return:
         """
-        dictionary = Dictionary(self.texts)
-        npmi = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=dictionary,
-                              coherence='c_npmi', topn=topk)
-        return npmi.get_coherence()
+        if topk > len(self.topics[0]):
+            raise Exception('Words in topics are less than topk')
+        else:
+            dictionary = Dictionary(self.texts)
+            npmi = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=dictionary,
+                                  coherence='c_npmi', topn=topk)
+            return npmi.get_coherence()
 
 
 class CoherenceWordEmbeddings(Measure):
@@ -72,19 +77,22 @@ class CoherenceWordEmbeddings(Measure):
         :param binary: if the word2vec file is binary
         :return: topic coherence computed on the word embeddings similarities
         """
-        if self.word2vec is None:
-            wv = api.load('word2vec-google-news-300')
+        if topk > len(self.topics[0]):
+            raise Exception('Words in topics are less than topk')
         else:
-            wv = KeyedVectors.load_word2vec_format(self.word2vec_path, binary=binary)
-        arrays = []
-        for index, topic in enumerate(self.topics):
-            if len(topic) > 0:
-                local_simi = []
-                for word1, word2 in itertools.combinations(topic[0:topk], 2):
-                    if word1 in wv.vocab and word2 in wv.vocab:
-                        local_simi.append(wv.similarity(word1, word2))
-                arrays.append(np.mean(local_simi))
-        return np.mean(arrays)
+            if self.word2vec is None:
+                wv = api.load('word2vec-google-news-300')
+            else:
+                wv = KeyedVectors.load_word2vec_format(self.word2vec_path, binary=binary)
+            arrays = []
+            for index, topic in enumerate(self.topics):
+                if len(topic) > 0:
+                    local_simi = []
+                    for word1, word2 in itertools.combinations(topic[0:topk], 2):
+                        if word1 in wv.vocab and word2 in wv.vocab:
+                            local_simi.append(wv.similarity(word1, word2))
+                    arrays.append(np.mean(local_simi))
+            return np.mean(arrays)
 
 
 class RBO(Measure):
@@ -99,8 +107,11 @@ class RBO(Measure):
         :param topic_list: a list of lists of words
         :return: rank_biased_overlap over the topics
         '''
-        collect = []
-        for list1, list2 in itertools.combinations(self.topics, 2):
-            rbo_val = rbo(list1[:topk], list2[:topk], p=weight)[2]
-            collect.append(rbo_val)
-        return np.mean(collect)
+        if topk > len(self.topics[0]):
+            raise Exception('Words in topics are less than topk')
+        else:
+            collect = []
+            for list1, list2 in itertools.combinations(self.topics, 2):
+                rbo_val = rbo.rbo(list1[:topk], list2[:topk], p=weight)[2]
+                collect.append(rbo_val)
+            return np.mean(collect)
