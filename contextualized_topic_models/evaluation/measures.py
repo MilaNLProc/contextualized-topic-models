@@ -95,7 +95,7 @@ class CoherenceWordEmbeddings(Measure):
             return np.mean(arrays)
 
 
-class RBO(Measure):
+class InvertedRBO(Measure):
     def __init__(self, topics):
         super().__init__()
         self.topics = topics
@@ -114,4 +114,4 @@ class RBO(Measure):
             for list1, list2 in itertools.combinations(self.topics, 2):
                 rbo_val = rbo.rbo(list1[:topk], list2[:topk], p=weight)[2]
                 collect.append(rbo_val)
-            return np.mean(collect)
+            return 1 - np.mean(collect)

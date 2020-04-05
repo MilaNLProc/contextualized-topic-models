@@ -47,12 +47,12 @@ class VocabAndTextFromFile:
 
         self.vocab = list(set(concatenate_text.split()))
 
-
         for index, vocab in list(zip(range(0, len(self.vocab)), self.vocab)):
             self.vocab_dict[vocab] = index
 
-        self.index_dd = np.array(list(map(lambda y: np.array(list(map(lambda x : self.dict_to_dump[x], y.split()))), data)))
+        self.index_dd = np.array(list(map(lambda y: np.array(list(map(lambda x : self.vocab_dict[x], y.split()))), data)))
 
+        return self.vocab_dict, self.index_dd
 
 
 
