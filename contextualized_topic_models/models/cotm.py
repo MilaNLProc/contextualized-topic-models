@@ -21,7 +21,7 @@ class COTM(object):
     def __init__(self, input_size, bert_input_size, inferencetype, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
-                 solver='adam', num_epochs=100, reduce_on_plateau=False):
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         """
         Initialize COTM model.
 
@@ -39,6 +39,8 @@ class COTM(object):
             solver : string, optimizer 'adam' or 'sgd' (default 'adam')
             num_epochs : int, number of epochs to train for, (default 100)
             reduce_on_plateau : bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
+            num_data_loader_workers : int, number of data loader workers (default cpu_count). set it to 0 if you are
+            using Windows
         """
         assert isinstance(input_size, int) and input_size > 0,\
             "input_size must by type int > 0."
@@ -60,6 +62,8 @@ class COTM(object):
         assert solver in ['adam', 'sgd'], "solver must be 'adam' or 'sgd'."
         assert isinstance(reduce_on_plateau, bool),\
             "reduce_on_plateau must be type bool."
+        assert isinstance(num_data_loader_workers, int) and num_data_loader_workers >= 0, \
+            "num_data_loader_workers must by type int >= 0. set 0 if you are using windows"
 
         self.input_size = input_size
         self.n_components = n_components
@@ -75,6 +79,7 @@ class COTM(object):
         self.solver = solver
         self.num_epochs = num_epochs
         self.reduce_on_plateau = reduce_on_plateau
+        self.num_data_loader_workers = num_data_loader_workers
 
         # init inference avitm network
         self.model = DecoderNetwork(
@@ -206,7 +211,7 @@ class COTM(object):
 
         train_loader = DataLoader(
             self.train_data, batch_size=self.batch_size, shuffle=True,
-            num_workers=mp.cpu_count())
+            num_workers=self.num_data_loader_workers)
 
         # init training variables
         train_loss = 0
@@ -240,7 +245,7 @@ class COTM(object):
 
         loader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=False,
-            num_workers=mp.cpu_count())
+            num_workers=self.num_data_loader_workers)
 
         with torch.no_grad():
             collect_theta = []
@@ -266,7 +271,7 @@ class COTM(object):
 
         loader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=False,
-            num_workers=mp.cpu_count())
+            num_workers=self.num_data_loader_workers)
 
         preds = []
 

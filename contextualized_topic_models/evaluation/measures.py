@@ -31,7 +31,7 @@ class TopicDiversity(Measure):
         unique_words = set()
         for t in self.topics:
             unique_words = unique_words.union(set(t[:topk]))
-        td = len(unique_words) / (topk * len(topics))
+        td = len(unique_words) / (topk * len(self.topics))
         return td
 
 
@@ -63,7 +63,7 @@ class CoherenceWordEmbeddings(Measure):
         self.word2vec_path = word2vec
         self.binary = binary
 
-    def score(self, topk=10):
+    def score(self, topk=10, binary= False):
         """
         :param topics: a list of lists of the top-n most likely words
         :param topk: how many most likely words to consider in the evaluation
