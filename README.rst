@@ -33,10 +33,22 @@ Features
 Quick Guide
 -----------
 
+Install the package using pip
+
+.. code-block:: bash
+
+    pip install -U contextualized_topic_models
+
+
+The contextual neural topic model can be easily instantiated using few parameters (although there is a wide range of parameters you can
+ use to change the behaviour of the neural topic model.
+
 .. code-block:: python
 
     cotm = COTM(input_size=1000, bert_input_size=512, inferencetype="contextual")
     cotm.fit()
+
+
 
 Team
 ----
