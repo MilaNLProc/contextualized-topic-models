@@ -260,7 +260,7 @@ class COTM(object):
 
                 # forward pass
                 self.model.zero_grad()
-                collect_theta.extend(self.model.get_theta(X, X_bert).numpy().tolist())
+                collect_theta.extend(self.model.get_theta(X, X_bert).cpu().numpy().tolist())
             return collect_theta
 
 
@@ -408,5 +408,5 @@ class COTM(object):
         for (k, v) in checkpoint['dcue_dict'].items():
             setattr(self, k, v)
 
-        self._init_nn()
+        self._init_nn() #TODO implement this method
         self.model.load_state_dict(checkpoint['state_dict'])
