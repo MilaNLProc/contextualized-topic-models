@@ -67,7 +67,18 @@ The contextual neural topic model can be easily instantiated using few parameter
     cotm.fit()
 
 
-See the example notebook in the `contextualized_topic_models/examples` folder
+See the example notebook in the `contextualized_topic_models/examples` folder. If you want you can also compute evaluate your topics using different measures,
+for example coherence with the NPMI.
+
+.. code-block:: python
+
+    from contextualized_topic_models.evaluation.measures import CoherenceNPMI
+
+    with open('text_file_one_doc_per_line.txt',"r") as fr:
+        texts = [doc.split() for doc in fr.read().splitlines()] # load text for NPMI
+
+    npmi = CoherenceNPMI(texts=texts, topics=cotm.get_topic_lists(10))
+    npmi.score()
 
 Team
 ----
