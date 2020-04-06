@@ -44,7 +44,26 @@ The contextual neural topic model can be easily instantiated using few parameter
 
 .. code-block:: python
 
-    cotm = COTM(input_size=1000, bert_input_size=512, inference_type="contextual")
+    from contextualized_topic_models.models.cotm import COTM
+    from contextualized_topic_models.utils.data_preparation import VocabAndTextFromFile
+    from contextualized_topic_models.utils.data_preparation import to_bow
+    from contextualized_topic_models.utils.data_preparation import embed_documents
+
+    vocab_obj = VocabAndTextFromFile("text_file_one_doc_per_line.txt")
+
+    vocab, training_ids = vocab_obj.create_vocab_and_index() # create vocabulary and training data
+
+    # generate BERT data
+    train_bert = embed_documents("text_file_one_doc_per_line.txt", "distiluse-base-multilingual-cased")
+
+    train_bow = to_bow(training_ids, len(vocab)) # create bag of word
+
+    idx2token = {v: k for (k, v) in vocab.items()}
+
+    training_data = COTMDataset(train_bow, train_bert, idx2token)
+
+
+    cotm = COTM(input_size=1000, bert_input_size=512, inference_type="contextual") # run the model
     cotm.fit()
 
 
