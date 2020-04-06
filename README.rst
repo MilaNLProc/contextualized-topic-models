@@ -63,7 +63,7 @@ The contextual neural topic model can be easily instantiated using few parameter
     training_data = COTMDataset(train_bow, train_bert, idx2token)
 
 
-    cotm = COTM(input_size=1000, bert_input_size=512, inference_type="contextual") # run the model
+    cotm = COTM(input_size=len(vocab), bert_input_size=512, inference_type="contextual", n_components=50) # run the model
     cotm.fit()
 
 
