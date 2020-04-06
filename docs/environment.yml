@@ -1,4 +1,4 @@
-name: ml4chem
+name: contextualized-topic-models
 
 channels:
     - anaconda
