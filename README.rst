@@ -40,7 +40,8 @@ Install the package using pip
     pip install -U contextualized_topic_models
 
 
-The contextual neural topic model can be easily instantiated using few parameters (although there is a wide range of parameters you can use to change the behaviour of the neural topic model.
+The contextual neural topic model can be easily instantiated using few parameters (although there is a wide range of parameters you can use to change the behaviour of the neural topic model. When you generate
+embeddings with BERT remember that there is a maximum length and for documents that are too long some words will be ignored.
 
 .. code-block:: python
 
@@ -54,13 +55,13 @@ The contextual neural topic model can be easily instantiated using few parameter
     vocab, training_ids = vocab_obj.create_vocab_and_index() # create vocabulary and training data
 
     # generate BERT data
-    train_bert = embed_documents("text_file_one_doc_per_line.txt", "distiluse-base-multilingual-cased")
+    training_bert = embed_documents("text_file_one_doc_per_line.txt", "distiluse-base-multilingual-cased")
 
-    train_bow = to_bow(training_ids, len(vocab)) # create bag of word
+    training_bow = to_bow(training_ids, len(vocab)) # create bag of word
 
     idx2token = {v: k for (k, v) in vocab.items()}
 
-    training_data = COTMDataset(train_bow, train_bert, idx2token)
+    training_data = COTMDataset(training_bow, training_bert, idx2token)
 
 
     cotm = COTM(input_size=len(vocab), bert_input_size=512, inference_type="contextual", n_components=50) # run the model
