@@ -42,7 +42,6 @@ class ContextualInferenceNetwork(nn.Module):
 
         self.input_layer = nn.Linear(input_size+input_size, hidden_sizes[0])
         self.adapt_bert = nn.Linear(bert_size, hidden_sizes[0])
-        #self.bert_layer = nn.Linear(hidden_sizes[0], hidden_sizes[0])
 
         self.hiddens = nn.Sequential(OrderedDict([
             ('l_{}'.format(i), nn.Sequential(nn.Linear(h_in, h_out), self.activation))
@@ -59,8 +58,6 @@ class ContextualInferenceNetwork(nn.Module):
     def forward(self, x, x_bert):
         """Forward pass."""
         x_bert = self.adapt_bert(x_bert)
-        #x = torch.cat((x, x_bert), 1)
-        #x = self.input_layer(x)
 
         x = self.activation(x_bert)
         x = self.hiddens(x)
@@ -69,6 +66,8 @@ class ContextualInferenceNetwork(nn.Module):
         log_sigma = self.f_sigma_batchnorm(self.f_sigma(x))
 
         return mu, log_sigma
+
+
 
 
 class CombinedInferenceNetwork(nn.Module):

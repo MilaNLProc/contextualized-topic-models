@@ -17,9 +17,11 @@ def bert_embeddings_from_file(text_file, sbert_model_to_load):
 
     return np.array(model.encode(train_text))
 
+
 def bert_embeddings_from_list(texts, sbert_model_to_load):
     model = SentenceTransformer(sbert_model_to_load)
     return np.array(model.encode(texts))
+
 
 class TextHandler:
 
