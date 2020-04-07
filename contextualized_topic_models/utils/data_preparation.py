@@ -9,7 +9,7 @@ def to_bow(data, min_length):
     return np.array(vect)
 
 
-def embed_documents(text_file, sbert_model_to_load):
+def embed_documents_from_file(text_file, sbert_model_to_load):
     model = SentenceTransformer(sbert_model_to_load)
 
     with open(text_file, encoding="latin") as filino:
@@ -17,6 +17,9 @@ def embed_documents(text_file, sbert_model_to_load):
 
     return np.array(model.encode(train_text))
 
+def embed_documents_from_list(texts, sbert_model_to_load):
+    model = SentenceTransformer(sbert_model_to_load)
+    return np.array(model.encode(texts))
 
 class VocabAndTextFromFile:
 
