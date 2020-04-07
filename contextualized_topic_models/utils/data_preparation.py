@@ -2,14 +2,14 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 
-def to_bow(data, min_length):
-    """Convert index lists to bag of words representation of documents."""
+def get_bag_of_words(data, min_length):
+
     vect = [np.bincount(x[x != np.array(None)].astype('int'), minlength=min_length)
             for x in data if np.sum(x[x != np.array(None)]) != 0]
     return np.array(vect)
 
 
-def embed_documents_from_file(text_file, sbert_model_to_load):
+def bert_embeddings_from_file(text_file, sbert_model_to_load):
     model = SentenceTransformer(sbert_model_to_load)
 
     with open(text_file, encoding="latin") as filino:
@@ -17,11 +17,11 @@ def embed_documents_from_file(text_file, sbert_model_to_load):
 
     return np.array(model.encode(train_text))
 
-def embed_documents_from_list(texts, sbert_model_to_load):
+def bert_embeddings_from_list(texts, sbert_model_to_load):
     model = SentenceTransformer(sbert_model_to_load)
     return np.array(model.encode(texts))
 
-class VocabAndTextFromFile:
+class TextHandler:
 
     def __init__(self, file_name):
         self.file_name = file_name
@@ -39,7 +39,7 @@ class VocabAndTextFromFile:
 
         return data
 
-    def create_vocab_and_index(self):
+    def get_training(self):
         data = self.load_text_file()
 
         concatenate_text = ""
@@ -55,7 +55,9 @@ class VocabAndTextFromFile:
 
         self.index_dd = np.array(list(map(lambda y: np.array(list(map(lambda x : self.vocab_dict[x], y.split()))), data)))
 
-        return self.vocab_dict, self.index_dd
+        self.idx2token = {v: k for (k, v) in self.vocab_dict.items()}
+
+        return self.vocab_dict, self.index_dd, self.idx2token
 
 
 

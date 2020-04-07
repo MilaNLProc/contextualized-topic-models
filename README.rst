@@ -47,25 +47,22 @@ embeddings with BERT remember that there is a maximum length and for documents t
 
     from contextualized_topic_models.models.cotm import COTM
     from contextualized_topic_models.utils.data_preparation import VocabAndTextFromFile
-    from contextualized_topic_models.utils.data_preparation import to_bow
+    from contextualized_topic_models.utils.data_preparation import get_bag_of_words
     from contextualized_topic_models.utils.data_preparation import embed_documents
 
-    vocab_obj = VocabAndTextFromFile("text_file_one_doc_per_line.txt")
+    vocab_obj = TextHandler("text_file_one_doc_per_line.txt")
 
-    vocab, training_ids = vocab_obj.create_vocab_and_index() # create vocabulary and training data
+    vocab, training_ids, idx2token = vocab_obj.get_training() # create vocabulary and training data
 
     # generate BERT data
-    training_bert = embed_documents("text_file_one_doc_per_line.txt", "distiluse-base-multilingual-cased")
+    training_bert = bert_embeddings_from_file("text_file_one_doc_per_line.txt", "distiluse-base-multilingual-cased")
 
-    training_bow = to_bow(training_ids, len(vocab)) # create bag of word
+    training_bow = get_bag_of_words(training_ids, len(vocab)) # create bag of words
 
-    idx2token = {v: k for (k, v) in vocab.items()}
-
-    training_data = COTMDataset(training_bow, training_bert, idx2token)
-
+    training_dataset = COTMDataset(training_bow, training_bert, idx2token)
 
     cotm = COTM(input_size=len(vocab), bert_input_size=512, inference_type="contextual", n_components=50) # run the model
-    cotm.fit()
+    cotm.fit(training_dataset)
 
 
 See the example notebook in the `contextualized_topic_models/examples` folder. If you want you can also compute evaluate your topics using different measures,
