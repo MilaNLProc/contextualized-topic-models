@@ -264,7 +264,6 @@ class COTM(object):
             return collect_theta
 
 
-
     def predict(self, dataset, k=10):
         """Predict input."""
         self.model.eval()

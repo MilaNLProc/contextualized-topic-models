@@ -27,7 +27,10 @@ from which we constructed the foundations of this package. We are happy to redis
 Features
 --------
 
-* TODO
+* Combines BERT and Neural Variational Topic Models
+* Two different methodologies: combined, where we combine BoW and BERT embeddings and contextual, that uses only BERT embeddings
+* Includes methods to create embedded representations and BoW
+* Includes evaluation metrics
 
 
 Quick Guide
@@ -47,23 +50,19 @@ embeddings with BERT remember that there is a maximum length and for documents t
 
     from contextualized_topic_models.models.cotm import COTM
     from contextualized_topic_models.utils.data_preparation import VocabAndTextFromFile
-    from contextualized_topic_models.utils.data_preparation import get_bag_of_words
     from contextualized_topic_models.utils.data_preparation import embed_documents
 
-    vocab_obj = TextHandler("text_file_one_doc_per_line.txt")
-
-    vocab, training_ids, idx2token = vocab_obj.get_training() # create vocabulary and training data
+    handler = TextHandler("documents.txt")
+    handler.prepare() # create vocabulary and training data
 
     # generate BERT data
-    training_bert = bert_embeddings_from_file("text_file_one_doc_per_line.txt", "distiluse-base-multilingual-cased")
+    training_bert = bert_embeddings_from_file("documents.txt", "distiluse-base-multilingual-cased")
 
-    training_bow = get_bag_of_words(training_ids, len(vocab)) # create bag of words
+    training_dataset = COTMDataset(handler.bow, training_bert, handler.idx2token)
 
-    training_dataset = COTMDataset(training_bow, training_bert, idx2token)
+    cotm = COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
 
-    cotm = COTM(input_size=len(vocab), bert_input_size=512, inference_type="contextual", n_components=50) # run the model
-    cotm.fit(training_dataset)
-
+    cotm.fit(training_dataset) # run the model
 
 See the example notebook in the `contextualized_topic_models/examples` folder. If you want you can also compute evaluate your topics using different measures,
 for example coherence with the NPMI.
@@ -72,11 +71,26 @@ for example coherence with the NPMI.
 
     from contextualized_topic_models.evaluation.measures import CoherenceNPMI
 
-    with open('text_file_one_doc_per_line.txt',"r") as fr:
+    with open('documents.txt',"r") as fr:
         texts = [doc.split() for doc in fr.read().splitlines()] # load text for NPMI
 
     npmi = CoherenceNPMI(texts=texts, topics=cotm.get_topic_lists(10))
     npmi.score()
+
+
+Predict topics for novel documents
+
+.. code-block:: python
+
+
+    test_handler = TextHandler("spanish_documents.txt")
+    test_handler.prepare() # create vocabulary and training data
+
+    # generate BERT data
+    testing_bert = bert_embeddings_from_file("spanish_documents.txt", "distiluse-base-multilingual-cased")
+
+    testing_dataset = COTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
+    cotm.get_thetas(testing_dataset)
 
 Team
 ----

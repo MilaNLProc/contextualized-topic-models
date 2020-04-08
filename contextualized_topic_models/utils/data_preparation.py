@@ -29,6 +29,9 @@ class TextHandler:
         self.file_name = file_name
         self.vocab_dict = {}
         self.vocab = []
+        self.index_dd = None
+        self.idx2token = None
+        self.training_bow = None
 
     def load_text_file(self):
         """
@@ -41,7 +44,7 @@ class TextHandler:
 
         return data
 
-    def get_training(self):
+    def prepare(self):
         data = self.load_text_file()
 
         concatenate_text = ""
@@ -55,11 +58,11 @@ class TextHandler:
         for index, vocab in list(zip(range(0, len(self.vocab)), self.vocab)):
             self.vocab_dict[vocab] = index
 
-        self.index_dd = np.array(list(map(lambda y: np.array(list(map(lambda x : self.vocab_dict[x], y.split()))), data)))
-
+        self.index_dd = np.array(list(map(lambda y: np.array(list(map(lambda x:
+                                                                      self.vocab_dict[x], y.split()))), data)))
         self.idx2token = {v: k for (k, v) in self.vocab_dict.items()}
+        self.bow = get_bag_of_words(self.index_dd, len(self.vocab))
 
-        return self.vocab_dict, self.index_dd, self.idx2token
 
 
 
