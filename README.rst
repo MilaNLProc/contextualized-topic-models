@@ -60,7 +60,7 @@ embeddings with BERT remember that there is a maximum length and for documents t
 
     training_dataset = COTMDataset(handler.bow, training_bert, handler.idx2token)
 
-    cotm = COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
+    cotm = COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)
 
     cotm.fit(training_dataset) # run the model
 
@@ -98,6 +98,18 @@ Team
 * Federico Bianchi <f.bianchi@unibocconi.it> Bocconi University
 * Silvia Terragni <s.terragni4@campus.unimib.it> University of Milan-Bicocca
 * Dirk Hovy <dirk.hovy@unibocconi.it> Bocconi University
+
+References
+----------
+
+.. raw:: html
+
+    <pre> @article{bianchi2020pretraining,
+        title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
+        author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
+        year={2020},
+       journal={arXiv preprint arXiv:2004.03974},
+    } <pre>
 
 Credits
 -------
