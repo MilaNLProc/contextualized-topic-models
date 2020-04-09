@@ -109,7 +109,7 @@ References
         author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
         year={2020},
        journal={arXiv preprint arXiv:2004.03974},
-    } <pre>
+    } </pre>
 
 Credits
 -------
