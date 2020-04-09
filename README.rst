@@ -43,7 +43,8 @@ Install the package using pip
     pip install -U contextualized_topic_models
 
 
-The contextual neural topic model can be easily instantiated using few parameters (although there is a wide range of parameters you can use to change the behaviour of the neural topic model. When you generate
+The contextual neural topic model can be easily instantiated using few parameters (although there is a wide range of
+parameters you can use to change the behaviour of the neural topic model). When you generate
 embeddings with BERT remember that there is a maximum length and for documents that are too long some words will be ignored.
 
 .. code-block:: python
