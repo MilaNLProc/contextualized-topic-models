@@ -84,11 +84,11 @@ Predict topics for novel documents
 .. code-block:: python
 
 
-    test_handler = TextHandler("spanish_documents.txt")
+    test_handler = TextHandler("documents.txt")
     test_handler.prepare() # create vocabulary and training data
 
     # generate BERT data
-    testing_bert = bert_embeddings_from_file("spanish_documents.txt", "distiluse-base-multilingual-cased")
+    testing_bert = bert_embeddings_from_file("documents.txt", "distiluse-base-multilingual-cased")
 
     testing_dataset = COTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
     cotm.get_thetas(testing_dataset)
