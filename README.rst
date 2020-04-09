@@ -49,8 +49,8 @@ embeddings with BERT remember that there is a maximum length and for documents t
 .. code-block:: python
 
     from contextualized_topic_models.models.cotm import COTM
-    from contextualized_topic_models.utils.data_preparation import VocabAndTextFromFile
-    from contextualized_topic_models.utils.data_preparation import embed_documents
+    from contextualized_topic_models.utils.data_preparation import TextHandler
+    from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
 
     handler = TextHandler("documents.txt")
     handler.prepare() # create vocabulary and training data
