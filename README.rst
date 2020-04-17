@@ -18,12 +18,17 @@ Contextualized Topic Models (CTM) are a family of topic models that use pre-trai
 support topic modeling. See the papers for details:
 
 
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/1adfc89751f1d86169862e1106e454cade153825/img/lm_topic_model.pdf
+.. figure:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
     :alt: Combined TM
     :width: 45%
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/1adfc89751f1d86169862e1106e454cade153825/img/lm_topic_model_multilingual.pdf
+
+    Combined Topic Model
+
+.. figure:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
     :alt: Contextual TM
     :width: 45%
+
+    Contextual Topic Model
 
 
 * `Cross-lingual Contextualized Topic Models with Zero-shot Learning` https://arxiv.org/pdf/2004.07737v1.pdf
