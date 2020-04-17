@@ -14,14 +14,18 @@ Contextualized Topic Models
         :alt: Documentation Status
 
 
-Contextualized Topic Models
+Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
+support topic modeling. See the papers for details:
 
+* `Cross-lingual Contextualized Topic Models with Zero-shot Learning` https://arxiv.org/pdf/2004.07737v1.pdf
+* `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence` https://arxiv.org/pdf/2004.03974.pdf
+
+Software details:
 
 * Free software: MIT license
 * Documentation: https://contextualized-topic-models.readthedocs.io.
+* Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package from which we constructed the foundations of this package. We are happy to redistribute again this software under the MIT License.
 
-Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package
-from which we constructed the foundations of this package. We are happy to redistribute again this software under the MIT License.
 
 
 Features
@@ -46,6 +50,8 @@ Install the package using pip
 The contextual neural topic model can be easily instantiated using few parameters (although there is a wide range of
 parameters you can use to change the behaviour of the neural topic model). When you generate
 embeddings with BERT remember that there is a maximum length and for documents that are too long some words will be ignored.
+
+
 
 .. code-block:: python
 
@@ -93,6 +99,10 @@ Predict topics for novel documents
     testing_dataset = COTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
     cotm.get_thetas(testing_dataset)
 
+Cross-lingual Topic Modeling
+----------------------------
+
+
 Team
 ----
 
@@ -103,6 +113,7 @@ Team
 References
 ----------
 
+Combined BERT+BoW
 .. raw:: html
 
     <pre> @article{bianchi2020pretraining,
@@ -111,6 +122,18 @@ References
         year={2020},
        journal={arXiv preprint arXiv:2004.03974},
     } </pre>
+
+Contextual TM
+.. raw:: html
+
+    <pre> @article{bianchi2020crosslingual,
+        title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
+        author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
+        year={2020},
+       journal={arXiv preprint arXiv:2004.07737},
+    } </pre>
+
+
 
 Credits
 -------
