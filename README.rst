@@ -23,15 +23,18 @@ support topic modeling. See the papers for details:
 
 **Combined Topic Model**
 
-.. raw:: html
-
-    <img src="https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png" width="400"/>
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
+   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
+   :align: center
+   :width: 200px
 
 **Contextual Topic Model**
 
-.. raw:: html
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
+   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
+   :align: center
+   :width: 200px
 
-    <img src="https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png" width="400"/>
 
 
 Software details:
@@ -68,8 +71,17 @@ embeddings with BERT remember that there is a maximum length and for documents t
 An important aspect to take into account is which network you want to use: the one that combines BERT and the BoW or the one that just uses BERT.
 It's easy to swap from one to the other:
 
-* Combined Topic Model: :code:`CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)`
-* Fully Contextual Topic Model: :code:`CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)`
+Combined Topic Model:
+
+.. code-block:: python
+
+    CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)
+
+Fully Contextual Topic Model:
+
+.. code-block:: python
+
+    CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
 
 
 Here is how you can use the combined topic model. The high level API is pretty easy to use:
