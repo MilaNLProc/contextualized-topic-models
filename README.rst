@@ -21,21 +21,6 @@ support topic modeling. See the papers for details:
 * `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence` https://arxiv.org/pdf/2004.03974.pdf
 
 
-**Combined Topic Model**
-
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
-   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
-   :align: center
-   :width: 200px
-
-**Contextual Topic Model**
-
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
-   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
-   :align: center
-   :width: 200px
-
-
 
 Software details:
 
