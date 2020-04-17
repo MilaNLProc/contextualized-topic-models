@@ -17,3 +17,4 @@ deploy:
     tags: true
     repo: MilaNLProc/contextualized-topic-models
     python: 3.8
+skip_cleanup: true
