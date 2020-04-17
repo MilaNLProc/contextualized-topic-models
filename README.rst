@@ -23,10 +23,10 @@ support topic modeling. See the papers for details:
 
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
     :alt: Combined TM
-    :width: 25%
+    :width: 200
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
     :alt: Contextual TM
-    :width: 25%
+    :width: 200
 
 
 
