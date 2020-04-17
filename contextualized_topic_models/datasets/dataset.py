@@ -1,5 +1,6 @@
 import torch
 from torch.utils.data import Dataset
+import numpy as np
 
 
 class COTMDataset(Dataset):
@@ -26,3 +27,5 @@ class COTMDataset(Dataset):
         X_bert = torch.FloatTensor(self.X_bert[i])
 
         return {'X': X, 'X_bert': X_bert}
+
+
