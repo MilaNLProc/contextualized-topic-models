@@ -57,7 +57,8 @@ It's easy to swap from one to the other:
 * Combined Topic Model: :code:`COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)`
 * Fully Contextual Topic Model: :code:`COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)`
 
-The fully contextual topic model can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
+
+Here is how you can use the combined topic model. The high level API is pretty easy to use:
 
 .. code-block:: python
 
@@ -77,9 +78,9 @@ The fully contextual topic model can be used for cross-lingual topic modeling! S
 
     cotm.fit(training_dataset) # run the model
 
-See the example notebook in the `contextualized_topic_models/examples` folder. If you want you can also compute evaluate your topics using different measures,
-for example coherence with the NPMI.
-
+See the example notebook in the `contextualized_topic_models/examples` folder.
+We have also included some of the metrics normally used in the evaluation of topic models, for example you can compute the coherence of your
+topics using NPMI using our simple and high-level API.
 .. code-block:: python
 
     from contextualized_topic_models.evaluation.measures import CoherenceNPMI
@@ -93,6 +94,9 @@ for example coherence with the NPMI.
 
 Cross-lingual Topic Modeling
 ----------------------------
+
+The fully contextual topic model can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
+
 
 .. code-block:: python
 
