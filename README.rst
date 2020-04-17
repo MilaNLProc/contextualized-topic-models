@@ -20,11 +20,10 @@ support topic modeling. See the papers for details:
 
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/1adfc89751f1d86169862e1106e454cade153825/img/lm_topic_model.pdf
     :alt: Combined TM
-    :width: 400
-
+    :width: 45%
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/1adfc89751f1d86169862e1106e454cade153825/img/lm_topic_model_multilingual.pdf
     :alt: Contextual TM
-    :width: 400
+    :width: 45%
 
 
 * `Cross-lingual Contextualized Topic Models with Zero-shot Learning` https://arxiv.org/pdf/2004.07737v1.pdf
