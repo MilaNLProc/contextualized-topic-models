@@ -169,26 +169,26 @@ References
 
 Combined BERT+BoW
 
-.. raw:: html
+::
 
-    <pre> @article{bianchi2020pretraining,
+    @article{bianchi2020pretraining,
         title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
         author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
         year={2020},
        journal={arXiv preprint arXiv:2004.03974},
-    } </pre>
+    }
 
 
 Contextual TM
 
-.. raw:: html
+::
 
-    <pre> @article{bianchi2020crosslingual,
+    @article{bianchi2020crosslingual,
         title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
         author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
         year={2020},
        journal={arXiv preprint arXiv:2004.07737},
-    } </pre>
+    }
 
 
 

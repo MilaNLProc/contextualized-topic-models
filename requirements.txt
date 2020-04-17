@@ -1,3 +1,4 @@
+wheel==0.33.6
 torch
 numpy
 torchvision
