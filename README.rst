@@ -166,7 +166,7 @@ Development Team
 References
 ----------
 
-Combined BERT+BoW
+Combined Topic Model
 
 ::
 
@@ -178,7 +178,7 @@ Combined BERT+BoW
     }
 
 
-Contextual TM
+Fully Contextual Topic Model
 
 ::
 
