@@ -26,7 +26,7 @@ support topic modeling. See the papers for details:
 
     <img src="https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png" width=400>
 
-**Contextual Topic Model**
+**Fully Contextual Topic Model**
 
 .. raw:: html
 
@@ -79,6 +79,9 @@ Fully Contextual Topic Model:
 
     CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
 
+
+Contextual Topic Modeling
+-------------------------
 
 Here is how you can use the combined topic model. The high level API is pretty easy to use:
 
