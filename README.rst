@@ -17,6 +17,16 @@ Contextualized Topic Models
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
 support topic modeling. See the papers for details:
 
+
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/1adfc89751f1d86169862e1106e454cade153825/img/lm_topic_model.pdf
+    :alt: Combined TM
+    :width: 400
+
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/1adfc89751f1d86169862e1106e454cade153825/img/lm_topic_model_multilingual.pdf
+    :alt: Contextual TM
+    :width: 400
+
+
 * `Cross-lingual Contextualized Topic Models with Zero-shot Learning` https://arxiv.org/pdf/2004.07737v1.pdf
 * `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence` https://arxiv.org/pdf/2004.03974.pdf
 
