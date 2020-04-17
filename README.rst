@@ -54,15 +54,15 @@ embeddings with BERT remember that there is a maximum length and for documents t
 An important aspect to take into account is which network you want to use: the one that combines BERT and the BoW or the one that just uses BERT.
 It's easy to swap from one to the other:
 
-* Combined Topic Model: :code:`COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)`
-* Fully Contextual Topic Model: :code:`COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)`
+* Combined Topic Model: :code:`CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)`
+* Fully Contextual Topic Model: :code:`CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)`
 
 
 Here is how you can use the combined topic model. The high level API is pretty easy to use:
 
 .. code-block:: python
 
-    from contextualized_topic_models.models.cotm import COTM
+    from contextualized_topic_models.models.ctm import CTM
     from contextualized_topic_models.utils.data_preparation import TextHandler
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
 
@@ -72,15 +72,16 @@ Here is how you can use the combined topic model. The high level API is pretty e
     # generate BERT data
     training_bert = bert_embeddings_from_file("documents.txt", "distiluse-base-multilingual-cased")
 
-    training_dataset = COTMDataset(handler.bow, training_bert, handler.idx2token)
+    training_dataset = CTMDataset(handler.bow, training_bert, handler.idx2token)
 
-    cotm = COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)
+    ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)
 
-    cotm.fit(training_dataset) # run the model
+    ctm.fit(training_dataset) # run the model
 
 See the example notebook in the `contextualized_topic_models/examples` folder.
 We have also included some of the metrics normally used in the evaluation of topic models, for example you can compute the coherence of your
 topics using NPMI using our simple and high-level API.
+
 .. code-block:: python
 
     from contextualized_topic_models.evaluation.measures import CoherenceNPMI
@@ -88,7 +89,7 @@ topics using NPMI using our simple and high-level API.
     with open('documents.txt',"r") as fr:
         texts = [doc.split() for doc in fr.read().splitlines()] # load text for NPMI
 
-    npmi = CoherenceNPMI(texts=texts, topics=cotm.get_topic_lists(10))
+    npmi = CoherenceNPMI(texts=texts, topics=ctm.get_topic_lists(10))
     npmi.score()
 
 
@@ -100,7 +101,7 @@ The fully contextual topic model can be used for cross-lingual topic modeling! S
 
 .. code-block:: python
 
-    from contextualized_topic_models.models.cotm import COTM
+    from contextualized_topic_models.models.ctm import CTM
     from contextualized_topic_models.utils.data_preparation import TextHandler
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
 
@@ -109,11 +110,11 @@ The fully contextual topic model can be used for cross-lingual topic modeling! S
 
     training_bert = bert_embeddings_from_file("documents.txt", "distiluse-base-multilingual-cased")
 
-    training_dataset = COTMDataset(handler.bow, training_bert, handler.idx2token)
+    training_dataset = CTMDataset(handler.bow, training_bert, handler.idx2token)
 
-    cotm = COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
+    ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
 
-    cotm.fit(training_dataset) # run the model
+    ctm.fit(training_dataset) # run the model
 
 
 Predict topics for novel documents
@@ -127,8 +128,8 @@ Predict topics for novel documents
     # generate BERT data
     testing_bert = bert_embeddings_from_file("spanish_documents.txt", "distiluse-base-multilingual-cased")
 
-    testing_dataset = COTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
-    cotm.get_thetas(testing_dataset)
+    testing_dataset = CTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
+    ctm.get_thetas(testing_dataset)
 
 Development Team
 ----------------

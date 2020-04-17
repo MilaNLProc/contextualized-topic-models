@@ -14,16 +14,16 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 
-class COTM(object):
+class CTM(object):
 
-    """Class to train COTM model."""
+    """Class to train CTM model."""
 
     def __init__(self, input_size, bert_input_size, inference_type, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         """
-        Initialize COTM model.
+        Initialize CTM model.
 
         Args
             input_size : int, dimension of input

@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 import numpy as np
 
 
-class COTMDataset(Dataset):
+class CTMDataset(Dataset):
 
     """Class to load BOW dataset."""
 
