@@ -31,7 +31,7 @@ support topic modeling. See the papers for details:
 
 .. raw:: html
 
-<img src="https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png" width="400"/>
+    <img src="https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png" width="400"/>
 
 
 Software details:
