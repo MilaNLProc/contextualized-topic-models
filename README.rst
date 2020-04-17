@@ -51,7 +51,13 @@ The contextual neural topic model can be easily instantiated using few parameter
 parameters you can use to change the behaviour of the neural topic model). When you generate
 embeddings with BERT remember that there is a maximum length and for documents that are too long some words will be ignored.
 
+An important aspect to take into account is which network you want to use: the one that combines BERT and the BoW or the one that just uses BERT.
+It's easy to swap from one to the other:
 
+* Combined Topic Model: :code:`COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)`
+* Fully Contextual Topic Model: :code:`COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)`
+
+The fully contextual topic model can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
 
 .. code-block:: python
 
@@ -85,26 +91,43 @@ for example coherence with the NPMI.
     npmi.score()
 
 
+Cross-lingual Topic Modeling
+----------------------------
+
+.. code-block:: python
+
+    from contextualized_topic_models.models.cotm import COTM
+    from contextualized_topic_models.utils.data_preparation import TextHandler
+    from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
+
+    handler = TextHandler("english_documents.txt")
+    handler.prepare() # create vocabulary and training data
+
+    training_bert = bert_embeddings_from_file("documents.txt", "distiluse-base-multilingual-cased")
+
+    training_dataset = COTMDataset(handler.bow, training_bert, handler.idx2token)
+
+    cotm = COTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
+
+    cotm.fit(training_dataset) # run the model
+
+
 Predict topics for novel documents
 
 .. code-block:: python
 
 
-    test_handler = TextHandler("documents.txt")
+    test_handler = TextHandler("spanish_documents.txt")
     test_handler.prepare() # create vocabulary and training data
 
     # generate BERT data
-    testing_bert = bert_embeddings_from_file("documents.txt", "distiluse-base-multilingual-cased")
+    testing_bert = bert_embeddings_from_file("spanish_documents.txt", "distiluse-base-multilingual-cased")
 
     testing_dataset = COTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
     cotm.get_thetas(testing_dataset)
 
-Cross-lingual Topic Modeling
-----------------------------
-
-
-Team
-----
+Development Team
+----------------
 
 * Federico Bianchi <f.bianchi@unibocconi.it> Bocconi University
 * Silvia Terragni <s.terragni4@campus.unimib.it> University of Milan-Bicocca
@@ -114,6 +137,7 @@ References
 ----------
 
 Combined BERT+BoW
+
 .. raw:: html
 
     <pre> @article{bianchi2020pretraining,
@@ -123,7 +147,9 @@ Combined BERT+BoW
        journal={arXiv preprint arXiv:2004.03974},
     } </pre>
 
+
 Contextual TM
+
 .. raw:: html
 
     <pre> @article{bianchi2020crosslingual,
