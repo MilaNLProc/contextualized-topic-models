@@ -4,7 +4,10 @@
 define BROWSER_PYSCRIPT
 import os, webbrowser, sys
 
-from urllib.request import pathname2url
+try:
+	from urllib import pathname2url
+except:
+	from urllib.request import pathname2url
 
 webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
 endef
@@ -48,24 +51,24 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
-	flake8 contextualized_topic_models tests
+	flake8 cade tests
 
 test: ## run tests quickly with the default Python
-	pytest
+	python setup.py test
 
 test-all: ## run tests on every Python version with tox
 	tox
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source contextualized_topic_models -m pytest
+	coverage run --source cade setup.py test
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/contextualized_topic_models.rst
+	rm -f docs/cade.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ contextualized_topic_models
+	sphinx-apidoc -o docs/ cade
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	$(BROWSER) docs/_build/html/index.html
