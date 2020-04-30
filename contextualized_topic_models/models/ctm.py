@@ -286,7 +286,7 @@ class CTM(object):
 
                 # forward pass
                 self.model.zero_grad()
-                _, _, _, _, word_dists = self.model(X, X_bert)
+                _, _, _, _, _, word_dists = self.model(X, X_bert)
 
                 _, indices = torch.sort(word_dists, dim=1)
                 preds += [indices[:, :k]]
