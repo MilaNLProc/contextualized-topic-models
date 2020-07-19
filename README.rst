@@ -22,16 +22,17 @@ support topic modeling. See the papers for details:
 
 **Combined Topic Model**
 
-.. raw:: html
-
-    <img src="https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png" width=400>
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
+   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
+   :align: center
+   :width: 400px
 
 **Fully Contextual Topic Model**
 
-.. raw:: html
-
-    <img src="https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png" width=400>
-
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
+   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
+   :align: center
+   :width: 400px
 
 Software details:
 
