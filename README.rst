@@ -90,6 +90,7 @@ Here is how you can use the combined topic model. The high level API is pretty e
     from contextualized_topic_models.models.ctm import CTM
     from contextualized_topic_models.utils.data_preparation import TextHandler
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
+    from contextualized_topic_models.datasets.dataset import CTMDataset
 
     handler = TextHandler("documents.txt")
     handler.prepare() # create vocabulary and training data
@@ -129,6 +130,7 @@ The fully contextual topic model can be used for cross-lingual topic modeling! S
     from contextualized_topic_models.models.ctm import CTM
     from contextualized_topic_models.utils.data_preparation import TextHandler
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
+    from contextualized_topic_models.datasets.dataset import CTMDataset
 
     handler = TextHandler("english_documents.txt")
     handler.prepare() # create vocabulary and training data
