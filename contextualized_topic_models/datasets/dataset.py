@@ -13,7 +13,7 @@ class CTMDataset(Dataset):
             X : array-like, shape=(n_samples, n_features)
                 Document word matrix.
         """
-        if len(X) != len(X_bert):
+        if X.shape[0] != len(X_bert):
             raise Exception("Wait! BoW and Contextual Embeddings have different sizes! "
                             "You might want to check if the BoW preparation method has removed some documents. ")
 
@@ -23,11 +23,11 @@ class CTMDataset(Dataset):
 
     def __len__(self):
         """Return length of dataset."""
-        return len(self.X)
+        return self.X.shape[0]
 
     def __getitem__(self, i):
         """Return sample from dataset at index i."""
-        X = torch.FloatTensor(self.X[i])
+        X = torch.FloatTensor(self.X[i].todense())
         X_bert = torch.FloatTensor(self.X_bert[i])
 
         return {'X': X, 'X_bert': X_bert}

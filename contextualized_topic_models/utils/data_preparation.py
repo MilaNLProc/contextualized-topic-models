@@ -1,12 +1,16 @@
 import numpy as np
 from sentence_transformers import SentenceTransformer
+import scipy.sparse
 
 
 def get_bag_of_words(data, min_length):
 
     vect = [np.bincount(x[x != np.array(None)].astype('int'), minlength=min_length)
             for x in data if np.sum(x[x != np.array(None)]) != 0]
-    return np.array(vect)
+
+
+    vect = scipy.sparse.csr_matrix(vect)
+    return vect
 
 
 def bert_embeddings_from_file(text_file, sbert_model_to_load):
@@ -41,28 +45,24 @@ class TextHandler:
         """
         with open(self.file_name, "r") as filino:
             data = filino.readlines()
-
         return data
 
     def prepare(self):
-        data = self.load_text_file()
+        indptr = [0]
+        indices = []
+        data = []
+        vocabulary = {}
+        with open(self.file_name, "r") as filino:
+            docs = filino.readlines()
 
-        concatenate_text = ""
-        for line in data:
-            line = line.strip()
-            concatenate_text += line + " "
-        concatenate_text = concatenate_text.strip()
+        for d in docs:
+            for term in d.split():
+                index = vocabulary.setdefault(term, len(vocabulary))
+                indices.append(index)
+                data.append(1)
+            indptr.append(len(indices))
 
-        self.vocab = list(set(concatenate_text.split()))
-
-        for index, vocab in list(zip(range(0, len(self.vocab)), self.vocab)):
-            self.vocab_dict[vocab] = index
-
-        self.index_dd = np.array(list(map(lambda y: np.array(list(map(lambda x:
-                                                                      self.vocab_dict[x], y.split()))), data)))
+        self.vocab_dict = vocabulary
+        self.vocab = list(vocabulary.keys())
         self.idx2token = {v: k for (k, v) in self.vocab_dict.items()}
-        self.bow = get_bag_of_words(self.index_dd, len(self.vocab))
-
-
-
-
+        self.bow = scipy.sparse.csr_matrix((data, indices, indptr), dtype=int)
