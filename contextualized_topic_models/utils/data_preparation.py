@@ -31,7 +31,7 @@ class TextHandler:
         self.vocab = []
         self.index_dd = None
         self.idx2token = None
-        self.training_bow = None
+        self.bow = None
 
     def load_text_file(self):
         """

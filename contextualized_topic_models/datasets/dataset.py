@@ -17,11 +17,9 @@ class CTMDataset(Dataset):
             raise Exception("Wait! BoW and Contextual Embeddings have different sizes! "
                             "You might want to check if the BoW preparation method has removed some documents. ")
 
-
         self.X = X
         self.X_bert = X_bert
         self.idx2token = idx2token
-
 
     def __len__(self):
         """Return length of dataset."""
