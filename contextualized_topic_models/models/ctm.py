@@ -409,3 +409,10 @@ class CTM(object):
 
         self._init_nn() #TODO implement this method
         self.model.load_state_dict(checkpoint['state_dict'])
+
+    def get_topic_word_matrix(self):
+        """
+        Return the topic-word matrix (dimensions: number of topics x length of the vocabulary).
+        If model_type is LDA, the matrix is normalized; otherwise the matrix is unnormalized.
+        """
+        return self.model.topic_word_matrix.cpu().detach().numpy()

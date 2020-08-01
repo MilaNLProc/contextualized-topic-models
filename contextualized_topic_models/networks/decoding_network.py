@@ -44,6 +44,7 @@ class DecoderNetwork(nn.Module):
         self.activation = activation
         self.dropout = dropout
         self.learn_priors = learn_priors
+        self.topic_word_matrix = None
 
         if infnet == "contextual":
             self.inf_net = ContextualInferenceNetwork(
@@ -110,9 +111,11 @@ class DecoderNetwork(nn.Module):
             word_dist = F.softmax(
                 self.beta_batchnorm(torch.matmul(theta, self.beta)), dim=1)
             # word_dist: batch_size x input_size
+            self.topic_word_matrix = self.beta
         elif self.model_type == 'LDA':
             # simplex constrain on Beta
             beta = F.softmax(self.beta_batchnorm(self.beta), dim=1)
+            self.topic_word_matrix = beta
             word_dist = torch.matmul(theta, beta)
             # word_dist: batch_size x input_size
 
