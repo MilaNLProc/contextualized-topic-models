@@ -90,6 +90,8 @@ Fully Contextual Topic Model:
     CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
 
 
+
+
 Contextual Topic Modeling
 -------------------------
 
@@ -167,6 +169,21 @@ Predict topics for novel documents
 
     testing_dataset = CTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
     ctm.get_thetas(testing_dataset)
+
+
+
+Mono vs Cross-lingual
+---------------------
+All the examples we saw use a multilingual embedding model `distiluse-base-multilingual-cased`.
+However, if you are doing topic modeling in English, you can use the English sentence-bert model. In that case,
+it's really easy to update the code to support mono-lingual english topic modeling.
+
+.. code-block:: python
+
+    training_bert = bert_embeddings_from_file("documents.txt", "bert-base-nli-mean-tokens")
+    ctm = CTM(input_size=len(handler.vocab), bert_input_size=768, inference_type="combined", n_components=50)
+
+In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
 
 Development Team
 ----------------
