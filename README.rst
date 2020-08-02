@@ -174,7 +174,7 @@ Predict topics for novel documents
 
 Mono vs Cross-lingual
 ---------------------
-All the examples we saw use a multilingual embedding model `distiluse-base-multilingual-cased`.
+All the examples we saw used a multilingual embedding model `distiluse-base-multilingual-cased`.
 However, if you are doing topic modeling in English, you can use the English sentence-bert model. In that case,
 it's really easy to update the code to support mono-lingual english topic modeling.
 
