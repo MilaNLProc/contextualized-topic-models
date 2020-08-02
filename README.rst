@@ -13,6 +13,13 @@ Contextualized Topic Models
         :target: https://contextualized-topic-models.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
+.. image:: https://img.shields.io/github/contributors/MilaNLProc/contextualized-topic-models
+        :target: https://github.com/MilaNLProc/contextualized-topic-modelsgraphs/contributors/
+        :alt: Contributors
+
+.. image:: https://img.shields.io/badge/License-MIT-blue.svg
+        :target: https://lbesson.mit-license.org/
+        :alt: License
 
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
 support topic modeling. See the papers for details:
