@@ -60,8 +60,8 @@ Features
 * Includes evaluation metrics
 
 
-Quick Guide
------------
+Overview
+--------
 
 Install the package using pip
 
