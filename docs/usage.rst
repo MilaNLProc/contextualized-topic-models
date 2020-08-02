@@ -2,9 +2,14 @@
 Usage
 =====
 
-To use Contextualized Topic Models in a project::
+Quick Guide
+-----------
 
-    import contextualized_topic_models
+We have two notebooks that can help you start using the CTM. The `first <https://github.com/MilaNLProc/contextualized-topic-models/blob/master/examples/topic-modeling.ipynb>`_ contains a guide to use the
+combined CTM model and shows some of the functions you can use to get the topics for each document.
+The `second <https://github.com/MilaNLProc/contextualized-topic-models/blob/master/examples/multilingual-topic-modeling.ipynb>`_ one instead contains a simple introduction to the fully contextual CTM embedded in a multilingual
+settings.
+
 
 Frequently Asked Questions
 --------------------------
@@ -18,14 +23,14 @@ Check the code `here <https://github.com/MilaNLProc/contextualized-topic-models/
 to see how we create the representations.
 
 
-Is the BoW needed even for the fully contextual model
-*****************************************************
+Is the BoW needed even for the fully contextual model?
+******************************************************
 
 Yes, it is. The BoW is necessary in the reconstruction phase, without that we would lose the symbolic information
 that allows us to get the topics.
 
-Can I use this with a Pandas DataFrame
-**************************************
+Can I use this with a Pandas DataFrame^
+***************************************
 
 Sure you can, see the discussion in the following `issue
 <https://github.com/MilaNLProc/contextualized-topic-models/issues/4>`_.
