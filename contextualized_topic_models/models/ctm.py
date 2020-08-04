@@ -252,6 +252,7 @@ class CTM(object):
             for batch_samples in loader:
                 # batch_size x vocab_size
                 X = batch_samples['X']
+                X = X.reshape(X.shape[0], -1)
                 X_bert = batch_samples['X_bert']
 
                 if self.USE_CUDA:
@@ -278,6 +279,7 @@ class CTM(object):
             for batch_samples in loader:
                 # batch_size x vocab_size
                 X = batch_samples['X']
+                X = X.reshape(X.shape[0], -1)
                 X_bert = batch_samples['X_bert']
 
                 if self.USE_CUDA:
