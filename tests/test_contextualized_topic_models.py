@@ -20,22 +20,22 @@ def root_dir():
 def data_dir(root_dir):
     return root_dir + "/../contextualized_topic_models/data/"
 
-def test_shape_checks():
-    handler = TextHandler("../contextualized_topic_models/data/gnews/GoogleNews.txt")
+def test_shape_checks(data_dir):
+    handler = TextHandler(data_dir +"gnews/GoogleNews.txt")
     handler.prepare()  # create vocabulary and training data
 
     # load BERT data
-    with open("../contextualized_topic_models/data/gnews/bert_embeddings_gnews", "rb") as filino:
+    with open(data_dir +"gnews/bert_embeddings_gnews", "rb") as filino:
         training_bert = pickle.load(filino)
 
     assert len(training_bert) == len(handler.bow.todense())
 
-def test_training_with_saved_data():
-    handler = TextHandler("../contextualized_topic_models/data/gnews/GoogleNews.txt")
+def test_training_with_saved_data(data_dir):
+    handler = TextHandler(data_dir + "gnews/GoogleNews.txt")
     handler.prepare()  # create vocabulary and training data
 
     # load BERT data
-    with open("../contextualized_topic_models/data/gnews/bert_embeddings_gnews", "rb") as filino:
+    with open(data_dir +"gnews/bert_embeddings_gnews", "rb") as filino:
         training_bert = pickle.load(filino)
 
     training_dataset = CTMDataset(handler.bow, training_bert, handler.idx2token)
