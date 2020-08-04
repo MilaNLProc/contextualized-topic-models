@@ -2,7 +2,12 @@
 History
 =======
 
-1.4.0 (2020-04-05)
+1.4.1 (2020-08-04)
+------------------
+
+* Fixed bug over sparse matrices
+
+1.4.0 (2020-08-01)
 ------------------
 
 * New feature handling sparse bow for optimized processing
