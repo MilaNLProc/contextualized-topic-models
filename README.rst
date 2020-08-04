@@ -232,7 +232,10 @@ Credits
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 To ease the use of the library we have also incuded the `rbo`_ package, all the rights reserved to the author of that package.
 
+Note
+----
 
+Remember that this is a research tool :)
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
