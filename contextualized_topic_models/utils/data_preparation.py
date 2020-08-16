@@ -16,7 +16,7 @@ def get_bag_of_words(data, min_length):
 def bert_embeddings_from_file(text_file, sbert_model_to_load):
     model = SentenceTransformer(sbert_model_to_load)
 
-    with open(text_file, encoding="latin") as filino:
+    with open(text_file) as filino:
         train_text = list(map(lambda x: x, filino.readlines()))
 
     return np.array(model.encode(train_text))

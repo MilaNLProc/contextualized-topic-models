@@ -2,6 +2,11 @@
 History
 =======
 
+1.4.2 (2020-08-04)
+------------------
+
+* Changed the encoding on file load for the SBERT embedding function
+
 1.4.1 (2020-08-04)
 ------------------
 
