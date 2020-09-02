@@ -3,6 +3,7 @@ torch==1.6.0
 numpy==1.19.1
 torchvision==0.7.0
 gensim==3.8.3
-sentence-transformers==0.3.2
+sentence-transformers==0.3.5
+transformers==3.0.2
 pytest==4.6.5
 pytest-runner==5.1
