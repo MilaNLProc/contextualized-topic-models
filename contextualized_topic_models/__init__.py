@@ -2,4 +2,4 @@
 
 __author__ = """Federico Bianchi"""
 __email__ = 'f.bianchi@unibocconi.it'
-__version__ = '1.4.2'
+__version__ = '1.4.3'
