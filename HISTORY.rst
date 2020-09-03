@@ -2,7 +2,7 @@
 History
 =======
 
-1.4.3 (2020-08-04)
+1.4.3 (2020-09-03)
 ------------------
 
 * Updating sentence-transformers package to avoid errors
