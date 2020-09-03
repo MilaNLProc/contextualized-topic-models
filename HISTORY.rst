@@ -2,6 +2,11 @@
 History
 =======
 
+1.4.3 (2020-08-04)
+------------------
+
+* Updating sentence-transformers package to avoid errors
+
 1.4.2 (2020-08-04)
 ------------------
 
