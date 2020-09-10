@@ -4,7 +4,9 @@ import scipy.sparse
 
 
 def get_bag_of_words(data, min_length):
-
+    """
+    Creates the bag of words
+    """
     vect = [np.bincount(x[x != np.array(None)].astype('int'), minlength=min_length)
             for x in data if np.sum(x[x != np.array(None)]) != 0]
 
@@ -13,18 +15,23 @@ def get_bag_of_words(data, min_length):
     return vect
 
 
-def bert_embeddings_from_file(text_file, sbert_model_to_load):
+def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200):
+    """
+    Creates SBERT Embeddings from an input file
+    """
     model = SentenceTransformer(sbert_model_to_load)
-
     with open(text_file) as filino:
         train_text = list(map(lambda x: x, filino.readlines()))
 
-    return np.array(model.encode(train_text))
+    return np.array(model.encode(train_text, show_progress_bar=True, batch_size=batch_size))
 
 
-def bert_embeddings_from_list(texts, sbert_model_to_load):
+def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200):
+    """
+    Creates SBERT Embeddings from a list
+    """
     model = SentenceTransformer(sbert_model_to_load)
-    return np.array(model.encode(texts))
+    return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
 
 
 class TextHandler:
