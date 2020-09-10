@@ -239,30 +239,34 @@ class CTM(object):
                 if save_dir is not None:
                     self.save(save_dir)
 
-    def get_thetas(self, dataset):
+    def get_thetas(self, dataset, n_samples=1):
         """Predict input."""
         self.model.eval()
 
         loader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=False,
             num_workers=self.num_data_loader_workers)
+        final_thetas = []
+        for _ in range(n_samples):
+            with torch.no_grad():
+                collect_theta = []
+                for batch_samples in loader:
+                    # batch_size x vocab_size
+                    X = batch_samples['X']
+                    X = X.reshape(X.shape[0], -1)
+                    X_bert = batch_samples['X_bert']
 
-        with torch.no_grad():
-            collect_theta = []
-            for batch_samples in loader:
-                # batch_size x vocab_size
-                X = batch_samples['X']
-                X = X.reshape(X.shape[0], -1)
-                X_bert = batch_samples['X_bert']
+                    if self.USE_CUDA:
+                        X = X.cuda()
+                        X_bert = X_bert.cuda()
 
-                if self.USE_CUDA:
-                    X = X.cuda()
-                    X_bert = X_bert.cuda()
+                    # forward pass
+                    self.model.zero_grad()
+                    collect_theta.extend(self.model.get_theta(X, X_bert).cpu().numpy().tolist())
 
-                # forward pass
-                self.model.zero_grad()
-                collect_theta.extend(self.model.get_theta(X, X_bert).cpu().numpy().tolist())
-            return collect_theta
+                final_thetas.append(np.array(collect_theta))
+
+        return np.sum(final_thetas, axis=0)/n_samples
 
 
     def predict(self, dataset, k=10):
@@ -294,7 +298,6 @@ class CTM(object):
                 preds += [indices[:, :k]]
 
             preds = torch.cat(preds, dim=0)
-
         return preds
 
     def score(self, scorer='coherence', k=10, topics=5):
@@ -418,3 +421,21 @@ class CTM(object):
         If model_type is LDA, the matrix is normalized; otherwise the matrix is unnormalized.
         """
         return self.model.topic_word_matrix.cpu().detach().numpy()
+
+    def get_predicted_topics(self, dataset, n_samples):
+        """
+        Return the a list containing the predicted topic for each document (length: number of documents).
+
+        :param dataset: CTMDataset to infer topics
+        :param n_samples: number of sampling of theta
+        :return:
+        """
+        predicted_topics = []
+        #thetas = np.zeros((len(dataset), self.n_components))
+
+        thetas = self.get_thetas(dataset, n_samples)
+
+        for idd in range(len(dataset)):
+            predicted_topic = np.argmax(thetas[idd] / np.sum(thetas[idd]))
+            predicted_topics.append(predicted_topic)
+        return predicted_topics

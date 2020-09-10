@@ -10,7 +10,6 @@ def get_bag_of_words(data, min_length):
     vect = [np.bincount(x[x != np.array(None)].astype('int'), minlength=min_length)
             for x in data if np.sum(x[x != np.array(None)]) != 0]
 
-
     vect = scipy.sparse.csr_matrix(vect)
     return vect
 

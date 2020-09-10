@@ -1,7 +1,6 @@
 import torch
 from torch.utils.data import Dataset
-import numpy as np
-
+import scipy.sparse
 
 class CTMDataset(Dataset):
 
@@ -27,8 +26,12 @@ class CTMDataset(Dataset):
 
     def __getitem__(self, i):
         """Return sample from dataset at index i."""
-        X = torch.FloatTensor(self.X[i].todense())
-        X_bert = torch.FloatTensor(self.X_bert[i])
+        if type(self.X[i]) == scipy.sparse.csr.csr_matrix:
+            X = torch.FloatTensor(self.X[i].todense())
+            X_bert = torch.FloatTensor(self.X_bert[i])
+        else:
+            X = torch.FloatTensor(self.X[i])
+            X_bert = torch.FloatTensor(self.X_bert[i])
 
         return {'X': X, 'X_bert': X_bert}
 
