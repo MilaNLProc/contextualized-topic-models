@@ -4,12 +4,27 @@ from nltk.corpus import stopwords as stop_words
 
 
 class SimplePreprocessing():
+    """
+    Provides a very simple preprocessing script that filters infrequent tokens from text
+    """
     def __init__(self, documents, stopwords_language='english', vocabulary_size=2000):
+        """
+
+        :param documents:
+        :param stopwords_language:
+        :param vocabulary_size: the number of most frequent words to include in the documents. Infrequent words will be discarded from the list of preprocessed documents
+        """
         self.documents = documents
         self.stopwords = set(stop_words.words(stopwords_language))
         self.vocabulary_size = vocabulary_size
 
     def preprocess(self):
+        """
+        Note that if after filtering some documents do not contain words we remove them. That is why we return also the
+        list of unpreprocessed documents.
+
+        :return: preprocessed documents, unpreprocessed documents and the vocabulary list
+        """
         preprocessed_docs_tmp = self.documents
         preprocessed_docs_tmp = [doc.lower() for doc in preprocessed_docs_tmp]
         preprocessed_docs_tmp = [doc.translate(
@@ -18,7 +33,7 @@ class SimplePreprocessing():
                              for doc in preprocessed_docs_tmp]
 
         vectorizer = CountVectorizer(max_features=self.vocabulary_size, token_pattern=r'\b[a-zA-Z]{2,}\b')
-        X = vectorizer.fit_transform(preprocessed_docs_tmp)
+        vectorizer.fit_transform(preprocessed_docs_tmp)
         vocabulary = set(vectorizer.get_feature_names())
         preprocessed_docs_tmp = [' '.join([w for w in doc.split() if w in vocabulary])
                                  for doc in preprocessed_docs_tmp]

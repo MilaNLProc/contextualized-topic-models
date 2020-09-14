@@ -52,11 +52,16 @@ class TextHandler:
         data = []
         vocabulary = {}
 
-        if self.file_name == None:
+        if self.sentences == None and self.file_name == None:
+            raise Exception("Sentences and file_names cannot both be none")
+
+        if self.sentences != None:
             docs = self.sentences
-        else:
+        elif self.file_name != None:
             with open(self.file_name, "r") as filino:
                 docs = filino.readlines()
+        else:
+            raise Exception("One parameter between sentences and file_name should be selected")
 
         for d in docs:
             for term in d.split():
