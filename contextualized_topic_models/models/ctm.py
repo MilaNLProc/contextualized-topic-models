@@ -15,33 +15,31 @@ from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 
 class CTM(object):
+    """Class to train the contextualized topic model.
 
-    """Class to train CTM model."""
+        :param input_size: int, dimension of input
+        :param bert_input_size: int, dimension of input that comes from BERT embeddings
+        :param inference_type: string, you can choose between the contextual model and the combined model
+        :param n_components: int, number of topic components, (default 10)
+        :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
+        :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
+        :param activation: string, 'softplus', 'relu', (default 'softplus')
+        :param dropout: float, dropout to use (default 0.2)
+        :param learn_priors: bool, make priors a learnable parameter (default True)
+        :param batch_size: int, size of batch to use for training (default 64)
+        :param lr: float, learning rate to use for training (default 2e-3)
+        :param momentum: float, momentum to use for training (default 0.99)
+        :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
+        :param num_epochs: int, number of epochs to train for, (default 100)
+        :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
+        :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
+    """
 
     def __init__(self, input_size, bert_input_size, inference_type, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
-        """
-        Initialize CTM model.
 
-        Args
-            input_size : int, dimension of input
-            n_components : int, number of topic components, (default 10)
-            model_type : string, 'prodLDA' or 'LDA' (default 'prodLDA')
-            hidden_sizes : tuple, length = n_layers, (default (100, 100))
-            activation : string, 'softplus', 'relu', (default 'softplus')
-            dropout : float, dropout to use (default 0.2)
-            learn_priors : bool, make priors a learnable parameter (default True)
-            batch_size : int, size of batch to use for training (default 64)
-            lr : float, learning rate to use for training (default 2e-3)
-            momentum : float, momentum to use for training (default 0.99)
-            solver : string, optimizer 'adam' or 'sgd' (default 'adam')
-            num_epochs : int, number of epochs to train for, (default 100)
-            reduce_on_plateau : bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
-            num_data_loader_workers : int, number of data loader workers (default cpu_count). set it to 0 if you are
-            using Windows
-        """
         assert isinstance(input_size, int) and input_size > 0,\
             "input_size must by type int > 0."
         assert isinstance(n_components, int) and input_size > 0,\
@@ -178,33 +176,32 @@ class CTM(object):
 
         return samples_processed, train_loss
 
-    def fit(self, train_dataset, save_dir=None):
+    def fit(self, train_dataset, save_dir=None, verbose=True):
         """
-        Train the AVITM model.
+        Train the CTM model.
 
-        Args
-            train_dataset : PyTorch Dataset classs for training data.
-            val_dataset : PyTorch Dataset classs for validation data.
-            save_dir : directory to save checkpoint models to.
+        :param train_dataset: PyTorch Dataset class for training data.
+        :param save_dir: directory to save checkpoint models to.
         """
         # Print settings to output file
-        print("Settings: \n\
-               N Components: {}\n\
-               Topic Prior Mean: {}\n\
-               Topic Prior Variance: {}\n\
-               Model Type: {}\n\
-               Hidden Sizes: {}\n\
-               Activation: {}\n\
-               Dropout: {}\n\
-               Learn Priors: {}\n\
-               Learning Rate: {}\n\
-               Momentum: {}\n\
-               Reduce On Plateau: {}\n\
-               Save Dir: {}".format(
-                   self.n_components, 0.0,
-                   1. - (1./self.n_components), self.model_type,
-                   self.hidden_sizes, self.activation, self.dropout, self.learn_priors,
-                   self.lr, self.momentum, self.reduce_on_plateau, save_dir))
+        if verbose:
+            print("Settings: \n\
+                   N Components: {}\n\
+                   Topic Prior Mean: {}\n\
+                   Topic Prior Variance: {}\n\
+                   Model Type: {}\n\
+                   Hidden Sizes: {}\n\
+                   Activation: {}\n\
+                   Dropout: {}\n\
+                   Learn Priors: {}\n\
+                   Learning Rate: {}\n\
+                   Momentum: {}\n\
+                   Reduce On Plateau: {}\n\
+                   Save Dir: {}".format(
+                       self.n_components, 0.0,
+                       1. - (1./self.n_components), self.model_type,
+                       self.hidden_sizes, self.activation, self.dropout, self.learn_priors,
+                       self.lr, self.momentum, self.reduce_on_plateau, save_dir))
 
         self.model_dir = save_dir
         self.train_data = train_dataset
@@ -226,10 +223,10 @@ class CTM(object):
             samples_processed += sp
             e = datetime.datetime.now()
 
-            # report
-            print("Epoch: [{}/{}]\tSamples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
-                epoch+1, self.num_epochs, samples_processed,
-                len(self.train_data)*self.num_epochs, train_loss, e - s))
+            if verbose:
+                print("Epoch: [{}/{}]\tSamples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
+                    epoch+1, self.num_epochs, samples_processed,
+                    len(self.train_data)*self.num_epochs, train_loss, e - s))
 
             # save best
             if train_loss < self.best_loss_train:
@@ -239,8 +236,14 @@ class CTM(object):
                 if save_dir is not None:
                     self.save(save_dir)
 
-    def get_thetas(self, dataset, n_samples=1):
-        """Predict input."""
+    def get_thetas(self, dataset, n_samples=20):
+        """
+        Get the document-topic distribution for a dataset of topics. Includes multiple sampling to reduce variation via
+        the parameter n_sample.
+
+        :param dataset: a PyTorch Dataset containing the documents
+        :param n_samples: the number of sample to collect to estimate the final distribution (the more the better).
+        """
         self.model.eval()
 
         loader = DataLoader(
@@ -300,47 +303,11 @@ class CTM(object):
             preds = torch.cat(preds, dim=0)
         return preds
 
-    def score(self, scorer='coherence', k=10, topics=5):
-        """Score model."""
-        if scorer == 'perplexity':
-            # score = perplexity_score(truth, preds)
-            raise NotImplementedError("Not implemented yet.")
-        elif scorer == 'coherence':
-            score = self._get_coherence(k, topics=topics)
-        else:
-            raise ValueError("Unknown score type!")
-
-        return score
-
-    def _get_coherence(self, k=10, topics=5):
-        """Get coherence using palmetto web service."""
-        component_dists = self.best_components
-        base_url = 'https://palmetto.demos.dice-research.org/service/cv?words='
-        scores = []
-        i = 0
-        while i < topics:
-            print(i)
-            t = np.random.randint(0, self.n_components)
-            _, idxs = torch.topk(component_dists[t], k)
-            component_words = [self.train_data.idx2token[idx]
-                               for idx in idxs.cpu().numpy()]
-            url = base_url + '%20'.join(component_words)
-            print(url)
-            try:
-                score = float(requests.get(url, timeout=300).content)
-                scores += [score]
-                i += 1
-            except requests.exceptions.Timeout:
-                print("Attempted scoring timed out.  Trying again.")
-                continue
-        return np.mean(scores)
-
     def get_topics(self, k=10):
         """
         Retrieve topic words.
 
-        Args
-            k : (int) number of words to return per topic, default 10.
+        :param k: int, number of words to return per topic, default 10.
         """
         assert k <= self.input_size, "k must be <= input size."
         component_dists = self.best_components
@@ -356,10 +323,11 @@ class CTM(object):
         """
         Retrieve the lists of topic words.
 
-        Args
-            k : (int) number of words to return per topic, default 10.
+
+        :param k: (int) number of words to return per topic, default 10.
         """
         assert k <= self.input_size, "k must be <= input size."
+        # TODO: collapse this method with the one that just returns the topics
         component_dists = self.best_components
         topics = []
         for i in range(self.n_components):
@@ -381,8 +349,7 @@ class CTM(object):
         """
         Save model.
 
-        Args
-            models_dir: path to directory for saving NN models.
+        :param models_dir: path to directory for saving NN models.
         """
         if (self.model is not None) and (models_dir is not None):
 
@@ -400,9 +367,8 @@ class CTM(object):
         """
         Load a previously trained model.
 
-        Args
-            model_dir: directory where models are saved.
-            epoch: epoch of model to load.
+        :param model_dir: directory where models are saved.
+        :param epoch: epoch of model to load.
         """
         epoch_file = "epoch_"+str(epoch)+".pth"
         model_file = os.path.join(model_dir, epoch_file)
@@ -428,7 +394,7 @@ class CTM(object):
 
         :param dataset: CTMDataset to infer topics
         :param n_samples: number of sampling of theta
-        :return:
+        :return: the predicted topics
         """
         predicted_topics = []
         #thetas = np.zeros((len(dataset), self.n_components))

@@ -34,32 +34,29 @@ def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200):
 
 
 class TextHandler:
-
-    def __init__(self, file_name):
+    """
+    Class used to handle the text preparation and the BagOfWord
+    """
+    def __init__(self, file_name=None, sentences=None):
         self.file_name = file_name
+        self.sentences = sentences
         self.vocab_dict = {}
         self.vocab = []
         self.index_dd = None
         self.idx2token = None
         self.bow = None
 
-    def load_text_file(self):
-        """
-        Loads a text file
-        :param text_file:
-        :return:
-        """
-        with open(self.file_name, "r") as filino:
-            data = filino.readlines()
-        return data
-
     def prepare(self):
         indptr = [0]
         indices = []
         data = []
         vocabulary = {}
-        with open(self.file_name, "r") as filino:
-            docs = filino.readlines()
+
+        if self.file_name == None:
+            docs = self.sentences
+        else:
+            with open(self.file_name, "r") as filino:
+                docs = filino.readlines()
 
         for d in docs:
             for term in d.split():
