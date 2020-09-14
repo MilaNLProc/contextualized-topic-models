@@ -200,6 +200,7 @@ that are empty after training. The preprocess method will return the preprocesse
 We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of Word.
 
 .. code-block:: python
+
     from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
 
     documents = [line.strip() for line in open("documents.txt").readlines()]
