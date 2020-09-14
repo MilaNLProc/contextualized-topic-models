@@ -159,4 +159,4 @@ texinfo_documents = [
 ]
 
 
-autodoc_mock_imports = ['numpy', 'pandas']
+autodoc_mock_imports = ['numpy', 'pandas', 'torch']
