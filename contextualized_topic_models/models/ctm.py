@@ -1,7 +1,6 @@
 import os
 from collections import defaultdict
 import multiprocessing as mp
-import requests
 
 import numpy as np
 import datetime
