@@ -2,7 +2,7 @@
 History
 =======
 
-1.5.0 (2020-09-03)
+1.5.0 (2020-09-14)
 ------------------
 
 * Introduced a method to predict the topics for a set of documents (supports multiple sampling to reduce variation)
