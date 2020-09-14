@@ -8,7 +8,7 @@ Welcome to Contextualized Topic Models's documentation!
    readme
    installation
    usage
-   modules
+   ctm
    contributing
    authors
    history

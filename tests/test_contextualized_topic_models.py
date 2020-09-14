@@ -76,7 +76,33 @@ def test_training(data_dir):
 
     ctm.fit(training_dataset)  # run the model
 
-    topics = (ctm.get_topic_lists(2))
+    topics = ctm.get_topic_lists(2)
+
+    assert len(topics) == 5
+
+    thetas = ctm.get_thetas(training_dataset)
+
+    assert len(thetas) == len(train_bert)
+
+
+def test_training_from_lists(data_dir):
+
+    with open(data_dir) as filino:
+        data = filino.readlines()
+
+    handler = TextHandler(sentences=data)
+    handler.prepare()  # create vocabulary and training data
+
+    train_bert = bert_embeddings_from_list(data + 'sample_text_document', "distiluse-base-multilingual-cased")
+
+    training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
+
+    ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",
+              n_components=5)
+
+    ctm.fit(training_dataset)  # run the model
+
+    topics = ctm.get_topic_lists(2)
 
     assert len(topics) == 5
 
