@@ -12,6 +12,9 @@ from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
 
 import os
 import pytest
+import nltk
+
+nltk.download("stopwords")
 
 @pytest.fixture
 def root_dir():
