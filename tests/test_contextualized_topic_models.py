@@ -8,6 +8,7 @@ import numpy as np
 import pickle
 from contextualized_topic_models.utils.data_preparation import TextHandler
 from contextualized_topic_models.datasets.dataset import CTMDataset
+from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
 
 import os
 import pytest
@@ -67,21 +68,17 @@ def test_training(data_dir):
     handler = TextHandler(data_dir + "sample_text_document")
     handler.prepare()  # create vocabulary and training data
 
-    train_bert = bert_embeddings_from_file(data_dir + 'sample_text_document', "distiluse-base-multilingual-cased")
-
+    train_bert = bert_embeddings_from_file(data_dir + 'sample_text_document',
+                                           "distiluse-base-multilingual-cased")
     training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
 
     ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",
               n_components=5)
-
     ctm.fit(training_dataset)  # run the model
-
     topics = ctm.get_topic_lists(2)
-
     assert len(topics) == 5
 
     thetas = ctm.get_thetas(training_dataset)
-
     assert len(thetas) == len(train_bert)
 
 
@@ -94,19 +91,26 @@ def test_training_from_lists(data_dir):
     handler.prepare()  # create vocabulary and training data
 
     train_bert = bert_embeddings_from_list(data, "distiluse-base-multilingual-cased")
-
     training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
 
     ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",
               n_components=5)
-
     ctm.fit(training_dataset)  # run the model
-
     topics = ctm.get_topic_lists(2)
 
     assert len(topics) == 5
-
     thetas = ctm.get_thetas(training_dataset)
 
     assert len(thetas) == len(train_bert)
+
+
+def test_preprocessing(data_dir):
+    docs = [line.strip() for line in open(data_dir + "gnews/GoogleNews.txt", 'r').readlines()]
+    sp = SimplePreprocessing(docs)
+    prep_corpus, unprepr_corpus, vocab = sp.preprocess()
+
+    assert len(prep_corpus) == len(unprepr_corpus)  # prep docs must have the same size as the unprep docs
+    assert len(prep_corpus) <= len(docs)  # preprocessed docs must be less than or equal the original docs
+
+    assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
 
