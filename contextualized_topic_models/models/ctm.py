@@ -248,6 +248,7 @@ class CTM(object):
         loader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=False,
             num_workers=self.num_data_loader_workers)
+
         final_thetas = []
         for _ in range(n_samples):
             with torch.no_grad():

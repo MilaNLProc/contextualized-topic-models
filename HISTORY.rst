@@ -2,6 +2,14 @@
 History
 =======
 
+1.5.0 (2020-09-03)
+------------------
+
+* Introduced a method to predict the topics for a set of documents (supports multiple sampling to reduce variation)
+* Adding some features to bert embeddings creation like increased batch size and progress bar
+* Supporting training directly from lists without the need to deal with files
+* Adding a simple quick preprocessing pipeline
+
 1.4.3 (2020-09-03)
 ------------------
 

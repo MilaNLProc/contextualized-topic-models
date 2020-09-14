@@ -73,6 +73,7 @@ def test_training(data_dir):
 
     train_bert = bert_embeddings_from_file(data_dir + 'sample_text_document',
                                            "distiluse-base-multilingual-cased")
+
     training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
 
     ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",

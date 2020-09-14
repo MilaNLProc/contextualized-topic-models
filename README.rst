@@ -173,7 +173,8 @@ Predict topics for novel documents
     testing_bert = bert_embeddings_from_file("spanish_documents.txt", "distiluse-base-multilingual-cased")
 
     testing_dataset = CTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
-    ctm.get_thetas(testing_dataset)
+    # n_sample how many times to sample the distribution (see the doc)
+    ctm.get_thetas(testing_dataset, n_samples=20)
 
 
 
@@ -190,6 +191,22 @@ it's really easy to update the code to support mono-lingual english topic modeli
 
 In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
 
+Preprocessing
+-------------
+
+Do you need a quick script to run the preprocessing pipeline? we got you covered! Load your documents
+and then use our SimplePreprocessing class. It will automatically filter infrequent words and remove documents
+that are empty after training. The preprocess method will return the preprocessed and the unpreprocessed documents.
+We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of Word.
+
+.. code-block:: python
+    from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
+
+    documents = [line.strip() for line in open("documents.txt").readlines()]
+    sp = SimplePreprocessing(documents)
+    preprocessed_documents, unpreprocessed_corpus, vocab = sp.preprocess()
+
+
 Development Team
 ----------------
 
@@ -199,6 +216,8 @@ Development Team
 
 References
 ----------
+
+If you use this in a research work please cite these papers:
 
 Combined Topic Model
 
