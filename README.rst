@@ -211,9 +211,9 @@ We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of
 Development Team
 ----------------
 
-* Federico Bianchi <f.bianchi@unibocconi.it> Bocconi University
-* Silvia Terragni <s.terragni4@campus.unimib.it> University of Milan-Bicocca
-* Dirk Hovy <dirk.hovy@unibocconi.it> Bocconi University
+* `Federico Bianchi`_ <f.bianchi@unibocconi.it> Bocconi University
+* `Silvia Terragni`_ <s.terragni4@campus.unimib.it> University of Milan-Bicocca
+* `Dirk Hovy`_ <dirk.hovy@unibocconi.it> Bocconi University
 
 References
 ----------
@@ -261,3 +261,6 @@ Remember that this is a research tool :)
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`Stephen Carrow` : https://github.com/estebandito22
 .. _`rbo` : https://github.com/dlukes/rbo
+.. _Federico Bianchi: http://vinid.io
+.. _Silvia Terragni: https://silviatti.github.io/
+.. _Dirk Hovy: https://dirkhovy.com/
