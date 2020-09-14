@@ -87,13 +87,13 @@ def test_training(data_dir):
 
 def test_training_from_lists(data_dir):
 
-    with open(data_dir) as filino:
+    with open(data_dir + 'sample_text_document') as filino:
         data = filino.readlines()
 
     handler = TextHandler(sentences=data)
     handler.prepare()  # create vocabulary and training data
 
-    train_bert = bert_embeddings_from_list(data + 'sample_text_document', "distiluse-base-multilingual-cased")
+    train_bert = bert_embeddings_from_list(data, "distiluse-base-multilingual-cased")
 
     training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
 
