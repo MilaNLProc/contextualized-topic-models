@@ -161,7 +161,8 @@ The fully contextual topic model can be used for cross-lingual topic modeling! S
     ctm.fit(training_dataset) # run the model
 
 
-Predict topics for novel documents
+Predict Topics for Unseen Documents
+-----------------------------------
 
 .. code-block:: python
 
