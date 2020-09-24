@@ -32,6 +32,12 @@ support topic modeling. See the papers for details:
 * `Cross-lingual Contextualized Topic Models with Zero-shot Learning` https://arxiv.org/pdf/2004.07737v1.pdf
 * `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence` https://arxiv.org/pdf/2004.03974.pdf
 
+
+README
+------
+
+Make **sure** you read the doc a bit. The cross-lingual topic modeling requires to use a "contextual" model and it is trained only on **ONE** language; with the power of multilingual BERT it can then be used to predict the topics of documents in unseen languages. For more details you can read the two papers mentioned above.
+
 Combined Topic Model
 --------------------
 
