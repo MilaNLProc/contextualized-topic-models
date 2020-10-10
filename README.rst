@@ -21,8 +21,8 @@ Contextualized Topic Models
         :target: https://lbesson.mit-license.org/
         :alt: License
 
-.. image:: https://pepy.tech/badge/contextualized-topic-models/month
-        :target: https://pepy.tech/project/contextualized-topic-models/month
+.. image:: https://pepy.tech/badge/contextualized-topic-models
+        :target: https://pepy.tech/project/contextualized-topic-models
         :alt: Downloads
 
 
