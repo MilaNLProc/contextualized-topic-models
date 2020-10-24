@@ -3,6 +3,7 @@ from gensim.models.coherencemodel import CoherenceModel
 from gensim.models import KeyedVectors
 import gensim.downloader as api
 from scipy.spatial.distance import cosine
+import abc
 
 from contextualized_topic_models.evaluation.rbo import rbo
 import numpy as np
@@ -10,7 +11,6 @@ import itertools
 
 
 class Measure:
-
     def __init__(self):
         pass
 
@@ -38,20 +38,29 @@ class TopicDiversity(Measure):
             return td
 
 
-class CoherenceNPMI(Measure):
+class Coherence(abc.ABC):
+    """
+    :param topics: a list of lists of the top-k words
+    :param texts: (list of lists of strings) represents the corpus on which the empirical frequencies of words are computed
+    """
     def __init__(self, topics, texts):
-        super().__init__()
         self.topics = topics
         self.texts = texts
         self.dictionary = Dictionary(self.texts)
 
+    @abc.abstractmethod
+    def score(self):
+        pass
+
+
+class CoherenceNPMI(Coherence):
+    def __init__(self, topics, texts):
+        super().__init__(topics, texts)
+
     def score(self, topk=10):
         """
-        :param topics: a list of lists of the top-k words
-        :param texts: (list of lists of strings) represents the corpus on which the empirical frequencies of words are
-        computed
         :param topk: how many most likely words to consider in the evaluation
-        :return:
+        :return: NPMI coherence
         """
         if topk > len(self.topics[0]):
             raise Exception('Words in topics are less than topk')
@@ -59,6 +68,57 @@ class CoherenceNPMI(Measure):
             npmi = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
                                   coherence='c_npmi', topn=topk)
             return npmi.get_coherence()
+
+
+class CoherenceUMASS(Coherence):
+    def __init__(self, topics, texts):
+        super().__init__(topics, texts)
+
+    def score(self, topk=10):
+        """
+        :param topk: how many most likely words to consider in the evaluation
+        :return: UMass coherence
+        """
+        if topk > len(self.topics[0]):
+            raise Exception('Words in topics are less than topk')
+        else:
+            umass = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
+                                   coherence='u_mass', topn=topk)
+            return umass.get_coherence()
+
+
+class CoherenceUCI(Coherence):
+    def __init__(self, topics, texts):
+        super().__init__(topics, texts)
+
+    def score(self, topk=10):
+        """
+        :param topk: how many most likely words to consider in the evaluation
+        :return: UCI coherence
+        """
+        if topk > len(self.topics[0]):
+            raise Exception('Words in topics are less than topk')
+        else:
+            uci = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
+                                 coherence='c_uci', topn=topk)
+            return uci.get_coherence()
+
+
+class CoherenceCV(Coherence):
+    def __init__(self, topics, texts):
+        super().__init__(topics, texts)
+
+    def score(self, topk=10):
+        """
+        :param topk: how many most likely words to consider in the evaluation
+        :return: C_V coherence
+        """
+        if topk > len(self.topics[0]):
+            raise Exception('Words in topics are less than topk')
+        else:
+            cv = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
+                                   coherence='c_v', topn=topk)
+            return cv.get_coherence()
 
 
 class CoherenceWordEmbeddings(Measure):
