@@ -378,7 +378,6 @@ class CTM(object):
         for (k, v) in checkpoint['dcue_dict'].items():
             setattr(self, k, v)
 
-        self._init_nn() #TODO implement this method
         self.model.load_state_dict(checkpoint['state_dict'])
 
     def get_topic_word_matrix(self):
