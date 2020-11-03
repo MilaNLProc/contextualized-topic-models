@@ -2,7 +2,6 @@
 Contextualized Topic Models
 ===========================
 
-
 .. image:: https://img.shields.io/pypi/v/contextualized_topic_models.svg
         :target: https://pypi.python.org/pypi/contextualized_topic_models
 
@@ -25,6 +24,10 @@ Contextualized Topic Models
         :target: https://pepy.tech/project/contextualized-topic-models
         :alt: Downloads
 
+.. image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1V0tkpJL1yhiHZUJ_vwQRu6I7_svjw1wb?usp=sharing
+    :alt: Open In Colab
+
 
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
 support topic modeling. See the papers for details:
@@ -41,6 +44,21 @@ README
 ------
 
 Make **sure** you read the doc a bit. The cross-lingual topic modeling requires to use a "contextual" model and it is trained only on **ONE** language; with the power of multilingual BERT it can then be used to predict the topics of documents in unseen languages. For more details you can read the two papers mentioned above.
+
+
+Jump start Tutorial
+-------------------
+
+.. |colab| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1V0tkpJL1yhiHZUJ_vwQRu6I7_svjw1wb?usp=sharing
+    :alt: Open In Colab
+
+
++-----------------------------------+---------------------+
+| Name                              | Link                |
++===================================+=====================+
+| Wikipedia Topic Modeling          | |colab|             |
++-----------------------------------+---------------------+
 
 Combined Topic Model
 --------------------
