@@ -2,7 +2,12 @@
 History
 =======
 
-1.5.1 (2020-11-03)
+1.5.3 (2020-11-03)
+------------------
+
+* adding support for Windows encoding by defaulting file load to UTF-8
+
+1.5.2 (2020-11-03)
 ------------------
 
 * updated sentence-transformers version to 0.3.6

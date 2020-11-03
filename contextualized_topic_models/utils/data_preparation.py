@@ -19,7 +19,7 @@ def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200):
     Creates SBERT Embeddings from an input file
     """
     model = SentenceTransformer(sbert_model_to_load)
-    with open(text_file) as filino:
+    with open(text_file, encoding="utf-8") as filino:
         train_text = list(map(lambda x: x, filino.readlines()))
 
     return np.array(model.encode(train_text, show_progress_bar=True, batch_size=batch_size))
@@ -58,7 +58,7 @@ class TextHandler:
         if self.sentences != None:
             docs = self.sentences
         elif self.file_name != None:
-            with open(self.file_name, "r") as filino:
+            with open(self.file_name, encoding="utf-8") as filino:
                 docs = filino.readlines()
         else:
             raise Exception("One parameter between sentences and file_name should be selected")
