@@ -2,6 +2,13 @@
 History
 =======
 
+1.5.1 (2020-11-03)
+------------------
+
+* updated sentence-transformers version to 0.3.6
+* beta support for model saving and loading
+* new evaluation metrics based on coherence
+
 1.5.0 (2020-09-14)
 ------------------
 
