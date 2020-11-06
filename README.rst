@@ -49,16 +49,16 @@ Make **sure** you read the doc a bit. The cross-lingual topic modeling requires 
 Jump start Tutorial
 -------------------
 
-.. |colab| image:: https://colab.research.google.com/assets/colab-badge.svg
+.. |colab1| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1V0tkpJL1yhiHZUJ_vwQRu6I7_svjw1wb?usp=sharing
     :alt: Open In Colab
 
 
-+-----------------------------------+---------------------+
-| Name                              | Link                |
-+===================================+=====================+
-| Wikipedia Topic Modeling          | |colab|             |
-+-----------------------------------+---------------------+
++----------------------------------------------------------------+--------------------+
+| Name                                                           | Link               |
++================================================================+====================+
+| Contextualized Topic Modeling for Wikipedia Documents          | |colab1|           |
++----------------------------------------------------------------+--------------------+
 
 Combined Topic Model
 --------------------
