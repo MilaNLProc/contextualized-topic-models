@@ -53,11 +53,16 @@ Jump start Tutorial
     :target: https://colab.research.google.com/drive/1V0tkpJL1yhiHZUJ_vwQRu6I7_svjw1wb?usp=sharing
     :alt: Open In Colab
 
+.. |colab2| image::
+    :target: https://colab.research.google.com/drive/1quD11TMy-1D-GxPUj_Dea4iRYmOO8C2C?usp=sharing
+    :alt: Open In Colab
 
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
 +================================================================+====================+
 | Contextualized Topic Modeling for Wikipedia Documents          | |colab1|           |
++----------------------------------------------------------------+--------------------+
+| Contextualized Topic Modeling with Preprocessing               | |colab2|           |
 +----------------------------------------------------------------+--------------------+
 
 TL;DR
