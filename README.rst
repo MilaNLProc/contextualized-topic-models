@@ -62,7 +62,7 @@ Jump start Tutorial
 +================================================================+====================+
 | Combined Topic Modeling for Wikipedia Documents                | |colab1|           |
 +----------------------------------------------------------------+--------------------+
-| Combined Topic Modeling with Preprocessing                   | |colab2|           |
+| Combined Topic Modeling with Preprocessing                     | |colab2|           |
 +----------------------------------------------------------------+--------------------+
 
 TL;DR
