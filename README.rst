@@ -60,9 +60,9 @@ Jump start Tutorial
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
 +================================================================+====================+
-| Contextualized Topic Modeling for Wikipedia Documents          | |colab1|           |
+| Combined Topic Modeling for Wikipedia Documents                | |colab1|           |
 +----------------------------------------------------------------+--------------------+
-| Contextualized Topic Modeling with Preprocessing               | |colab2|           |
+| Combined Topic Modeling with Preprocessing                   | |colab2|           |
 +----------------------------------------------------------------+--------------------+
 
 TL;DR
