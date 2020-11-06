@@ -60,6 +60,14 @@ Jump start Tutorial
 | Contextualized Topic Modeling for Wikipedia Documents          | |colab1|           |
 +----------------------------------------------------------------+--------------------+
 
+TL;DR
+-----
+
++ In CTMs we have two models. "combined" and "contextual", they have different use cases.
++ CTMs work better when the size of the bag of words has been restricted to a number of terms that do not go over 2000 elements (this is because we have a neural model that reconstructs the input bag of word). We have a preprocessing_ pipeline that can help you in dealing with this.
++ Check the BERT model you are using, the multilingual BERT model one used on English data might not give results that are as good as the pure English trained one.
++ Preprocessing is **key**. If you give BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
+
 Combined Topic Model
 --------------------
 
@@ -288,6 +296,7 @@ Note
 Remember that this is a research tool :)
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
+.. preprocessing: hhttps://github.com/MilaNLProc/contextualized-topic-models#preprocessing
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`Stephen Carrow` : https://github.com/estebandito22
 .. _`rbo` : https://github.com/dlukes/rbo
