@@ -109,8 +109,8 @@ Features
 Overview
 --------
 
-First, install PyTorch. Refer to th PyTorch installation pytorch_
-to install a specific pytorch version that is supported by your platform and CUDA version.
+**Important**: If you want to use CUDA you need to install the correct version of
+the CUDA systems that matches your distribution, see pytorch_.
 
 Install the package using pip
 
