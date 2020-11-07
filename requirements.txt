@@ -1,5 +1,4 @@
 wheel==0.33.6
-torch==1.6.0
 numpy==1.19.1
 torchvision==0.7.0
 gensim==3.8.3

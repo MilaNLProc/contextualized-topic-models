@@ -109,12 +109,14 @@ Features
 Overview
 --------
 
+First, install PyTorch. Refer to th PyTorch installation pytorch_
+to install a specific pytorch version that is supported by your platform and CUDA version.
+
 Install the package using pip
 
 .. code-block:: bash
 
     pip install -U contextualized_topic_models
-
 
 The contextual neural topic model can be easily instantiated using few parameters (although there is a wide range of
 parameters you can use to change the behaviour of the neural topic model). When you generate
@@ -300,8 +302,9 @@ Note
 
 Remember that this is a research tool :)
 
+.. _pytorch: https://pytorch.org/get-started/locally/
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. preprocessing: hhttps://github.com/MilaNLProc/contextualized-topic-models#preprocessing
+.. preprocessing: https://github.com/MilaNLProc/contextualized-topic-models#preprocessing
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`Stephen Carrow` : https://github.com/estebandito22
 .. _`rbo` : https://github.com/dlukes/rbo
