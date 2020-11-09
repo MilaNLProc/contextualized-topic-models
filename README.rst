@@ -142,7 +142,7 @@ ZeroShotTM:
 
 Mono vs Cross-lingual
 ---------------------
-All the examples below a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
+All the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
 If you are doing topic modeling in English, you can use the English sentence-bert model. In that case,
 it's really easy to update the code to support mono-lingual english topic modeling.
 
