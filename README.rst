@@ -43,7 +43,10 @@ support topic modeling. See the papers for details:
 README
 ------
 
-Make **sure** you read the doc a bit. The cross-lingual topic modeling requires to use a "contextual" model and it is trained only on **ONE** language; with the power of multilingual BERT it can then be used to predict the topics of documents in unseen languages. For more details you can read the two papers mentioned above.
+Make **sure** you read the doc a bit.
+The cross-lingual topic modeling requires to use a ZeroShot model and it is trained only on **ONE** language;
+with the power of multilingual BERT it can then be used to predict the topics of documents in unseen languages.
+For more details you can read the two papers mentioned above.
 
 
 Jump start Tutorial
@@ -68,7 +71,7 @@ Jump start Tutorial
 TL;DR
 -----
 
-+ In CTMs we have two models. **"combined"** and **"contextual"**, they have different use cases.
++ In CTMs we have two models. CombinedTM and ContextualTM, they have different use cases.
 + CTMs work better when the size of the bag of words **has been restricted to a number of terms** that does not go over **2000 elements** (this is because we have a neural model that reconstructs the input bag of word). We have a preprocessing_ pipeline that can help you in dealing with this.
 + Check the BERT model you are using, the **multilingual BERT model one used on English data might not give results that are as good** as the pure English trained one.
 + **Preprocessing is key**. If you give BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
@@ -94,7 +97,6 @@ Software details:
 * Free software: MIT license
 * Documentation: https://contextualized-topic-models.readthedocs.io.
 * Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package from which we constructed the foundations of this package. We are happy to redistribute again this software under the MIT License.
-
 
 
 Features
