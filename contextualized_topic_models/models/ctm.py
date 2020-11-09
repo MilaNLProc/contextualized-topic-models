@@ -4,13 +4,14 @@ import multiprocessing as mp
 
 import numpy as np
 import datetime
-
+import warnings
 import torch
 from torch import optim
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
+
 
 
 class CTM(object):
@@ -34,10 +35,13 @@ class CTM(object):
         :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
 
-    def __init__(self, input_size, bert_input_size, inference_type, n_components=10, model_type='prodLDA',
+    def __init__(self, input_size, bert_input_size, inference_type="combined", n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
+
+        if self.__class__.__name__ == "CTM":
+            warnings.warn("Direct call to CTM is deprecated, use CombinedTM or ZeroShotTM", DeprecationWarning)
 
         assert isinstance(input_size, int) and input_size > 0,\
             "input_size must by type int > 0."
@@ -404,3 +408,14 @@ class CTM(object):
             predicted_topic = np.argmax(thetas[idd] / np.sum(thetas[idd]))
             predicted_topics.append(predicted_topic)
         return predicted_topics
+
+
+class CombinedTM(CTM):
+    def __init__(self, input_size, bert_input_size, **kwargs):
+        inference_type = "combined"
+        super().__init__(input_size, bert_input_size, inference_type, **kwargs)
+
+class ZeroShotTM(CTM):
+    def __init__(self, input_size, bert_input_size, **kwargs):
+        inference_type = "contextual"
+        super().__init__(input_size, bert_input_size, inference_type, **kwargs)
