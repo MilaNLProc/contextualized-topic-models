@@ -76,6 +76,9 @@ TL;DR
 + Check the BERT model you are using, the **multilingual BERT model one used on English data might not give results that are as good** as the pure English trained one.
 + **Preprocessing is key**. If you give BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
 
+
+
+
 Combined Topic Model
 --------------------
 
@@ -139,12 +142,14 @@ ZeroShotTM:
 
     ZeroShotTM(input_size=len(handler.vocab), bert_input_size=512, n_components=50)
 
+But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
 
-Mono vs Cross-lingual
+
+Mono vs Multi-lingual Embeddings
 ---------------------
 All the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
 If you are doing topic modeling in English, you can use the English sentence-bert model. In that case,
-it's really easy to update the code to support mono-lingual english topic modeling.
+it's really easy to update the code to support mono-lingual English topic modeling.
 
 .. code-block:: python
 
@@ -307,6 +312,7 @@ Remember that this is a research tool :)
 .. _pytorch: https://pytorch.org/get-started/locally/
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. preprocessing: https://github.com/MilaNLProc/contextualized-topic-models#preprocessing
+.. _cross-lingual-topic-modeling: https://github.com/MilaNLProc/contextualized-topic-models#cross-lingual-topic-modeling
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`Stephen Carrow` : https://github.com/estebandito22
 .. _`rbo` : https://github.com/dlukes/rbo
