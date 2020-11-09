@@ -9,10 +9,7 @@ import torch
 from torch import optim
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
-
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
-
-
 
 class CTM(object):
     """Class to train the contextualized topic model.
@@ -41,7 +38,7 @@ class CTM(object):
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
 
         if self.__class__.__name__ == "CTM":
-            warnings.warn("Direct call to CTM is deprecated, use CombinedTM or ZeroShotTM", DeprecationWarning)
+            warnings.warn("Direct call to CTM is deprecated and will be removed in version 2, use CombinedTM or ZeroShotTM", DeprecationWarning)
 
         assert isinstance(input_size, int) and input_size > 0,\
             "input_size must by type int > 0."
