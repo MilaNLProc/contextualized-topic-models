@@ -63,11 +63,7 @@ def test_embeddings_from_scratch(data_dir):
                                              [1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
                                              [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2]]))
 
-    train_bert = bert_embeddings_from_file(data_dir + 'sample_text_document', "distiluse-base-multilingual-cased")
-
-    assert len(train_bert) == len(handler.bow.todense())
-
-def test_training(data_dir):
+def test_training_all_classes_ctm(data_dir):
     handler = TextHandler(data_dir + "sample_text_document")
     handler.prepare()  # create vocabulary and training data
 
@@ -78,6 +74,7 @@ def test_training(data_dir):
 
     ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",
               n_components=5)
+
     ctm.fit(training_dataset)  # run the model
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
@@ -85,16 +82,8 @@ def test_training(data_dir):
     thetas = ctm.get_thetas(training_dataset)
     assert len(thetas) == len(train_bert)
 
-def test_training_subclasses_ctm(data_dir):
-    handler = TextHandler(data_dir + "sample_text_document")
-    handler.prepare()  # create vocabulary and training data
-
-    train_bert = bert_embeddings_from_file(data_dir + 'sample_text_document',
-                                           "distiluse-base-multilingual-cased")
-
-    training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
-
-    ctm = ZeroShotTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined", n_components=5)
+    ctm = ZeroShotTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1,
+                     n_components=5)
     ctm.fit(training_dataset)  # run the model
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
@@ -102,15 +91,14 @@ def test_training_subclasses_ctm(data_dir):
     thetas = ctm.get_thetas(training_dataset)
     assert len(thetas) == len(train_bert)
 
-    ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined", n_components=5)
+    ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1,
+                     n_components=5)
     ctm.fit(training_dataset)  # run the model
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
 
     thetas = ctm.get_thetas(training_dataset)
     assert len(thetas) == len(train_bert)
-
-def test_training_from_lists(data_dir):
 
     with open(data_dir + 'sample_text_document') as filino:
         data = filino.readlines()
