@@ -43,7 +43,10 @@ support topic modeling. See the papers for details:
 README
 ------
 
-Make **sure** you read the doc a bit. The cross-lingual topic modeling requires to use a "contextual" model and it is trained only on **ONE** language; with the power of multilingual BERT it can then be used to predict the topics of documents in unseen languages. For more details you can read the two papers mentioned above.
+Make **sure** you read the doc a bit.
+The cross-lingual topic modeling requires to use a ZeroShot model and it is trained only on **ONE** language;
+with the power of multilingual BERT it can then be used to predict the topics of documents in unseen languages.
+For more details you can read the two papers mentioned above.
 
 
 Jump start Tutorial
@@ -60,18 +63,21 @@ Jump start Tutorial
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
 +================================================================+====================+
-| Combined Topic Modeling for Wikipedia Documents                | |colab1|           |
+| CombinedTM for Wikipedia Documents                             | |colab1|           |
 +----------------------------------------------------------------+--------------------+
-| Combined Topic Modeling with Preprocessing                     | |colab2|           |
+| CombinedTM with Preprocessing                                  | |colab2|           |
 +----------------------------------------------------------------+--------------------+
 
 TL;DR
 -----
 
-+ In CTMs we have two models. **"combined"** and **"contextual"**, they have different use cases.
++ In CTMs we have two models. CombinedTM and ZeroShotTM, they have different use cases.
 + CTMs work better when the size of the bag of words **has been restricted to a number of terms** that does not go over **2000 elements** (this is because we have a neural model that reconstructs the input bag of word). We have a preprocessing_ pipeline that can help you in dealing with this.
 + Check the BERT model you are using, the **multilingual BERT model one used on English data might not give results that are as good** as the pure English trained one.
 + **Preprocessing is key**. If you give BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
+
+
+
 
 Combined Topic Model
 --------------------
@@ -81,8 +87,8 @@ Combined Topic Model
    :align: center
    :width: 400px
 
-Fully Contextual Topic Model
-----------------------------
+ZeroShot Topic Model
+--------------------
 
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
    :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
@@ -96,12 +102,11 @@ Software details:
 * Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package from which we constructed the foundations of this package. We are happy to redistribute again this software under the MIT License.
 
 
-
 Features
 --------
 
 * Combines BERT and Neural Variational Topic Models
-* Two different methodologies: combined, where we combine BoW and BERT embeddings and contextual, that uses only BERT embeddings
+* Two different methodologies: Combined, where we combine BoW and BERT embeddings and ZeroShot, that uses only BERT embeddings
 * Includes methods to create embedded representations and BoW
 * Includes evaluation metrics
 
@@ -125,29 +130,43 @@ embeddings with BERT remember that there is a maximum length and for documents t
 An important aspect to take into account is which network you want to use: the one that combines BERT and the BoW or the one that just uses BERT.
 It's easy to swap from one to the other:
 
-Combined Topic Model:
+CombinedTM:
 
 .. code-block:: python
 
-    CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)
+    CombinedTM(input_size=len(handler.vocab), bert_input_size=512,  n_components=50)
 
-Fully Contextual Topic Model:
+ZeroShotTM:
 
 .. code-block:: python
 
-    CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
+    ZeroShotTM(input_size=len(handler.vocab), bert_input_size=512, n_components=50)
+
+But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
 
 
+Mono vs Multi-lingual Embeddings
+---------------------
+All the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
+If you are doing topic modeling in English, you can use the English sentence-bert model. In that case,
+it's really easy to update the code to support mono-lingual English topic modeling.
+
+.. code-block:: python
+
+    training_bert = bert_embeddings_from_file("documents.txt", "bert-base-nli-mean-tokens")
+    ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=768, n_components=50)
+
+In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
 
 
 Contextual Topic Modeling
 -------------------------
 
-Here is how you can use the combined topic model. The high level API is pretty easy to use:
+Here is how you can use the CombinedTM. The high level API is pretty easy to use:
 
 .. code-block:: python
 
-    from contextualized_topic_models.models.ctm import CTM
+    from contextualized_topic_models.models.ctm import CombinedTM
     from contextualized_topic_models.utils.data_preparation import TextHandler
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
@@ -160,7 +179,7 @@ Here is how you can use the combined topic model. The high level API is pretty e
 
     training_dataset = CTMDataset(handler.bow, training_bert, handler.idx2token)
 
-    ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="combined", n_components=50)
+    ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=512, n_components=50)
 
     ctm.fit(training_dataset) # run the model
 
@@ -182,12 +201,12 @@ topics using NPMI using our simple and high-level API.
 Cross-lingual Topic Modeling
 ----------------------------
 
-The fully contextual topic model can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
+The ZeroShotTM can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
 
 
 .. code-block:: python
 
-    from contextualized_topic_models.models.ctm import CTM
+    from contextualized_topic_models.models.ctm import ZeroShotTM
     from contextualized_topic_models.utils.data_preparation import TextHandler
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
@@ -199,7 +218,7 @@ The fully contextual topic model can be used for cross-lingual topic modeling! S
 
     training_dataset = CTMDataset(handler.bow, training_bert, handler.idx2token)
 
-    ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, inference_type="contextual", n_components=50)
+    ctm = ZeroShotTM(input_size=len(handler.vocab), bert_input_size=512, n_components=50)
 
     ctm.fit(training_dataset) # run the model
 
@@ -221,20 +240,6 @@ Once you have trained the cross-lingual topic model, you can use this simple pip
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_thetas(testing_dataset, n_samples=20)
 
-
-
-Mono vs Cross-lingual
----------------------
-All the examples we saw used a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
-However, if you are doing topic modeling in English, you can use the English sentence-bert model. In that case,
-it's really easy to update the code to support mono-lingual english topic modeling.
-
-.. code-block:: python
-
-    training_bert = bert_embeddings_from_file("documents.txt", "bert-base-nli-mean-tokens")
-    ctm = CTM(input_size=len(handler.vocab), bert_input_size=768, inference_type="combined", n_components=50)
-
-In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
 
 Preprocessing
 -------------
@@ -265,7 +270,7 @@ References
 
 If you use this in a research work please cite these papers:
 
-Combined Topic Model
+CombinedTM
 
 ::
 
@@ -277,7 +282,7 @@ Combined Topic Model
     }
 
 
-Fully Contextual Topic Model
+ZeroShotTM
 
 ::
 
@@ -305,6 +310,7 @@ Remember that this is a research tool :)
 .. _pytorch: https://pytorch.org/get-started/locally/
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. preprocessing: https://github.com/MilaNLProc/contextualized-topic-models#preprocessing
+.. _cross-lingual-topic-modeling: https://github.com/MilaNLProc/contextualized-topic-models#cross-lingual-topic-modeling
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`Stephen Carrow` : https://github.com/estebandito22
 .. _`rbo` : https://github.com/dlukes/rbo

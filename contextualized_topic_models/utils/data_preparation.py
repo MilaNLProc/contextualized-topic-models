@@ -1,7 +1,7 @@
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import scipy.sparse
-
+import warnings
 
 def get_bag_of_words(data, min_length):
     """
@@ -72,5 +72,14 @@ class TextHandler:
 
         self.vocab_dict = vocabulary
         self.vocab = list(vocabulary.keys())
+
+        warnings.simplefilter('always', DeprecationWarning)
+        if len(self.vocab) > 2000:
+            warnings.warn("The vocab you are using has more than 2000 words, reconstructing high-dimensional vectors requires"
+                          "significantly more training epochs and training samples. "
+                          "Consider reducing the number of vocabulary items. "
+                          "See https://github.com/MilaNLProc/contextualized-topic-models#preprocessing "
+                          "and https://github.com/MilaNLProc/contextualized-topic-models#tldr", Warning)
+
         self.idx2token = {v: k for (k, v) in self.vocab_dict.items()}
         self.bow = scipy.sparse.csr_matrix((data, indices, indptr), dtype=int)
