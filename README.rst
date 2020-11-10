@@ -146,7 +146,8 @@ But remember that you can do zero-shot cross-lingual topic modeling only with th
 
 
 Mono vs Multi-lingual Embeddings
----------------------
+--------------------------------
+
 All the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
 If you are doing topic modeling in English, you can use the English sentence-bert model. In that case,
 it's really easy to update the code to support mono-lingual English topic modeling.
