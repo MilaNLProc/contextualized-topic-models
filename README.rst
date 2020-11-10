@@ -154,7 +154,7 @@ it's really easy to update the code to support mono-lingual English topic modeli
 .. code-block:: python
 
     training_bert = bert_embeddings_from_file("documents.txt", "bert-base-nli-mean-tokens")
-    ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=768, inference_type="combined", n_components=50)
+    ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=768, n_components=50)
 
 In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
 
