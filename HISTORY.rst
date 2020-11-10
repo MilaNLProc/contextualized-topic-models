@@ -2,6 +2,13 @@
 History
 =======
 
+1.6.0 (2020-11-03)
+------------------
+
+* introducing the two different classes for ZeroShotTM and CombinedTM
+* depracating CTM class in favor of ZeroShotTM and CombinedTM
+
+
 1.5.3 (2020-11-03)
 ------------------
 

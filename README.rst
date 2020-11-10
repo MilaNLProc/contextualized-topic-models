@@ -63,9 +63,9 @@ Jump start Tutorial
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
 +================================================================+====================+
-| Combined Topic Modeling for Wikipedia Documents                | |colab1|           |
+| CombinedTM for Wikipedia Documents                             | |colab1|           |
 +----------------------------------------------------------------+--------------------+
-| Combined Topic Modeling with Preprocessing                     | |colab2|           |
+| CombinedTM with Preprocessing                                  | |colab2|           |
 +----------------------------------------------------------------+--------------------+
 
 TL;DR
@@ -162,7 +162,7 @@ In general, our package should be able to support all the models described in th
 Contextual Topic Modeling
 -------------------------
 
-Here is how you can use the combined topic model. The high level API is pretty easy to use:
+Here is how you can use the CombinedTM. The high level API is pretty easy to use:
 
 .. code-block:: python
 
@@ -239,8 +239,6 @@ Once you have trained the cross-lingual topic model, you can use this simple pip
     testing_dataset = CTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_thetas(testing_dataset, n_samples=20)
-
-
 
 
 Preprocessing
