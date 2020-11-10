@@ -75,7 +75,7 @@ class TextHandler:
 
         if len(self.vocab) > 2000:
             warnings.warn("The vocab you are using has more than 2000 words, reconstructing high-dimensional vectors requires"
-                          "significantly more training epochs and training sample. "
+                          "significantly more training epochs and training samples. "
                           "Consider reducing the number of vocabulary items. "
                           "See https://github.com/MilaNLProc/contextualized-topic-models#preprocessing "
                           "and https://github.com/MilaNLProc/contextualized-topic-models#tldr", Warning)
