@@ -412,12 +412,12 @@ class CTM(object):
 
 
 class CombinedTM(CTM):
-    def __init__(self, input_size, bert_input_size, **kwargs):
+    def __init__(self, **kwargs):
         inference_type = "combined"
-        super().__init__(input_size, bert_input_size, inference_type, **kwargs)
+        super().__init__(inference_type=inference_type, **kwargs)
 
 
 class ZeroShotTM(CTM):
-    def __init__(self, input_size, bert_input_size, **kwargs):
+    def __init__(self, **kwargs):
         inference_type = "contextual"
-        super().__init__(input_size, bert_input_size, inference_type, **kwargs)
+        super().__init__(inference_type=inference_type, **kwargs)
