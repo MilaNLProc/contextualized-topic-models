@@ -11,6 +11,8 @@ from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
+
+
 class CTM(object):
     """Class to train the contextualized topic model.
 
@@ -36,8 +38,10 @@ class CTM(object):
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
+        warnings.simplefilter('always', DeprecationWarning)
 
         if self.__class__.__name__ == "CTM":
+
             warnings.warn("Direct call to CTM is deprecated and will be removed in version 2, use CombinedTM or ZeroShotTM", DeprecationWarning)
 
         assert isinstance(input_size, int) and input_size > 0,\
@@ -411,6 +415,7 @@ class CombinedTM(CTM):
     def __init__(self, input_size, bert_input_size, **kwargs):
         inference_type = "combined"
         super().__init__(input_size, bert_input_size, inference_type, **kwargs)
+
 
 class ZeroShotTM(CTM):
     def __init__(self, input_size, bert_input_size, **kwargs):
