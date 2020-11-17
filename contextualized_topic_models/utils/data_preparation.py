@@ -2,6 +2,8 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 import scipy.sparse
 import warnings
+from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
+from contextualized_topic_models.datasets.dataset import CTMDataset
 
 def get_bag_of_words(data, min_length):
     """
@@ -31,6 +33,43 @@ def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200):
     """
     model = SentenceTransformer(sbert_model_to_load)
     return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
+
+
+class QuickText:
+
+    def __init__(self, bert_model, unpreprocessed_sentences=None, preprocessed_sentences=None, apply_preprocessing = False):
+        self.bert_model = bert_model
+        self.text_handler = ""
+
+        if preprocessed_sentences is not None and apply_preprocessing:
+            raise Exception("There is to need to apply preprocessing if your text is preprocessed")
+
+        if unpreprocessed_sentences is not None and apply_preprocessing:
+
+            sp = SimplePreprocessing(unpreprocessed_sentences)
+            preprocessed_documents, unpreprocessed_corpus, vocab = sp.preprocess()
+
+            self.preprocessed_sentences = preprocessed_documents
+            self.unpreprocessed_sentences = unpreprocessed_corpus
+
+        if unpreprocessed_sentences is not None and unpreprocessed_sentences is not None:
+            self.unpreprocessed_sentences = unpreprocessed_sentences
+            self.preprocessed_sentences = preprocessed_sentences
+            self.apply_preprocessing = apply_preprocessing
+
+
+    def load_dataset(self):
+        self.text_handler = TextHandler(sentences=self.preprocessed_sentences)
+        self.text_handler.prepare()
+
+        if self.unpreprocessed_sentences is not None:
+            testing_bert = bert_embeddings_from_list(self.unpreprocessed_sentences, self.bert_model)
+        else:
+            testing_bert = bert_embeddings_from_list(self.preprocessed_sentences, self.bert_model)
+
+        training_dataset = CTMDataset(self.text_handler.bow, testing_bert, self.text_handler.idx2token)
+        return training_dataset
+
 
 
 class TextHandler:
