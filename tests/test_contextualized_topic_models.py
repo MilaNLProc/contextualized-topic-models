@@ -124,11 +124,11 @@ def test_training_all_classes_ctm(data_dir):
 
     dataset = qt.load_dataset()
 
-    ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",
+    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, num_epochs=1,
               n_components=5)
     ctm.fit(dataset)  # run the model
     topics = ctm.get_topic_lists(2)
-
+    assert len(topics) == 5
 
 
 def test_preprocessing(data_dir):
