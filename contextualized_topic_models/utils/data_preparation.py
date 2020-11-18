@@ -15,7 +15,6 @@ def get_bag_of_words(data, min_length):
     vect = scipy.sparse.csr_matrix(vect)
     return vect
 
-
 def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200):
     """
     Creates SBERT Embeddings from an input file
@@ -36,15 +35,24 @@ def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200):
 
 
 class QuickText:
-
+    """
+    Integrated class to handle all the text preprocessing needed
+    """
     def __init__(self, bert_model, unpreprocessed_sentences=None, preprocessed_sentences=None, apply_preprocessing = False):
+        """
+        :param bert_model: string, bert model to use
+        :param unpreprocessed_sentences: list, list of sentences with the unpreprocessed text
+        :param preprocessed_sentences: list, list of sentences with the preprocessed text
+        :param apply_preprocessing: boolean, you can use our tool to apply some preprocessing to your text
+        """
+
         self.bert_model = bert_model
         self.text_handler = ""
 
         if preprocessed_sentences is not None and apply_preprocessing:
             raise Exception("There is to need to apply preprocessing if your text is preprocessed")
 
-        if unpreprocessed_sentences is not None and apply_preprocessing:
+        elif unpreprocessed_sentences is not None and apply_preprocessing:
 
             sp = SimplePreprocessing(unpreprocessed_sentences)
             preprocessed_documents, unpreprocessed_corpus, vocab = sp.preprocess()
@@ -52,10 +60,13 @@ class QuickText:
             self.preprocessed_sentences = preprocessed_documents
             self.unpreprocessed_sentences = unpreprocessed_corpus
 
-        if unpreprocessed_sentences is not None and unpreprocessed_sentences is not None:
+        elif unpreprocessed_sentences is not None and unpreprocessed_sentences is not None:
             self.unpreprocessed_sentences = unpreprocessed_sentences
             self.preprocessed_sentences = preprocessed_sentences
             self.apply_preprocessing = apply_preprocessing
+
+        else:
+            raise Exception("The parameter you have selected are not allowed")
 
 
     def load_dataset(self):

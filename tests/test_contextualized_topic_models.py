@@ -7,6 +7,7 @@ from contextualized_topic_models.utils.data_preparation import bert_embeddings_f
 import numpy as np
 import pickle
 from contextualized_topic_models.utils.data_preparation import TextHandler
+from contextualized_topic_models.utils.data_preparation import QuickText
 from contextualized_topic_models.datasets.dataset import CTMDataset
 from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
 
@@ -118,6 +119,17 @@ def test_training_all_classes_ctm(data_dir):
     thetas = ctm.get_thetas(training_dataset)
 
     assert len(thetas) == len(train_bert)
+
+    qt = QuickText("distiluse-base-multilingual-cased", unpreprocessed_sentences=data, preprocessed_sentences=data,
+                   apply_preprocessing=True)
+
+    dataset = qt.load_dataset()
+
+    ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",
+              n_components=5)
+    ctm.fit(dataset)  # run the model
+    topics = ctm.get_topic_lists(2)
+
 
 
 def test_preprocessing(data_dir):
