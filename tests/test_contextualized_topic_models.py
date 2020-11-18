@@ -120,8 +120,7 @@ def test_training_all_classes_ctm(data_dir):
 
     assert len(thetas) == len(train_bert)
 
-    qt = QuickText("distiluse-base-multilingual-cased", unpreprocessed_sentences=data, preprocessed_sentences=data,
-                   apply_preprocessing=True)
+    qt = QuickText("distiluse-base-multilingual-cased", unpreprocessed_sentences=data, preprocessed_sentences=data)
 
     dataset = qt.load_dataset()
 
