@@ -49,6 +49,9 @@ class QuickText:
         self.bert_model = bert_model
         self.text_handler = ""
 
+        if unpreprocessed_sentences is not None and not apply_preprocessing and preprocessed_sentences is None:
+            raise Exception("There is to need to apply preprocessing if your text is preprocessed")
+
         if preprocessed_sentences is not None and apply_preprocessing:
             raise Exception("There is to need to apply preprocessing if your text is preprocessed")
 
