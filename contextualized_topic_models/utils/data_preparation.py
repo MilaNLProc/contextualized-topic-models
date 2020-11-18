@@ -45,12 +45,18 @@ class QuickText:
         :param preprocessed_sentences: list, list of sentences with the preprocessed text
         :param apply_preprocessing: boolean, you can use our tool to apply some preprocessing to your text
         """
-
+        self.vocab_dict = {}
+        self.vocab = []
+        self.index_dd = None
+        self.idx2token = None
+        self.bow = None
         self.bert_model = bert_model
         self.text_handler = ""
 
         if unpreprocessed_sentences is not None and not apply_preprocessing and preprocessed_sentences is None:
-            raise Exception("There is to need to apply preprocessing if your text is preprocessed")
+            raise Exception("You need to set apply_preprocessing=True if you want to use unpreprocessed documents. "
+                            "On the other hand, if you do not want to use our preprocessing, you can manually"
+                            "preprocess your documents and pass them to the very same constructor if you want.")
 
         if preprocessed_sentences is not None and apply_preprocessing:
             raise Exception("There is to need to apply preprocessing if your text is preprocessed")
@@ -71,17 +77,44 @@ class QuickText:
         else:
             raise Exception("The parameter you have selected are not allowed")
 
+    def prepare_bow(self):
+        indptr = [0]
+        indices = []
+        data = []
+        vocabulary = {}
+
+        docs = self.preprocessed_sentences
+
+        for d in docs:
+            for term in d.split():
+                index = vocabulary.setdefault(term, len(vocabulary))
+                indices.append(index)
+                data.append(1)
+            indptr.append(len(indices))
+
+        self.vocab_dict = vocabulary
+        self.vocab = list(vocabulary.keys())
+
+        warnings.simplefilter('always', DeprecationWarning)
+        if len(self.vocab) > 2000:
+            warnings.warn("The vocab you are using has more than 2000 words, reconstructing high-dimensional vectors requires"
+                          "significantly more training epochs and training samples. "
+                          "Consider reducing the number of vocabulary items. "
+                          "See https://github.com/MilaNLProc/contextualized-topic-models#preprocessing "
+                          "and https://github.com/MilaNLProc/contextualized-topic-models#tldr", Warning)
+
+        self.idx2token = {v: k for (k, v) in self.vocab_dict.items()}
+        self.bow = scipy.sparse.csr_matrix((data, indices, indptr), dtype=int)
 
     def load_dataset(self):
-        self.text_handler = TextHandler(sentences=self.preprocessed_sentences)
-        self.text_handler.prepare()
+        self.prepare_bow()
 
         if self.unpreprocessed_sentences is not None:
             testing_bert = bert_embeddings_from_list(self.unpreprocessed_sentences, self.bert_model)
         else:
             testing_bert = bert_embeddings_from_list(self.preprocessed_sentences, self.bert_model)
 
-        training_dataset = CTMDataset(self.text_handler.bow, testing_bert, self.text_handler.idx2token)
+        training_dataset = CTMDataset(self.bow, testing_bert, self.idx2token)
         return training_dataset
 
 
@@ -99,11 +132,17 @@ class TextHandler:
         self.idx2token = None
         self.bow = None
 
+        warnings.simplefilter('always', DeprecationWarning)
+        if len(self.vocab) > 2000:
+            warnings.warn("TextHandler class is deprecated and will be removed in version 2.0. Use QuickText.", Warning)
+
     def prepare(self):
         indptr = [0]
         indices = []
         data = []
         vocabulary = {}
+
+
 
         if self.sentences == None and self.file_name == None:
             raise Exception("Sentences and file_names cannot both be none")
