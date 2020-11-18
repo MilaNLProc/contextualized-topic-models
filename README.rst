@@ -154,8 +154,9 @@ it's really easy to update the code to support mono-lingual English topic modeli
 
 .. code-block:: python
 
-    training_bert = bert_embeddings_from_file("documents.txt", "bert-base-nli-mean-tokens")
-    ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=768, n_components=50)
+    qt = QuickText("bert-base-nli-mean-tokens",
+                unpreprocessed_sentences=list_of_unpreprocessed_documents,
+                preprocessed_sentences=list_of_preprocessed_documents)
 
 In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
 
@@ -172,15 +173,13 @@ Here is how you can use the CombinedTM. The high level API is pretty easy to use
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
-    handler = TextHandler("documents.txt")
-    handler.prepare() # create vocabulary and training data
+    qt = QuickText("distiluse-base-multilingual-cased",
+                    unpreprocessed_sentences=list_of_unpreprocessed_documents,
+                    preprocessed_sentences=list_of_preprocessed_documents)
 
-    # generate BERT data
-    training_bert = bert_embeddings_from_file("documents.txt", "distiluse-base-multilingual-cased")
+    training_dataset = qt.load_dataset()
 
-    training_dataset = CTMDataset(handler.bow, training_bert, handler.idx2token)
-
-    ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=512, n_components=50)
+    ctm = CombinedTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
 
     ctm.fit(training_dataset) # run the model
 
@@ -212,14 +211,12 @@ The ZeroShotTM can be used for cross-lingual topic modeling! See the paper (http
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
-    handler = TextHandler("english_documents.txt")
-    handler.prepare() # create vocabulary and training data
+    qt = QuickText("distiluse-base-multilingual-cased",
+                    unpreprocessed_sentences=list_of_ENGLISH_unpreprocessed_documents)
 
-    training_bert = bert_embeddings_from_file("documents.txt", "distiluse-base-multilingual-cased")
+    training_dataset = qt.load_dataset()
 
-    training_dataset = CTMDataset(handler.bow, training_bert, handler.idx2token)
-
-    ctm = ZeroShotTM(input_size=len(handler.vocab), bert_input_size=512, n_components=50)
+    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
 
     ctm.fit(training_dataset) # run the model
 
@@ -231,13 +228,11 @@ Once you have trained the cross-lingual topic model, you can use this simple pip
 .. code-block:: python
 
 
-    test_handler = TextHandler("spanish_documents.txt")
-    test_handler.prepare() # create vocabulary and training data
+    qt = QuickText("distiluse-base-multilingual-cased",
+                    unpreprocessed_sentences=list_of_SPANISH_unpreprocessed_documents)
 
-    # generate BERT data
-    testing_bert = bert_embeddings_from_file("spanish_documents.txt", "distiluse-base-multilingual-cased")
+    testing_dataset = qt.load_dataset()
 
-    testing_dataset = CTMDataset(test_handler.bow, testing_bert, test_handler.idx2token)
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_thetas(testing_dataset, n_samples=20)
 

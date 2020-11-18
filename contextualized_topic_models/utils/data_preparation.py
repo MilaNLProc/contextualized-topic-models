@@ -53,11 +53,6 @@ class QuickText:
         self.bert_model = bert_model
         self.text_handler = ""
 
-        if unpreprocessed_sentences is not None and not apply_preprocessing and preprocessed_sentences is None:
-            raise Exception("You need to set apply_preprocessing=True if you want to use unpreprocessed documents. "
-                            "On the other hand, if you do not want to use our preprocessing, you can manually"
-                            "preprocess your documents and pass them to the very same constructor if you want.")
-
         if preprocessed_sentences is not None and apply_preprocessing:
             raise Exception("There is to need to apply preprocessing if your text is preprocessed")
 
@@ -83,7 +78,10 @@ class QuickText:
         data = []
         vocabulary = {}
 
-        docs = self.preprocessed_sentences
+        if self.preprocessed_sentences is not None:
+            docs = self.preprocessed_sentences
+        else:
+            docs = self.unpreprocessed_sentences
 
         for d in docs:
             for term in d.split():
