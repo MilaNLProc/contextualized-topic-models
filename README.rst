@@ -169,7 +169,7 @@ Here is how you can use the CombinedTM. The high level API is pretty easy to use
 .. code-block:: python
 
     from contextualized_topic_models.models.ctm import CombinedTM
-    from contextualized_topic_models.utils.data_preparation import TextHandler
+    from contextualized_topic_models.utils.data_preparation import QuickText
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
@@ -207,7 +207,7 @@ The ZeroShotTM can be used for cross-lingual topic modeling! See the paper (http
 .. code-block:: python
 
     from contextualized_topic_models.models.ctm import ZeroShotTM
-    from contextualized_topic_models.utils.data_preparation import TextHandler
+    from contextualized_topic_models.utils.data_preparation import QuickText
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
