@@ -9,7 +9,7 @@ import pickle
 from contextualized_topic_models.utils.data_preparation import TextHandler
 from contextualized_topic_models.utils.data_preparation import QuickText
 from contextualized_topic_models.datasets.dataset import CTMDataset
-from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
+from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing, QuickPreprocessing
 
 import os
 import pytest
@@ -133,11 +133,20 @@ def test_training_all_classes_ctm(data_dir):
 
 def test_preprocessing(data_dir):
     docs = [line.strip() for line in open(data_dir + "gnews/GoogleNews.txt", 'r').readlines()]
-    sp = SimplePreprocessing(docs)
+    sp = WhiteSpacePreprocessing(docs, "english")
     prep_corpus, unprepr_corpus, vocab = sp.preprocess()
 
     assert len(prep_corpus) == len(unprepr_corpus)  # prep docs must have the same size as the unprep docs
     assert len(prep_corpus) <= len(docs)  # preprocessed docs must be less than or equal the original docs
 
     assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
+
+    sp = QuickPreprocessing(docs)
+    prep_corpus, unprepr_corpus, vocab = sp.preprocess()
+
+    assert len(prep_corpus) == len(unprepr_corpus)  # prep docs must have the same size as the unprep docs
+    assert len(prep_corpus) <= len(docs)  # preprocessed docs must be less than or equal the original docs
+
+    assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
+
 
