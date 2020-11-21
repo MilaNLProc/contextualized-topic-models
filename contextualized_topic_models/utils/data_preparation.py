@@ -38,12 +38,11 @@ class QuickText:
     """
     Integrated class to handle all the text preprocessing needed
     """
-    def __init__(self, bert_model, unpreprocessed_sentences=None, preprocessed_sentences=None, apply_preprocessing = False):
+    def __init__(self, bert_model, preprocessed_sentences, unpreprocessed_sentences=None):
         """
         :param bert_model: string, bert model to use
         :param unpreprocessed_sentences: list, list of sentences with the unpreprocessed text
         :param preprocessed_sentences: list, list of sentences with the preprocessed text
-        :param apply_preprocessing: boolean, you can use our tool to apply some preprocessing to your text
         """
         self.vocab_dict = {}
         self.vocab = []
@@ -53,24 +52,13 @@ class QuickText:
         self.bert_model = bert_model
         self.text_handler = ""
 
-        if preprocessed_sentences is not None and apply_preprocessing:
-            raise Exception("There is to need to apply preprocessing if your text is preprocessed")
+        self.preprocessed_sentences = preprocessed_sentences
 
-        elif unpreprocessed_sentences is not None and apply_preprocessing:
-
-            sp = SimplePreprocessing(unpreprocessed_sentences)
-            preprocessed_documents, unpreprocessed_corpus, vocab = sp.preprocess()
-
-            self.preprocessed_sentences = preprocessed_documents
-            self.unpreprocessed_sentences = unpreprocessed_corpus
-
-        elif unpreprocessed_sentences is not None and unpreprocessed_sentences is not None:
+        if self.unpreprocessed_sentences is not None:
             self.unpreprocessed_sentences = unpreprocessed_sentences
-            self.preprocessed_sentences = preprocessed_sentences
-            self.apply_preprocessing = apply_preprocessing
-
         else:
-            raise Exception("The parameter you have selected are not allowed")
+            self.unpreprocessed_sentences = None
+
 
     def prepare_bow(self):
         indptr = [0]
