@@ -155,8 +155,8 @@ it's really easy to update the code to support mono-lingual English topic modeli
 .. code-block:: python
 
     qt = QuickText("bert-base-nli-mean-tokens",
-                unpreprocessed_sentences=list_of_unpreprocessed_documents,
-                preprocessed_sentences=list_of_preprocessed_documents)
+                text_for_bert=list_of_unpreprocessed_documents,
+                text_for_bow=list_of_preprocessed_documents)
 
 In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
 
@@ -174,8 +174,8 @@ Here is how you can use the CombinedTM. The high level API is pretty easy to use
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
     qt = QuickText("distiluse-base-multilingual-cased",
-                    unpreprocessed_sentences=list_of_unpreprocessed_documents,
-                    preprocessed_sentences=list_of_preprocessed_documents)
+                    text_for_bert=list_of_unpreprocessed_documents,
+                    text_for_bow=list_of_preprocessed_documents)
 
     training_dataset = qt.load_dataset()
 
@@ -212,7 +212,8 @@ The ZeroShotTM can be used for cross-lingual topic modeling! See the paper (http
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
     qt = QuickText("distiluse-base-multilingual-cased",
-                    unpreprocessed_sentences=list_of_ENGLISH_unpreprocessed_documents)
+                    text_for_bert=list_of_ENGLISH_unpreprocessed_documents,
+                    text_for_bow=list_of_ENGLISH_preprocessed_documents)
 
     training_dataset = qt.load_dataset()
 
@@ -229,7 +230,8 @@ Once you have trained the cross-lingual topic model, you can use this simple pip
 
 
     qt = QuickText("distiluse-base-multilingual-cased",
-                    unpreprocessed_sentences=list_of_SPANISH_unpreprocessed_documents)
+                    text_for_bert=list_of_SPANISH_unpreprocessed_documents,
+                    text_for_bow=list_of_SPANISH_preprocessed_documents)
 
     testing_dataset = qt.load_dataset()
 
@@ -247,11 +249,11 @@ We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of
 
 .. code-block:: python
 
-    from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
+    from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing
 
     documents = [line.strip() for line in open("documents.txt").readlines()]
-    sp = SimplePreprocessing(documents)
-    preprocessed_documents, unpreprocessed_corpus, vocab = sp.preprocess()
+    sp = WhiteSpacePreprocessing(documents)
+    preprocessed_documents, unpreprocessed_documents, vocab = sp.preprocess()
 
 
 Development Team
