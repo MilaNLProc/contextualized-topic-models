@@ -226,6 +226,8 @@ Predict Topics for Unseen Documents
 -----------------------------------
 Once you have trained the cross-lingual topic model, you can use this simple pipeline to predict the topics for documents in a different language.
 
+** Note ** that the bag of words of the two languages will not be comparable!
+
 .. code-block:: python
 
 

@@ -2,7 +2,6 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 import scipy.sparse
 import warnings
-from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
 from contextualized_topic_models.datasets.dataset import CTMDataset
 
 def get_bag_of_words(data, min_length):
@@ -54,7 +53,7 @@ class QuickText:
 
         self.text_for_bow = text_for_bow
 
-        if self.text_for_bert is not None:
+        if text_for_bert is not None:
             self.text_for_bert = text_for_bert
         else:
             self.text_for_bert = None
