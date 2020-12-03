@@ -9,7 +9,7 @@ import pickle
 from contextualized_topic_models.utils.data_preparation import TextHandler
 from contextualized_topic_models.utils.data_preparation import QuickText
 from contextualized_topic_models.datasets.dataset import CTMDataset
-from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing, QuickPreprocessing
+from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing, SimplePreprocessing
 
 import os
 import pytest
@@ -120,12 +120,11 @@ def test_training_all_classes_ctm(data_dir):
 
     assert len(thetas) == len(train_bert)
 
-    qt = QuickText("distiluse-base-multilingual-cased", unpreprocessed_sentences=data, preprocessed_sentences=data)
+    qt = QuickText("distiluse-base-multilingual-cased", text_for_bow=data, text_for_bert=data)
 
     dataset = qt.load_dataset()
 
-    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, num_epochs=1,
-              n_components=5)
+    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, num_epochs=1, n_components=5)
     ctm.fit(dataset)  # run the model
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
@@ -141,7 +140,7 @@ def test_preprocessing(data_dir):
 
     assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
 
-    sp = QuickPreprocessing(docs)
+    sp = SimplePreprocessing(docs)
     prep_corpus, unprepr_corpus, vocab = sp.preprocess()
 
     assert len(prep_corpus) == len(unprepr_corpus)  # prep docs must have the same size as the unprep docs

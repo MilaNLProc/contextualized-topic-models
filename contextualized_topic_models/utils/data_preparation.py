@@ -38,11 +38,11 @@ class QuickText:
     """
     Integrated class to handle all the text preprocessing needed
     """
-    def __init__(self, bert_model, preprocessed_sentences, unpreprocessed_sentences=None):
+    def __init__(self, bert_model, text_for_bow, text_for_bert=None):
         """
         :param bert_model: string, bert model to use
-        :param unpreprocessed_sentences: list, list of sentences with the unpreprocessed text
-        :param preprocessed_sentences: list, list of sentences with the preprocessed text
+        :param text_for_bert: list, list of sentences with the unpreprocessed text
+        :param text_for_bow: list, list of sentences with the preprocessed text
         """
         self.vocab_dict = {}
         self.vocab = []
@@ -52,12 +52,12 @@ class QuickText:
         self.bert_model = bert_model
         self.text_handler = ""
 
-        self.preprocessed_sentences = preprocessed_sentences
+        self.text_for_bow = text_for_bow
 
-        if self.unpreprocessed_sentences is not None:
-            self.unpreprocessed_sentences = unpreprocessed_sentences
+        if self.text_for_bert is not None:
+            self.text_for_bert = text_for_bert
         else:
-            self.unpreprocessed_sentences = None
+            self.text_for_bert = None
 
 
     def prepare_bow(self):
@@ -66,10 +66,10 @@ class QuickText:
         data = []
         vocabulary = {}
 
-        if self.preprocessed_sentences is not None:
-            docs = self.preprocessed_sentences
+        if self.text_for_bow is not None:
+            docs = self.text_for_bow
         else:
-            docs = self.unpreprocessed_sentences
+            docs = self.text_for_bert
 
         for d in docs:
             for term in d.split():
@@ -95,10 +95,10 @@ class QuickText:
     def load_dataset(self):
         self.prepare_bow()
 
-        if self.unpreprocessed_sentences is not None:
-            testing_bert = bert_embeddings_from_list(self.unpreprocessed_sentences, self.bert_model)
+        if self.text_for_bow is not None:
+            testing_bert = bert_embeddings_from_list(self.text_for_bow, self.bert_model)
         else:
-            testing_bert = bert_embeddings_from_list(self.preprocessed_sentences, self.bert_model)
+            testing_bert = bert_embeddings_from_list(self.text_for_bert, self.bert_model)
 
         training_dataset = CTMDataset(self.bow, testing_bert, self.idx2token)
         return training_dataset
