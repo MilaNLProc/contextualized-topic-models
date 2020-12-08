@@ -46,14 +46,14 @@ class DecoderNetwork(nn.Module):
         self.learn_priors = learn_priors
         self.topic_word_matrix = None
 
-        if infnet == "contextual":
+        if infnet == "zeroshot":
             self.inf_net = ContextualInferenceNetwork(
                 input_size, bert_size, n_components, hidden_sizes, activation)
         elif infnet == "combined":
             self.inf_net = CombinedInferenceNetwork(
                 input_size, bert_size, n_components, hidden_sizes, activation)
         else:
-            raise Exception('Missing infnet parameter, options are contextual and combined')
+            raise Exception('Missing infnet parameter, options are zeroshot and combined')
 
         # init prior parameters
         # \mu_1k = log \alpha_k + 1/K \sum_i log \alpha_i;

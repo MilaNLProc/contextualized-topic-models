@@ -209,8 +209,8 @@ Once you have trained the cross-lingual topic model, you can use this simple pip
 
 
 
-Contextual Topic Modeling
--------------------------
+Combined Topic Modeling
+-----------------------
 
 Here is how you can use the CombinedTM. Combined TM combines the BoW with SBERT, a process that seems to increase
 the coherence (https://arxiv.org/pdf/2004.03974.pdf).
