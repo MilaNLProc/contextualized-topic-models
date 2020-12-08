@@ -50,7 +50,7 @@ class QuickText:
         self.bow = None
         self.bert_model = bert_model
         self.text_handler = ""
-
+        self.data_bert = None
         self.text_for_bow = text_for_bow
 
         if text_for_bert is not None:
@@ -91,18 +91,20 @@ class QuickText:
         self.idx2token = {v: k for (k, v) in self.vocab_dict.items()}
         self.bow = scipy.sparse.csr_matrix((data, indices, indptr), dtype=int)
 
+    def load_contextualized_embeddings(self, embeddings):
+        self.data_bert = embeddings
+
     def load_dataset(self):
         self.prepare_bow()
 
-        if self.text_for_bow is not None:
-            testing_bert = bert_embeddings_from_list(self.text_for_bow, self.bert_model)
-        else:
-            testing_bert = bert_embeddings_from_list(self.text_for_bert, self.bert_model)
+        if self.data_bert is None:
+            if self.text_for_bert is not None:
+                self.data_bert = bert_embeddings_from_list(self.text_for_bert, self.bert_model)
+            else:
+                self.data_bert = bert_embeddings_from_list(self.text_for_bow, self.bert_model)
 
-        training_dataset = CTMDataset(self.bow, testing_bert, self.idx2token)
+        training_dataset = CTMDataset(self.bow, self.data_bert, self.idx2token)
         return training_dataset
-
-
 
 class TextHandler:
     """

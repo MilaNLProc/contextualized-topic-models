@@ -76,8 +76,13 @@ TL;DR
 + Check the BERT model you are using, the **multilingual BERT model one used on English data might not give results that are as good** as the pure English trained one.
 + **Preprocessing is key**. If you give BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
 
+ZeroShot Topic Model
+--------------------
 
-
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
+   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
+   :align: center
+   :width: 400px
 
 Combined Topic Model
 --------------------
@@ -87,13 +92,7 @@ Combined Topic Model
    :align: center
    :width: 400px
 
-ZeroShot Topic Model
---------------------
 
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
-   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
-   :align: center
-   :width: 400px
 
 Software details:
 
@@ -130,20 +129,20 @@ embeddings with BERT remember that there is a maximum length and for documents t
 An important aspect to take into account is which network you want to use: the one that combines BERT and the BoW or the one that just uses BERT.
 It's easy to swap from one to the other:
 
-CombinedTM:
-
-.. code-block:: python
-
-    CombinedTM(input_size=len(handler.vocab), bert_input_size=512,  n_components=50)
-
 ZeroShotTM:
 
 .. code-block:: python
 
-    ZeroShotTM(input_size=len(handler.vocab), bert_input_size=512, n_components=50)
+    ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
+
+CombinedTM:
+
+.. code-block:: python
+
+    CombinedTM(input_size=len(qt.vocab), bert_input_size=512,  n_components=50)
+
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
-
 
 Mono vs Multi-lingual Embeddings
 --------------------------------
@@ -160,11 +159,61 @@ it's really easy to update the code to support mono-lingual English topic modeli
 
 In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
 
+Zero-Shot Cross-Lingual Topic Modeling
+--------------------------------------
+
+Our ZeroShotTM can be used for zero-shot topic modeling. It can handle words that are not used during the training phase.
+More interestingly, this model can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
+
+The high level API to handle the text is pretty easy to use; `text_for_bert` should be used to pass to the model
+a list of documents that are not preprocessed. In this way, SBERT can use all the information in the text to generate the representations.
+Instead, to `text_for_bow` you should pass the pre-processed text used to build the BoW.
+
+.. code-block:: python
+
+    from contextualized_topic_models.models.ctm import ZeroShotTM
+    from contextualized_topic_models.utils.data_preparation import QuickText
+    from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
+    from contextualized_topic_models.datasets.dataset import CTMDataset
+
+    qt = QuickText("distiluse-base-multilingual-cased",
+                    text_for_bert=list_of_ENGLISH_unpreprocessed_documents,
+                    text_for_bow=list_of_ENGLISH_preprocessed_documents)
+
+    training_dataset = qt.load_dataset()
+
+    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
+
+    ctm.fit(training_dataset) # run the model
+
+    ctm.get_topics()
+
+
+Predict Topics for Unseen Documents
+-----------------------------------
+Once you have trained the cross-lingual topic model, you can use this simple pipeline to predict the topics for documents in a different language.
+
+** Note ** that the bag of words of the two languages will not be comparable!
+
+.. code-block:: python
+
+
+    qt = QuickText("distiluse-base-multilingual-cased",
+                    text_for_bert=list_of_SPANISH_unpreprocessed_documents,
+                    text_for_bow=list_of_SPANISH_preprocessed_documents)
+
+    testing_dataset = qt.load_dataset()
+
+    # n_sample how many times to sample the distribution (see the doc)
+    ctm.get_thetas(testing_dataset, n_samples=20)
+
+
 
 Contextual Topic Modeling
 -------------------------
 
-Here is how you can use the CombinedTM. The high level API is pretty easy to use:
+Here is how you can use the CombinedTM. Combined TM combines the BoW with SBERT, a process that seems to increase
+the coherence (https://arxiv.org/pdf/2004.03974.pdf).
 
 .. code-block:: python
 
@@ -191,54 +240,15 @@ topics using NPMI using our simple and high-level API.
 
     from contextualized_topic_models.evaluation.measures import CoherenceNPMI
 
-    with open('documents.txt',"r") as fr:
+    with open('preprocessed_documents.txt',"r") as fr:
         texts = [doc.split() for doc in fr.read().splitlines()] # load text for NPMI
 
     npmi = CoherenceNPMI(texts=texts, topics=ctm.get_topic_lists(10))
     npmi.score()
 
 
-Cross-lingual Topic Modeling
-----------------------------
-
-The ZeroShotTM can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
 
 
-.. code-block:: python
-
-    from contextualized_topic_models.models.ctm import ZeroShotTM
-    from contextualized_topic_models.utils.data_preparation import QuickText
-    from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
-    from contextualized_topic_models.datasets.dataset import CTMDataset
-
-    qt = QuickText("distiluse-base-multilingual-cased",
-                    text_for_bert=list_of_ENGLISH_unpreprocessed_documents,
-                    text_for_bow=list_of_ENGLISH_preprocessed_documents)
-
-    training_dataset = qt.load_dataset()
-
-    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
-
-    ctm.fit(training_dataset) # run the model
-
-
-Predict Topics for Unseen Documents
------------------------------------
-Once you have trained the cross-lingual topic model, you can use this simple pipeline to predict the topics for documents in a different language.
-
-** Note ** that the bag of words of the two languages will not be comparable!
-
-.. code-block:: python
-
-
-    qt = QuickText("distiluse-base-multilingual-cased",
-                    text_for_bert=list_of_SPANISH_unpreprocessed_documents,
-                    text_for_bow=list_of_SPANISH_preprocessed_documents)
-
-    testing_dataset = qt.load_dataset()
-
-    # n_sample how many times to sample the distribution (see the doc)
-    ctm.get_thetas(testing_dataset, n_samples=20)
 
 
 Preprocessing
@@ -253,7 +263,7 @@ We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of
 
     from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing
 
-    documents = [line.strip() for line in open("documents.txt").readlines()]
+    documents = [line.strip() for line in open("unpreprocessed_documents.txt").readlines()]
     sp = WhiteSpacePreprocessing(documents)
     preprocessed_documents, unpreprocessed_documents, vocab = sp.preprocess()
 
@@ -314,6 +324,6 @@ Remember that this is a research tool :)
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`Stephen Carrow` : https://github.com/estebandito22
 .. _`rbo` : https://github.com/dlukes/rbo
-.. _Federico Bianchi: http://vinid.io
+.. _Federico Bianchi: https://federicobianchi.io
 .. _Silvia Terragni: https://silviatti.github.io/
 .. _Dirk Hovy: https://dirkhovy.com/
