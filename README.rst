@@ -5,8 +5,8 @@ Contextualized Topic Models
 .. image:: https://img.shields.io/pypi/v/contextualized_topic_models.svg
         :target: https://pypi.python.org/pypi/contextualized_topic_models
 
-.. image:: https://travis-ci.com/MilaNLProc/contextualized-topic-models.svg
-        :target: https://travis-ci.com/MilaNLProc/contextualized-topic-models
+.. image:: https://github.com/MilaNLProc/contextualized-topic-models/workflows/Python%20package/badge.svg
+        :target: https://github.com/MilaNLProc/contextualized-topic-models/actions
 
 .. image:: https://readthedocs.org/projects/contextualized-topic-models/badge/?version=latest
         :target: https://contextualized-topic-models.readthedocs.io/en/latest/?badge=latest
