@@ -88,23 +88,6 @@ TL;DR
 + Check the BERT model you are using, the **multilingual BERT model one used on English data might not give results that are as good** as the pure English trained one.
 + **Preprocessing is key**. If you give BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
 
-ZeroShot Topic Model
---------------------
-
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
-   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
-   :align: center
-   :width: 400px
-
-Combined Topic Model
---------------------
-
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
-   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
-   :align: center
-   :width: 400px
-
-
 
 Software details:
 
@@ -344,7 +327,21 @@ CombinedTM
        journal={arXiv preprint arXiv:2004.03974},
     }
 
+ZeroShot Topic Model
+--------------------
 
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
+   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
+   :align: center
+   :width: 400px
+
+Combined Topic Model
+--------------------
+
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
+   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
+   :align: center
+   :width: 400px
 
 
 Credits
