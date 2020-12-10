@@ -72,7 +72,6 @@ Jump start Tutorial
     :target: https://colab.research.google.com/drive/1IxEg6GCgXw2weoDYRgU6fciG_CuJ9QiO?usp=sharing
     :alt: Open In Colab
 
-https://colab.research.google.com/drive/1IxEg6GCgXw2weoDYRgU6fciG_CuJ9QiO?usp=sharing
 
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
