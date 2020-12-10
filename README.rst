@@ -148,7 +148,7 @@ Mono vs Multi-lingual Embeddings
 --------------------------------
 
 All the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
-If you are doing topic modeling in English, you can use the English sentence-bert model. In that case,
+If you are doing topic modeling in English, **you can use the English sentence-bert model**, `bert-base-nli-mean-tokens`. In that case,
 it's really easy to update the code to support mono-lingual English topic modeling.
 
 .. code-block:: python
@@ -158,6 +158,7 @@ it's really easy to update the code to support mono-lingual English topic modeli
                 text_for_bow=list_of_preprocessed_documents)
 
 In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
+and in HuggingFace.
 
 Zero-Shot Cross-Lingual Topic Modeling
 --------------------------------------
@@ -193,7 +194,7 @@ Predict Topics for Unseen Documents
 -----------------------------------
 Once you have trained the cross-lingual topic model, you can use this simple pipeline to predict the topics for documents in a different language.
 
-** Note ** that the bag of words of the two languages will not be comparable!
+**Note** that the bag of words of the two languages will not be comparable!
 
 .. code-block:: python
 
@@ -206,8 +207,6 @@ Once you have trained the cross-lingual topic model, you can use this simple pip
 
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_thetas(testing_dataset, n_samples=20)
-
-
 
 Combined Topic Modeling
 -----------------------
@@ -319,7 +318,7 @@ Remember that this is a research tool :)
 
 .. _pytorch: https://pytorch.org/get-started/locally/
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. preprocessing: https://github.com/MilaNLProc/contextualized-topic-models#preprocessing
+.. _preprocessing: https://github.com/MilaNLProc/contextualized-topic-models#preprocessing
 .. _cross-lingual-topic-modeling: https://github.com/MilaNLProc/contextualized-topic-models#cross-lingual-topic-modeling
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`Stephen Carrow` : https://github.com/estebandito22
