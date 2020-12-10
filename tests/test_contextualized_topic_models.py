@@ -7,8 +7,9 @@ from contextualized_topic_models.utils.data_preparation import bert_embeddings_f
 import numpy as np
 import pickle
 from contextualized_topic_models.utils.data_preparation import TextHandler
+from contextualized_topic_models.utils.data_preparation import QuickText
 from contextualized_topic_models.datasets.dataset import CTMDataset
-from contextualized_topic_models.utils.preprocessing import SimplePreprocessing
+from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing, SimplePreprocessing
 
 import os
 import pytest
@@ -119,9 +120,26 @@ def test_training_all_classes_ctm(data_dir):
 
     assert len(thetas) == len(train_bert)
 
+    qt = QuickText("distiluse-base-multilingual-cased", text_for_bow=data, text_for_bert=data)
+
+    dataset = qt.load_dataset()
+
+    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, num_epochs=1, n_components=5)
+    ctm.fit(dataset)  # run the model
+    topics = ctm.get_topic_lists(2)
+    assert len(topics) == 5
+
 
 def test_preprocessing(data_dir):
     docs = [line.strip() for line in open(data_dir + "gnews/GoogleNews.txt", 'r').readlines()]
+    sp = WhiteSpacePreprocessing(docs, "english")
+    prep_corpus, unprepr_corpus, vocab = sp.preprocess()
+
+    assert len(prep_corpus) == len(unprepr_corpus)  # prep docs must have the same size as the unprep docs
+    assert len(prep_corpus) <= len(docs)  # preprocessed docs must be less than or equal the original docs
+
+    assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
+
     sp = SimplePreprocessing(docs)
     prep_corpus, unprepr_corpus, vocab = sp.preprocess()
 
@@ -129,4 +147,5 @@ def test_preprocessing(data_dir):
     assert len(prep_corpus) <= len(docs)  # preprocessed docs must be less than or equal the original docs
 
     assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
+
 

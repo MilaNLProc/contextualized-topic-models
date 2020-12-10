@@ -14,7 +14,8 @@ from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 
 class CTM(object):
-    """Class to train the contextualized topic model.
+    """Class to train the contextualized topic model. This is the more general class that we are keeping to
+    avoid braking code, user should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
 
         :param input_size: int, dimension of input
         :param bert_input_size: int, dimension of input that comes from BERT embeddings
@@ -401,8 +402,6 @@ class CTM(object):
         :return: the predicted topics
         """
         predicted_topics = []
-        #thetas = np.zeros((len(dataset), self.n_components))
-
         thetas = self.get_thetas(dataset, n_samples)
 
         for idd in range(len(dataset)):
@@ -411,13 +410,22 @@ class CTM(object):
         return predicted_topics
 
 
+class ZeroShotTM(CTM):
+    """
+    ZeroShotTM, as described in https://arxiv.org/pdf/2004.07737v1.pdf
+    """
+
+    def __init__(self, **kwargs):
+        inference_type = "zeroshot"
+        super().__init__(inference_type=inference_type, **kwargs)
+
+
 class CombinedTM(CTM):
+    """
+    CombinedTM, as described in https://arxiv.org/pdf/2004.03974.pdf
+    """
     def __init__(self, **kwargs):
         inference_type = "combined"
         super().__init__(inference_type=inference_type, **kwargs)
 
 
-class ZeroShotTM(CTM):
-    def __init__(self, **kwargs):
-        inference_type = "contextual"
-        super().__init__(inference_type=inference_type, **kwargs)
