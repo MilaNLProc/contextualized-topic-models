@@ -7,11 +7,11 @@ class WhiteSpacePreprocessing():
     """
     Provides a very simple preprocessing script that filters infrequent tokens from text
     """
-    def __init__(self, documents, stopwords_language, vocabulary_size=2000):
+    def __init__(self, documents, stopwords_language="english", vocabulary_size=2000):
         """
 
-        :param documents:
-        :param stopwords_language:
+        :param documents: list of strings
+        :param stopwords_language: string of the language of the stopwords (see nltk stopwords)
         :param vocabulary_size: the number of most frequent words to include in the documents. Infrequent words will be discarded from the list of preprocessed documents
         """
         self.documents = documents
@@ -45,6 +45,7 @@ class WhiteSpacePreprocessing():
                 unpreprocessed_docs.append(self.documents[i])
 
         return preprocessed_docs, unpreprocessed_docs, list(vocabulary)
+
 
 class SimplePreprocessing(WhiteSpacePreprocessing):
     def __init__(self, documents, stopwords_language="english"):

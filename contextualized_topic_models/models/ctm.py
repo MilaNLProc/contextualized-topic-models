@@ -12,7 +12,6 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 
-
 class CTM(object):
     """Class to train the contextualized topic model. This is the more general class that we are keeping to
     avoid braking code, user should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
@@ -60,7 +59,7 @@ class CTM(object):
         assert isinstance(batch_size, int) and batch_size > 0,\
             "batch_size must be int > 0."
         assert lr > 0, "lr must be > 0."
-        assert isinstance(momentum, float) and momentum > 0 and momentum <= 1,\
+        assert isinstance(momentum, float) and 0 < momentum <= 1,\
             "momentum must be 0 < float <= 1."
         assert solver in ['adam', 'sgd'], "solver must be 'adam' or 'sgd'."
         assert isinstance(reduce_on_plateau, bool),\
@@ -249,6 +248,19 @@ class CTM(object):
         :param dataset: a PyTorch Dataset containing the documents
         :param n_samples: the number of sample to collect to estimate the final distribution (the more the better).
         """
+        warnings.warn("Call to `get_thetas` is deprecated and will be removed in version 2, "
+                      "use `get_doc_topic_distribution` instead",
+                      DeprecationWarning)
+        return self.get_doc_topic_distribution(dataset, n_samples=n_samples)
+
+    def get_doc_topic_distribution(self, dataset, n_samples=20):
+        """
+        Get the document-topic distribution for a dataset of topics. Includes multiple sampling to reduce variation via
+        the parameter n_sample.
+
+        :param dataset: a PyTorch Dataset containing the documents
+        :param n_samples: the number of sample to collect to estimate the final distribution (the more the better).
+        """
         self.model.eval()
 
         loader = DataLoader(
@@ -277,6 +289,12 @@ class CTM(object):
 
         return np.sum(final_thetas, axis=0)/n_samples
 
+    def get_most_likely_topic(self, doc_topic_distribution):
+        """ get the most likely topic for each document
+
+        :param doc_topic_distribution: ndarray representing the topic distribution of each document
+        """
+        return np.argmax(doc_topic_distribution, axis=0)
 
     def predict(self, dataset, k=10):
         """Predict input."""
@@ -402,7 +420,7 @@ class CTM(object):
         :return: the predicted topics
         """
         predicted_topics = []
-        thetas = self.get_thetas(dataset, n_samples)
+        thetas = self.get_doc_topic_distribution(dataset, n_samples)
 
         for idd in range(len(dataset)):
             predicted_topic = np.argmax(thetas[idd] / np.sum(thetas[idd]))
