@@ -89,7 +89,8 @@ TL;DR
 + **Preprocessing is key**. If you give BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
 
 
-Software details:
+Software Details
+~~~~~~~~~~~~~~~~
 
 * Free software: MIT license
 * Documentation: https://contextualized-topic-models.readthedocs.io.
@@ -97,7 +98,7 @@ Software details:
 
 
 Features
---------
+~~~~~~~~
 
 * Combines BERT and Neural Variational Topic Models
 * Two different methodologies: Combined, where we combine BoW and BERT embeddings and ZeroShot, that uses only BERT embeddings
@@ -196,7 +197,7 @@ As you cann see, the high level API to handle the text is pretty easy to use;
 **text_for_bert** should be used to pass to the model a list of documents that are not preprocessed.
 Instead, to **text_for_bow** you should pass the pre-processed text used to build the BoW.
 
-**Advanced Notes:**: In this way, SBERT can use all the information in the text to generate the representations.
+**Advanced Notes:** in this way, SBERT can use all the information in the text to generate the representations.
 
 Predict Topics for Unseen Documents
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
