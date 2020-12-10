@@ -68,16 +68,24 @@ Jump start Tutorial
     :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
     :alt: Open In Colab
 
+.. |colabzt| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1IxEg6GCgXw2weoDYRgU6fciG_CuJ9QiO?usp=sharing
+    :alt: Open In Colab
+
+https://colab.research.google.com/drive/1IxEg6GCgXw2weoDYRgU6fciG_CuJ9QiO?usp=sharing
+
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
 +================================================================+====================+
-| CombinedTM for Wikipedia Documents  stable (v1.7.0)            | |colab1new|        |
+| Zero-Shot Cross-lingual Topic Modeling (stable v1.7.0)         | |colabzt|          |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM with Preprocessing       stable (v1.7.0)            | |colab2new|        |
+| CombinedTM for Wikipedia Documents (stable v1.7.0)             | |colab1new|        |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM for Wikipedia Documents  v1.6.0                     | |colab1old|        |
+| CombinedTM with Preprocessing (stable v1.7.0)                  | |colab2new|        |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM with Preprocessing       v1.6.0                     | |colab2old|        |
+| CombinedTM for Wikipedia Documents (v1.6.0)                    | |colab1old|        |
++----------------------------------------------------------------+--------------------+
+| CombinedTM with Preprocessing (v1.6.0)                         | |colab2old|        |
 +----------------------------------------------------------------+--------------------+
 
 TL;DR
