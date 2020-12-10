@@ -25,7 +25,7 @@ Contextualized Topic Models
         :alt: Downloads
 
 .. image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1V0tkpJL1yhiHZUJ_vwQRu6I7_svjw1wb?usp=sharing
+    :target: https://colab.research.google.com/drive/1GCKpfu6ZfyVTk9_FovxnyH48OkNIYOIb?usp=sharing
     :alt: Open In Colab
 
 
@@ -52,20 +52,32 @@ For more details you can read the two papers mentioned above.
 Jump start Tutorial
 -------------------
 
-.. |colab1| image:: https://colab.research.google.com/assets/colab-badge.svg
+.. |colab1old| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1V0tkpJL1yhiHZUJ_vwQRu6I7_svjw1wb?usp=sharing
     :alt: Open In Colab
 
-.. |colab2| image:: https://colab.research.google.com/assets/colab-badge.svg
+.. |colab2old| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1quD11TMy-1D-GxPUj_Dea4iRYmOO8C2C?usp=sharing
+    :alt: Open In Colab
+
+.. |colab1new| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1GCKpfu6ZfyVTk9_FovxnyH48OkNIYOIb?usp=sharing
+    :alt: Open In Colab
+
+.. |colab2new| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
     :alt: Open In Colab
 
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
 +================================================================+====================+
-| CombinedTM for Wikipedia Documents                             | |colab1|           |
+| CombinedTM for Wikipedia Documents  stable (v1.7.0)            | |colab1new|        |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM with Preprocessing                                  | |colab2|           |
+| CombinedTM with Preprocessing       stable (v1.7.0)            | |colab2new|        |
++----------------------------------------------------------------+--------------------+
+| CombinedTM for Wikipedia Documents  v1.6.0                     | |colab1old|        |
++----------------------------------------------------------------+--------------------+
+| CombinedTM with Preprocessing       v1.6.0                     | |colab2old|        |
 +----------------------------------------------------------------+--------------------+
 
 TL;DR
@@ -144,11 +156,11 @@ CombinedTM:
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
 
-Mono vs Multi-lingual Embeddings
---------------------------------
+Mono vs Multi-lingual Embeddings: Which Embeddings Should I Use?
+----------------------------------------------------------------
 
 All the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
-If you are doing topic modeling in English, **you can use the English sentence-bert model**, `bert-base-nli-mean-tokens`. In that case,
+If you are doing topic modeling in English, **you SHOULD use the English sentence-bert model**, `bert-base-nli-mean-tokens`. In that case,
 it's really easy to update the code to support mono-lingual English topic modeling.
 
 .. code-block:: python
@@ -166,16 +178,23 @@ Zero-Shot Cross-Lingual Topic Modeling
 Our ZeroShotTM can be used for zero-shot topic modeling. It can handle words that are not used during the training phase.
 More interestingly, this model can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
 
-The high level API to handle the text is pretty easy to use; `text_for_bert` should be used to pass to the model
-a list of documents that are not preprocessed. In this way, SBERT can use all the information in the text to generate the representations.
-Instead, to `text_for_bow` you should pass the pre-processed text used to build the BoW.
-
 .. code-block:: python
 
     from contextualized_topic_models.models.ctm import ZeroShotTM
     from contextualized_topic_models.utils.data_preparation import QuickText
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
+
+    text_for_bert = [
+        "hello, this is unpreprocessed text you can give to the model",
+        "have fun with our topic model",
+    ]
+
+    text_for_bow = [
+        "hello unpreprocessed give model",
+        "fun topic model",
+    ]
+
 
     qt = QuickText("distiluse-base-multilingual-cased",
                     text_for_bert=list_of_ENGLISH_unpreprocessed_documents,
@@ -190,29 +209,42 @@ Instead, to `text_for_bow` you should pass the pre-processed text used to build 
     ctm.get_topics()
 
 
-Predict Topics for Unseen Documents
------------------------------------
-Once you have trained the cross-lingual topic model, you can use this simple pipeline to predict the topics for documents in a different language.
+As you cann see, the high level API to handle the text is pretty easy to use;
+**text_for_bert** should be used to pass to the model a list of documents that are not preprocessed.
+Instead, to **text_for_bow** you should pass the pre-processed text used to build the BoW.
 
-**Note** that the bag of words of the two languages will not be comparable!
+**Advanced Notes:**: In this way, SBERT can use all the information in the text to generate the representations.
+
+Predict Topics for Unseen Documents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once you have trained the cross-lingual topic model,
+you can use this simple pipeline to predict the topics for documents in a different language (as long as this language
+is covered by **distiluse-base-multilingual-cased**).
 
 .. code-block:: python
 
 
+    list_of_SPANISH_documents = [
+        "hola, bienvenido",
+    ]
+
     qt = QuickText("distiluse-base-multilingual-cased",
-                    text_for_bert=list_of_SPANISH_unpreprocessed_documents,
-                    text_for_bow=list_of_SPANISH_preprocessed_documents)
+                    text_for_bert=list_of_SPANISH_documents,
+                    text_for_bow=list_of_SPANISH_documents)
 
     testing_dataset = qt.load_dataset()
 
     # n_sample how many times to sample the distribution (see the doc)
-    ctm.get_thetas(testing_dataset, n_samples=20)
+    ctm.get_thetas(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
+
+**Advanced Notes:** the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reason, but you cannot get
+the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
 
 Combined Topic Modeling
 -----------------------
 
-Here is how you can use the CombinedTM. Combined TM combines the BoW with SBERT, a process that seems to increase
-the coherence (https://arxiv.org/pdf/2004.03974.pdf).
+Here is how you can use the CombinedTM. This is a standard topic model that also uses BERT.
 
 .. code-block:: python
 
@@ -221,7 +253,7 @@ the coherence (https://arxiv.org/pdf/2004.03974.pdf).
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
-    qt = QuickText("distiluse-base-multilingual-cased",
+    qt = QuickText("bert-base-nli-mean-tokens",
                     text_for_bert=list_of_unpreprocessed_documents,
                     text_for_bow=list_of_preprocessed_documents)
 
@@ -231,7 +263,20 @@ the coherence (https://arxiv.org/pdf/2004.03974.pdf).
 
     ctm.fit(training_dataset) # run the model
 
-See the example notebook in the `contextualized_topic_models/examples` folder.
+    ctm.get_topics()
+
+    #ctm.get_thetas(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
+
+
+**Advanced Notes:** Combined TM combines the BoW with SBERT, a process that seems to increase
+the coherence of the predicted topics (https://arxiv.org/pdf/2004.03974.pdf).
+
+More Advanced Stuff
+-------------------
+
+Evaluation
+~~~~~~~~~~
+
 We have also included some of the metrics normally used in the evaluation of topic models, for example you can compute the coherence of your
 topics using NPMI using our simple and high-level API.
 
@@ -246,12 +291,8 @@ topics using NPMI using our simple and high-level API.
     npmi.score()
 
 
-
-
-
-
 Preprocessing
--------------
+~~~~~~~~~~~~~
 
 Do you need a quick script to run the preprocessing pipeline? we got you covered! Load your documents
 and then use our SimplePreprocessing class. It will automatically filter infrequent words and remove documents
@@ -279,6 +320,19 @@ References
 
 If you use this in a research work please cite these papers:
 
+ZeroShotTM
+
+::
+
+    @article{bianchi2020crosslingual,
+        title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
+        author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
+        year={2020},
+       journal={arXiv preprint arXiv:2004.07737},
+    }
+
+
+
 CombinedTM
 
 ::
@@ -290,17 +344,6 @@ CombinedTM
        journal={arXiv preprint arXiv:2004.03974},
     }
 
-
-ZeroShotTM
-
-::
-
-    @article{bianchi2020crosslingual,
-        title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
-        author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
-        year={2020},
-       journal={arXiv preprint arXiv:2004.07737},
-    }
 
 
 

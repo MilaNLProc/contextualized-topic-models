@@ -2,7 +2,7 @@
 History
 =======
 
-1.6.1 (2020-12-10)
+1.7.0 (2020-12-10)
 ------------------
 
 * adding a new and much simpler way to handle text for topic modeling
