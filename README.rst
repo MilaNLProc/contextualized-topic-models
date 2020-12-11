@@ -68,16 +68,23 @@ Jump start Tutorial
     :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
     :alt: Open In Colab
 
+.. |colabzt| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1IxEg6GCgXw2weoDYRgU6fciG_CuJ9QiO?usp=sharing
+    :alt: Open In Colab
+
+
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
 +================================================================+====================+
-| CombinedTM for Wikipedia Documents  stable (v1.7.0)            | |colab1new|        |
+| Zero-Shot Cross-lingual Topic Modeling (stable v1.7.0)         | |colabzt|          |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM with Preprocessing       stable (v1.7.0)            | |colab2new|        |
+| CombinedTM for Wikipedia Documents (stable v1.7.0)             | |colab1new|        |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM for Wikipedia Documents  v1.6.0                     | |colab1old|        |
+| CombinedTM with Preprocessing (stable v1.7.0)                  | |colab2new|        |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM with Preprocessing       v1.6.0                     | |colab2old|        |
+| CombinedTM for Wikipedia Documents (v1.6.0)                    | |colab1old|        |
++----------------------------------------------------------------+--------------------+
+| CombinedTM with Preprocessing (v1.6.0)                         | |colab2old|        |
 +----------------------------------------------------------------+--------------------+
 
 TL;DR
@@ -129,13 +136,13 @@ ZeroShotTM:
 
 .. code-block:: python
 
-    ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
+    ZeroShotTM(input_size=len(qt.vocab), bert_input_size=embedding_dimension, n_components=number_of_topics)
 
 CombinedTM:
 
 .. code-block:: python
 
-    CombinedTM(input_size=len(qt.vocab), bert_input_size=512,  n_components=50)
+    CombinedTM(input_size=len(qt.vocab), bert_input_size=embedding_dimension,  n_components=number_of_topics)
 
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
@@ -243,7 +250,7 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
 
     training_dataset = qt.load_dataset()
 
-    ctm = CombinedTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
+    ctm = CombinedTM(input_size=len(qt.vocab), bert_input_size=768, n_components=50)
 
     ctm.fit(training_dataset) # run the model
 
