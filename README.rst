@@ -136,13 +136,13 @@ ZeroShotTM:
 
 .. code-block:: python
 
-    ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
+    ZeroShotTM(input_size=len(qt.vocab), bert_input_size=embedding_dimension, n_components=number_of_topics)
 
 CombinedTM:
 
 .. code-block:: python
 
-    CombinedTM(input_size=len(qt.vocab), bert_input_size=512,  n_components=50)
+    CombinedTM(input_size=len(qt.vocab), bert_input_size=embedding_dimension,  n_components=number_of_topics)
 
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
@@ -250,7 +250,7 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
 
     training_dataset = qt.load_dataset()
 
-    ctm = CombinedTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
+    ctm = CombinedTM(input_size=len(qt.vocab), bert_input_size=768, n_components=50)
 
     ctm.fit(training_dataset) # run the model
 
