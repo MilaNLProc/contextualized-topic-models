@@ -10,7 +10,7 @@ from torch import optim
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
-
+from scipy.special import softmax
 
 class CTM(object):
     """Class to train the contextualized topic model. This is the more general class that we are keeping to
@@ -410,6 +410,13 @@ class CTM(object):
         If model_type is LDA, the matrix is normalized; otherwise the matrix is unnormalized.
         """
         return self.model.topic_word_matrix.cpu().detach().numpy()
+
+    def get_topic_word_distribution(self):
+        """
+        Return the topic-word distribution (dimensions: number of topics x length of the vocabulary).
+        """
+        mat = self.get_topic_word_matrix()
+        return softmax(mat, axis=1)
 
     def get_predicted_topics(self, dataset, n_samples):
         """

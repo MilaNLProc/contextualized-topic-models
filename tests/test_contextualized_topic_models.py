@@ -14,6 +14,8 @@ from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocess
 import os
 import pytest
 import nltk
+from math import isclose
+
 
 nltk.download("stopwords")
 
@@ -25,6 +27,7 @@ def root_dir():
 def data_dir(root_dir):
     return root_dir + "/../contextualized_topic_models/data/"
 
+
 def test_shape_checks(data_dir):
     handler = TextHandler(data_dir +"gnews/GoogleNews.txt")
     handler.prepare()  # create vocabulary and training data
@@ -34,6 +37,7 @@ def test_shape_checks(data_dir):
         training_bert = pickle.load(filino)
 
     assert len(training_bert) == len(handler.bow.todense())
+
 
 def test_training_with_saved_data(data_dir):
     handler = TextHandler(data_dir + "gnews/GoogleNews.txt")
@@ -52,7 +56,8 @@ def test_training_with_saved_data(data_dir):
 
     print(ctm.get_topics(2))
 
-    ctm.get_thetas(training_dataset)
+    ctm.get_doc_topic_distribution(training_dataset)
+    assert isclose(np.sum(ctm.get_topic_word_distribution()[0]), 1, rel_tol=1e-5, abs_tol=0.0)
 
 
 def test_embeddings_from_scratch(data_dir):
@@ -63,6 +68,7 @@ def test_embeddings_from_scratch(data_dir):
     assert np.array_equal(handler.bow.todense(), np.array([[1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                                              [1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
                                              [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2]]))
+
 
 def test_training_all_classes_ctm(data_dir):
     handler = TextHandler(data_dir + "sample_text_document")
@@ -80,7 +86,7 @@ def test_training_all_classes_ctm(data_dir):
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
 
-    thetas = ctm.get_thetas(training_dataset)
+    thetas = ctm.get_doc_topic_distribution(training_dataset)
     assert len(thetas) == len(train_bert)
 
     ctm = ZeroShotTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1,
@@ -89,7 +95,7 @@ def test_training_all_classes_ctm(data_dir):
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
 
-    thetas = ctm.get_thetas(training_dataset)
+    thetas = ctm.get_doc_topic_distribution(training_dataset)
     assert len(thetas) == len(train_bert)
 
     ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1,
@@ -98,7 +104,7 @@ def test_training_all_classes_ctm(data_dir):
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
 
-    thetas = ctm.get_thetas(training_dataset)
+    thetas = ctm.get_doc_topic_distribution(training_dataset)
     assert len(thetas) == len(train_bert)
 
     with open(data_dir + 'sample_text_document') as filino:
@@ -116,7 +122,7 @@ def test_training_all_classes_ctm(data_dir):
     topics = ctm.get_topic_lists(2)
 
     assert len(topics) == 5
-    thetas = ctm.get_thetas(training_dataset)
+    thetas = ctm.get_doc_topic_distribution(training_dataset)
 
     assert len(thetas) == len(train_bert)
 
