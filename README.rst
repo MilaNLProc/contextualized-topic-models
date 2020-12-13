@@ -28,7 +28,6 @@ Contextualized Topic Models
     :target: https://colab.research.google.com/drive/1GCKpfu6ZfyVTk9_FovxnyH48OkNIYOIb?usp=sharing
     :alt: Open In Colab
 
-
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
 support topic modeling. See the papers for details:
 
