@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 import wordcloud
+import matplotlib.pyplot as plt
 from scipy.special import softmax
 
 class CTM(object):
@@ -437,20 +438,22 @@ class CTM(object):
 
     def get_wordcloud(self, topic_id, n_words=5, background_color="black"):
         """
-        Plotting the wordcloud. It is an adapted version of the code found here: http://amueller.github.io/word_cloud/auto_examples/simple.html#sphx-glr-auto-examples-simple-py and here https://github.com/ddangelov/Top2Vec/blob/master/top2vec/Top2Vec.py
+        Plotting the wordcloud. It is an adapted version of the code found here:
+        http://amueller.github.io/word_cloud/auto_examples/simple.html#sphx-glr-auto-examples-simple-py and
+        here https://github.com/ddangelov/Top2Vec/blob/master/top2vec/Top2Vec.py
+
+        :param topic_id: id of the topic
+        :param n_words: number of words to show in word cloud
+        :param background_color: color of the background
         """
-        
-       word_score_list = get_word_distribution_by_topic_id(topic_index)[:n_words]
-       word_score_dict = {w : p for w, p in word_score_list.items()}
-       plt.figure(figsize=(10, 4),
-                  dpi=200)
-       plt.axis("off")
-       plt.imshow(
-           wordcloud.WordCloud(width=1000,
-                               height=400,
-                               background_color="black").generate_from_frequencies(word_score_dict))
-       plt.title("Displaying Topic " + str(topic_index), loc='center', fontsize=24)
-       plt.show()
+        word_score_list = self.get_word_distribution_by_topic_id(topic_id)[:n_words]
+        word_score_dict = {tup[0]: tup[1] for tup in word_score_list}
+        plt.figure(figsize=(10, 4), dpi=200)
+        plt.axis("off")
+        plt.imshow(wordcloud.WordCloud(width=1000, height=400, background_color=background_color
+                                       ).generate_from_frequencies(word_score_dict))
+        plt.title("Displaying Topic " + str(topic_id), loc='center', fontsize=24)
+        plt.show()
 
     def get_predicted_topics(self, dataset, n_samples):
         """
