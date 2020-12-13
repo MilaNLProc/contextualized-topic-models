@@ -10,6 +10,7 @@ from torch import optim
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
+import wordcloud
 from scipy.special import softmax
 
 class CTM(object):
@@ -433,6 +434,23 @@ class CTM(object):
             t = [(word, wd[topic][idx]) for idx, word in self.train_data.idx2token.items()]
             t = sorted(t, key=lambda x: -x[1])
         return t
+
+    def get_wordcloud(self, topic_id, n_words=5, background_color="black"):
+        """
+        Plotting the wordcloud. It is an adapted version of the code found here: http://amueller.github.io/word_cloud/auto_examples/simple.html#sphx-glr-auto-examples-simple-py and here https://github.com/ddangelov/Top2Vec/blob/master/top2vec/Top2Vec.py
+        """
+        
+       word_score_list = get_word_distribution_by_topic_id(topic_index)[:n_words]
+       word_score_dict = {w : p for w, p in word_score_list.items()}
+       plt.figure(figsize=(10, 4),
+                  dpi=200)
+       plt.axis("off")
+       plt.imshow(
+           wordcloud.WordCloud(width=1000,
+                               height=400,
+                               background_color="black").generate_from_frequencies(word_score_dict))
+       plt.title("Displaying Topic " + str(topic_index), loc='center', fontsize=24)
+       plt.show()
 
     def get_predicted_topics(self, dataset, n_samples):
         """
