@@ -418,6 +418,22 @@ class CTM(object):
         mat = self.get_topic_word_matrix()
         return softmax(mat, axis=1)
 
+    def get_word_distribution_by_topic_id(self, topic):
+        """
+        Return the word probability distribution of a topic sorted by probability.
+
+        :param topic: id of the topic (int)
+
+        :returns list of tuples (word, probability) sorted by the probability in descending order
+        """
+        if topic >= self.n_components:
+            raise Exception('Topic id must be lower than the number of topics')
+        else:
+            wd = self.get_topic_word_distribution()
+            t = [(word, wd[topic][idx]) for idx, word in self.train_data.idx2token.items()]
+            t = sorted(t, key=lambda x: -x[1])
+        return t
+
     def get_predicted_topics(self, dataset, n_samples):
         """
         Return the a list containing the predicted topic for each document (length: number of documents).
