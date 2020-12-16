@@ -231,6 +231,22 @@ is covered by **distiluse-base-multilingual-cased**).
 **Advanced Notes:** the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reason, but you cannot get
 the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
 
+Showing The Topic Word Cloud
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can also create a word cloud of the topic!
+
+.. code-block:: python
+
+    ctm.get_wordcloud(topic_id=47, n_words=15)
+
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/displaying_topic.png
+   :align: center
+   :width: 400px
+
+This functionality is currently available only in the dev version, you have to install the package directly from github
+if you want to use this: pip install git+https://github.com/MilaNLProc/contextualized-topic-models/
+
 Combined Topic Modeling
 -----------------------
 
