@@ -2,6 +2,14 @@
 History
 =======
 
+1.7.1 (2020-12-17)
+------------------
+
+* some minor updates to the documentation
+* adding a new method to visualize the topic using a wordcloud
+* save and load will now generate a warning since the feature has not been tested
+
+
 1.7.0 (2020-12-10)
 ------------------
 
