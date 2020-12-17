@@ -85,7 +85,6 @@ class CTM(object):
         self.reduce_on_plateau = reduce_on_plateau
         self.num_data_loader_workers = num_data_loader_workers
 
-        # init inference avitm network
         self.model = DecoderNetwork(
             input_size, self.bert_size, inference_type, n_components, model_type, hidden_sizes, activation,
             dropout, learn_priors)
@@ -364,7 +363,7 @@ class CTM(object):
         return topics
 
     def _format_file(self):
-        model_dir = "AVITM_nc_{}_tpm_{}_tpv_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}".\
+        model_dir = "contextualized_topic_model_nc_{}_tpm_{}_tpv_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}".\
             format(self.n_components, 0.0, 1 - (1./self.n_components),
                    self.model_type, self.hidden_sizes, self.activation,
                    self.dropout, self.lr, self.momentum,
