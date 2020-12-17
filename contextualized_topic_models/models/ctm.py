@@ -379,7 +379,7 @@ class CTM(object):
         warnings.simplefilter('always', Warning)
         warnings.warn("This is an experimental feature that we has not been fully tested. Refer to the following issue:"
                       "https://github.com/MilaNLProc/contextualized-topic-models/issues/38",
-                      DeprecationWarning)
+                      Warning)
 
         if (self.model is not None) and (models_dir is not None):
 
@@ -404,7 +404,7 @@ class CTM(object):
         warnings.simplefilter('always', Warning)
         warnings.warn("This is an experimental feature that we has not been fully tested. Refer to the following issue:"
                       "https://github.com/MilaNLProc/contextualized-topic-models/issues/38",
-                      DeprecationWarning)
+                      Warning)
 
         epoch_file = "epoch_"+str(epoch)+".pth"
         model_file = os.path.join(model_dir, epoch_file)
