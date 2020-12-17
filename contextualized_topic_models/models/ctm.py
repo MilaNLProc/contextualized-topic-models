@@ -372,10 +372,15 @@ class CTM(object):
 
     def save(self, models_dir=None):
         """
-        Save model.
+        Save model. (Experimental Feature, not tested)
 
         :param models_dir: path to directory for saving NN models.
         """
+        warnings.simplefilter('always', Warning)
+        warnings.warn("This is an experimental feature that we has not been fully tested. Refer to the following issue:"
+                      "https://github.com/MilaNLProc/contextualized-topic-models/issues/38",
+                      DeprecationWarning)
+
         if (self.model is not None) and (models_dir is not None):
 
             model_dir = self._format_file()
@@ -390,11 +395,17 @@ class CTM(object):
 
     def load(self, model_dir, epoch):
         """
-        Load a previously trained model.
+        Load a previously trained model. (Experimental Feature, not tested)
 
         :param model_dir: directory where models are saved.
         :param epoch: epoch of model to load.
         """
+
+        warnings.simplefilter('always', Warning)
+        warnings.warn("This is an experimental feature that we has not been fully tested. Refer to the following issue:"
+                      "https://github.com/MilaNLProc/contextualized-topic-models/issues/38",
+                      DeprecationWarning)
+
         epoch_file = "epoch_"+str(epoch)+".pth"
         model_file = os.path.join(model_dir, epoch_file)
         with open(model_file, 'rb') as model_dict:
