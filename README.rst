@@ -244,8 +244,6 @@ You can also create a word cloud of the topic!
    :align: center
    :width: 400px
 
-This functionality is currently available only in the dev version, you have to install the package directly from github
-if you want to use this: pip install git+https://github.com/MilaNLProc/contextualized-topic-models/
 
 Combined Topic Modeling
 -----------------------
