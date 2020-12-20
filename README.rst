@@ -13,7 +13,7 @@ Contextualized Topic Models
         :alt: Documentation Status
 
 .. image:: https://img.shields.io/github/contributors/MilaNLProc/contextualized-topic-models
-        :target: https://github.com/MilaNLProc/contextualized-topic-modelsgraphs/contributors/
+        :target: https://github.com/MilaNLProc/contextualized-topic-models/graphs/contributors/
         :alt: Contributors
 
 .. image:: https://img.shields.io/badge/License-MIT-blue.svg
