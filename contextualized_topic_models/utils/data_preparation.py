@@ -40,8 +40,8 @@ class QuickText:
     def __init__(self, bert_model, text_for_bow, text_for_bert=None):
         """
         :param bert_model: string, bert model to use
-        :param text_for_bert: list, list of sentences with the unpreprocessed text
         :param text_for_bow: list, list of sentences with the preprocessed text
+        :param text_for_bert: list, list of sentences with the unpreprocessed text
         """
         self.vocab_dict = {}
         self.vocab = []
@@ -52,11 +52,7 @@ class QuickText:
         self.text_handler = ""
         self.data_bert = None
         self.text_for_bow = text_for_bow
-
-        if text_for_bert is not None:
-            self.text_for_bert = text_for_bert
-        else:
-            self.text_for_bert = None
+        self.text_for_bert = text_for_bert
 
 
     def prepare_bow(self):
