@@ -37,11 +37,11 @@ class QuickText:
     """
     Integrated class to handle all the text preprocessing needed
     """
-    def __init__(self, bert_model, text_for_bert, text_for_bow=None):
+    def __init__(self, bert_model, text_for_bow, text_for_bert=None):
         """
         :param bert_model: string, bert model to use
-        :param text_for_bert: list, list of sentences with the unpreprocessed text
         :param text_for_bow: list, list of sentences with the preprocessed text
+        :param text_for_bert: list, list of sentences with the unpreprocessed text
         """
         self.vocab_dict = {}
         self.vocab = []
