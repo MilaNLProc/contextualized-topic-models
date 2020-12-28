@@ -2,6 +2,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 import scipy.sparse
 import warnings
+import pickle
 from contextualized_topic_models.datasets.dataset import CTMDataset
 
 def get_bag_of_words(data, min_length):
@@ -53,6 +54,7 @@ class QuickText:
         self.data_bert = None
         self.text_for_bow = text_for_bow
         self.text_for_bert = text_for_bert
+        self.loaded_from_config = False
 
 
     def prepare_bow(self):
@@ -87,19 +89,39 @@ class QuickText:
         self.idx2token = {v: k for (k, v) in self.vocab_dict.items()}
         self.bow = scipy.sparse.csr_matrix((data, indices, indptr), dtype=int)
 
-    def load_contextualized_embeddings(self, embeddings):
-        self.data_bert = embeddings
+    def load_configuration(self, bow_embeddings, contextualized_embeddings, vocab, id2token):
+        """
+        This method defines a way to instantiate the model with pre-trained data.
+        """
+
+        assert len(contextualized_embeddings) == bow_embeddings.shape[0]
+        assert len(vocab) == len(id2token)
+        self.data_bert = contextualized_embeddings
+        self.bow = bow_embeddings
+        self.vocab = vocab
+        self.idx2token = id2token
+        self.loaded_from_config = True
+
+    def load_pre_trained_contextualized(self, contextualized_embeddings):
+        """
+        In case the contextualized embeddings have been already trained, it is possible to load them with this method
+        """
+        self.data_bert = contextualized_embeddings
 
     def load_dataset(self):
-        self.prepare_bow()
+        if self.loaded_from_config:
+            training_dataset = CTMDataset(self.bow, self.data_bert, self.idx2token)
+        else:
+            self.prepare_bow()
 
-        if self.data_bert is None:
-            if self.text_for_bert is not None:
-                self.data_bert = bert_embeddings_from_list(self.text_for_bert, self.bert_model)
-            else:
-                self.data_bert = bert_embeddings_from_list(self.text_for_bow, self.bert_model)
+            if self.data_bert is None:
+                if self.text_for_bert is not None:
+                    self.data_bert = bert_embeddings_from_list(self.text_for_bert, self.bert_model)
+                else:
+                    self.data_bert = bert_embeddings_from_list(self.text_for_bow, self.bert_model)
 
-        training_dataset = CTMDataset(self.bow, self.data_bert, self.idx2token)
+            training_dataset = CTMDataset(self.bow, self.data_bert, self.idx2token)
+
         return training_dataset
 
 class TextHandler:
