@@ -214,14 +214,20 @@ is covered by **distiluse-base-multilingual-cased**).
 
 .. code-block:: python
 
-
-    list_of_SPANISH_documents = [
-        "hola, bienvenido",
+    list_of_unpreprocessed_SPANISH_documents = [
+        "hola, bienvenido!!",
     ]
 
+    list_of_preprocessed_SPANISH_documents = [
+        "hola bienvenido", 
+    ] 
+    # note that this bag of words is added only for compatibility reasons related to how we train the model. You NEED to have/create it, but it WILL NOT be used.
+    
+    assert len(list_of_unpreprocessed_SPANISH_documents) == len(list_of_preprocessed_SPANISH_documents)
+    
     qt = QuickText("distiluse-base-multilingual-cased",
-                    text_for_bert=list_of_SPANISH_documents,
-                    text_for_bow=list_of_SPANISH_documents)
+                    text_for_bert=list_of_unpreprocessed_SPANISH_documents,
+                    text_for_bow=list_of_preprocessed_SPANISH_documents)
 
     testing_dataset = qt.load_dataset()
 
