@@ -278,6 +278,35 @@ the coherence of the predicted topics (https://arxiv.org/pdf/2004.03974.pdf).
 More Advanced Stuff
 -------------------
 
+Training and Testing with CombinedTM
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you need to do training/testing evaluation, you need to perform the following steps:
+
+.. code-block:: python
+
+    from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_list
+    from sklearn.feature_extraction.text import CountVectorizer
+
+    train_contextualized_embeddings = bert_embeddings_from_list("bert_model", train_list_of_unpreprocessed_documents)
+    test_contextualized_embeddings = bert_embeddings_from_list("bert_model", test_list_of_unpreprocessed_documents)
+
+    # Very important part
+    vectorizer = CountVectorizer()
+    train_bow_embeddings = vectorizer.fit_transform(train_list_of_preprocessed_documents)
+    test_bow_embeddings = vectorizer.transform(test_list_of_preprocessed_documents)
+    # end of very important part
+
+    qt_train = QuickText("bert_model", None, None)
+    qt_train.load_configuration(train_bow_embeddings, train_contextualized_embeddings, vocab, id2token)
+    training_dataset = qt_train.load_dataset()
+
+    ctm = CombinedTM(input_size=len(qt_train.vocab), bert_input_size=BERT_SIZE, n_components=NUM_TOPICS)
+    ctm.fit(training_dataset)
+    qt_test = QuickText("bert_model", None, None)
+    qt_test.load_configuration(test_bow_embeddings, test_contextualized_embeddings, vocab, id2token)
+    testing_dataset = qt_test.load_dataset()
+
 Evaluation
 ~~~~~~~~~~
 
