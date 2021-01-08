@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import scipy.sparse
@@ -36,12 +37,21 @@ def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200):
 
 class TopicModelDataPreparation:
 
-    def __init__(self, contextualized_model):
+    def __init__(self, contextualized_model=None):
         self.contextualized_model = contextualized_model
         self.vocab = []
         self.id2token = {}
+        self.vectorizer = None
+
+    def load_from_embeddings(self, bow_embeddings, contextualized_embeddings, id2token):
+        return CTMDataset(bow_embeddings, contextualized_embeddings, id2token)
 
     def create_training_set(self, text_for_bert, text_for_bow):
+
+        if self.contextualized_model is None:
+            raise Exception("You should define a contextualized model if you want to create the embeddings")
+
+        # TODO: this count vectorizer removes tokens that have len = 1, might be unexpected for the users
         self.vectorizer = CountVectorizer()
 
         train_bow_embeddings = self.vectorizer.fit_transform(text_for_bow)
@@ -52,6 +62,9 @@ class TopicModelDataPreparation:
         return CTMDataset(train_bow_embeddings, train_contextualized_embeddings, self.id2token)
 
     def create_test_set(self, text_for_bert, text_for_bow=None):
+
+        if self.contextualized_model is None:
+            raise Exception("You should define a contextualized model if you want to create the embeddings")
 
         if text_for_bow is not None:
             test_bow_embeddings = self.vectorizer.transform(text_for_bow)

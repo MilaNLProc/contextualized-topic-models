@@ -14,7 +14,7 @@ import wordcloud
 import matplotlib.pyplot as plt
 from scipy.special import softmax
 
-class CTM(object):
+class CTM:
     """Class to train the contextualized topic model. This is the more general class that we are keeping to
     avoid braking code, user should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
 
@@ -43,7 +43,6 @@ class CTM(object):
         warnings.simplefilter('always', DeprecationWarning)
 
         if self.__class__.__name__ == "CTM":
-
             warnings.warn("Direct call to CTM is deprecated and will be removed in version 2, use CombinedTM or ZeroShotTM", DeprecationWarning)
 
         assert isinstance(input_size, int) and input_size > 0,\
@@ -485,19 +484,65 @@ class CTM(object):
 class ZeroShotTM(CTM):
     """
     ZeroShotTM, as described in https://arxiv.org/pdf/2004.07737v1.pdf
+
+    :param input_size: int, dimension of input
+    :param bert_input_size: int, dimension of input that comes from BERT embeddings
+    :param n_components: int, number of topic components, (default 10)
+    :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
+    :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
+    :param activation: string, 'softplus', 'relu', (default 'softplus')
+    :param dropout: float, dropout to use (default 0.2)
+    :param learn_priors: bool, make priors a learnable parameter (default True)
+    :param batch_size: int, size of batch to use for training (default 64)
+    :param lr: float, learning rate to use for training (default 2e-3)
+    :param momentum: float, momentum to use for training (default 0.99)
+    :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
+    :param num_epochs: int, number of epochs to train for, (default 100)
+    :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
+    :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
+
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, input_size, bert_input_size, n_components=10, model_type='prodLDA',
+                 hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
+                 learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         inference_type = "zeroshot"
-        super().__init__(inference_type=inference_type, **kwargs)
+        super().__init__(input_size, bert_input_size, inference_type, n_components, model_type,
+                 hidden_sizes, activation, dropout,
+                 learn_priors, batch_size, lr, momentum,
+                 solver, num_epochs, reduce_on_plateau, num_data_loader_workers)
 
 
 class CombinedTM(CTM):
     """
     CombinedTM, as described in https://arxiv.org/pdf/2004.03974.pdf
+
+    :param input_size: int, dimension of input
+    :param bert_input_size: int, dimension of input that comes from BERT embeddings
+    :param n_components: int, number of topic components, (default 10)
+    :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
+    :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
+    :param activation: string, 'softplus', 'relu', (default 'softplus')
+    :param dropout: float, dropout to use (default 0.2)
+    :param learn_priors: bool, make priors a learnable parameter (default True)
+    :param batch_size: int, size of batch to use for training (default 64)
+    :param lr: float, learning rate to use for training (default 2e-3)
+    :param momentum: float, momentum to use for training (default 0.99)
+    :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
+    :param num_epochs: int, number of epochs to train for, (default 100)
+    :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
+    :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
-    def __init__(self, **kwargs):
+
+    def __init__(self, input_size, bert_input_size, n_components=10, model_type='prodLDA',
+                 hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
+                 learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         inference_type = "combined"
-        super().__init__(inference_type=inference_type, **kwargs)
+        super().__init__(input_size, bert_input_size, inference_type, n_components, model_type,
+                 hidden_sizes, activation, dropout,
+                 learn_priors, batch_size, lr, momentum,
+                 solver, num_epochs, reduce_on_plateau, num_data_loader_workers)
 
 
