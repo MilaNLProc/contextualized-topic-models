@@ -14,6 +14,7 @@ import wordcloud
 import matplotlib.pyplot as plt
 from scipy.special import softmax
 
+
 class CTM:
     """Class to train the contextualized topic model. This is the more general class that we are keeping to
     avoid braking code, user should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
@@ -43,13 +44,15 @@ class CTM:
         warnings.simplefilter('always', DeprecationWarning)
 
         if self.__class__.__name__ == "CTM":
-            warnings.warn("Direct call to CTM is deprecated and will be removed in version 2, use CombinedTM or ZeroShotTM", DeprecationWarning)
+            warnings.warn(
+                "Direct call to CTM is deprecated and will be removed in version 2, use CombinedTM or ZeroShotTM",
+                DeprecationWarning)
 
-        assert isinstance(input_size, int) and input_size > 0,\
+        assert isinstance(input_size, int) and input_size > 0, \
             "input_size must by type int > 0."
-        assert isinstance(n_components, int) and input_size > 0,\
+        assert isinstance(n_components, int) and input_size > 0, \
             "n_components must by type int > 0."
-        assert model_type in ['LDA', 'prodLDA'],\
+        assert model_type in ['LDA', 'prodLDA'], \
             "model must be 'LDA' or 'prodLDA'."
         assert isinstance(hidden_sizes, tuple), \
             "hidden_sizes must be type tuple."
@@ -57,13 +60,13 @@ class CTM:
             "activation must be 'softplus' or 'relu'."
         assert dropout >= 0, "dropout must be >= 0."
         assert isinstance(learn_priors, bool), "learn_priors must be boolean."
-        assert isinstance(batch_size, int) and batch_size > 0,\
+        assert isinstance(batch_size, int) and batch_size > 0, \
             "batch_size must be int > 0."
         assert lr > 0, "lr must be > 0."
-        assert isinstance(momentum, float) and 0 < momentum <= 1,\
+        assert isinstance(momentum, float) and 0 < momentum <= 1, \
             "momentum must be 0 < float <= 1."
         assert solver in ['adam', 'sgd'], "solver must be 'adam' or 'sgd'."
-        assert isinstance(reduce_on_plateau, bool),\
+        assert isinstance(reduce_on_plateau, bool), \
             "reduce_on_plateau must be type bool."
         assert isinstance(num_data_loader_workers, int) and num_data_loader_workers >= 0, \
             "num_data_loader_workers must by type int >= 0. set 0 if you are using windows"
@@ -162,8 +165,8 @@ class CTM:
             # forward pass
             self.model.zero_grad()
             prior_mean, prior_variance, \
-                posterior_mean, posterior_variance, posterior_log_variance, \
-                word_dists = self.model(X, X_bert)
+            posterior_mean, posterior_variance, posterior_log_variance, \
+            word_dists = self.model(X, X_bert)
 
             # backward pass
             loss = self._loss(
@@ -202,10 +205,10 @@ class CTM:
                    Momentum: {}\n\
                    Reduce On Plateau: {}\n\
                    Save Dir: {}".format(
-                       self.n_components, 0.0,
-                       1. - (1./self.n_components), self.model_type,
-                       self.hidden_sizes, self.activation, self.dropout, self.learn_priors,
-                       self.lr, self.momentum, self.reduce_on_plateau, save_dir))
+                self.n_components, 0.0,
+                1. - (1. / self.n_components), self.model_type,
+                self.hidden_sizes, self.activation, self.dropout, self.learn_priors,
+                self.lr, self.momentum, self.reduce_on_plateau, save_dir))
 
         self.model_dir = save_dir
         self.train_data = train_dataset
@@ -229,8 +232,8 @@ class CTM:
             e = datetime.datetime.now()
             pbar.update(1)
             pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
-                    epoch+1, self.num_epochs, samples_processed,
-                    len(self.train_data)*self.num_epochs, train_loss, e - s))
+                epoch + 1, self.num_epochs, samples_processed,
+                len(self.train_data) * self.num_epochs, train_loss, e - s))
 
             # save best
             if train_loss < self.best_loss_train:
@@ -292,7 +295,7 @@ class CTM:
 
                 final_thetas.append(np.array(collect_theta))
         pbar.close()
-        return np.sum(final_thetas, axis=0)/n_samples
+        return np.sum(final_thetas, axis=0) / n_samples
 
     def get_most_likely_topic(self, doc_topic_distribution):
         """ get the most likely topic for each document
@@ -352,7 +355,6 @@ class CTM:
         """
         Retrieve the lists of topic words.
 
-
         :param k: (int) number of words to return per topic, default 10.
         """
         assert k <= self.input_size, "k must be <= input size."
@@ -367,8 +369,8 @@ class CTM:
         return topics
 
     def _format_file(self):
-        model_dir = "contextualized_topic_model_nc_{}_tpm_{}_tpv_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}".\
-            format(self.n_components, 0.0, 1 - (1./self.n_components),
+        model_dir = "contextualized_topic_model_nc_{}_tpm_{}_tpv_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}". \
+            format(self.n_components, 0.0, 1 - (1. / self.n_components),
                    self.model_type, self.hidden_sizes, self.activation,
                    self.dropout, self.lr, self.momentum,
                    self.reduce_on_plateau)
@@ -410,7 +412,7 @@ class CTM:
                       "https://github.com/MilaNLProc/contextualized-topic-models/issues/38",
                       Warning)
 
-        epoch_file = "epoch_"+str(epoch)+".pth"
+        epoch_file = "epoch_" + str(epoch) + ".pth"
         model_file = os.path.join(model_dir, epoch_file)
         with open(model_file, 'rb') as model_dict:
             checkpoint = torch.load(model_dict)
@@ -514,9 +516,9 @@ class ZeroShotTM(CTM):
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         inference_type = "zeroshot"
         super().__init__(input_size, bert_input_size, inference_type, n_components, model_type,
-                 hidden_sizes, activation, dropout,
-                 learn_priors, batch_size, lr, momentum,
-                 solver, num_epochs, reduce_on_plateau, num_data_loader_workers)
+                         hidden_sizes, activation, dropout,
+                         learn_priors, batch_size, lr, momentum,
+                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers)
 
 
 class CombinedTM(CTM):
@@ -546,8 +548,6 @@ class CombinedTM(CTM):
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         inference_type = "combined"
         super().__init__(input_size, bert_input_size, inference_type, n_components, model_type,
-                 hidden_sizes, activation, dropout,
-                 learn_priors, batch_size, lr, momentum,
-                 solver, num_epochs, reduce_on_plateau, num_data_loader_workers)
-
-
+                         hidden_sizes, activation, dropout,
+                         learn_priors, batch_size, lr, momentum,
+                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers)

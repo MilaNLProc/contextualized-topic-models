@@ -5,16 +5,13 @@
 from contextualized_topic_models.models.ctm import CTM, ZeroShotTM, CombinedTM
 from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file, bert_embeddings_from_list
 import numpy as np
-import pickle
 from contextualized_topic_models.utils.data_preparation import TextHandler
 from contextualized_topic_models.utils.data_preparation import QuickText, TopicModelDataPreparation
 from contextualized_topic_models.datasets.dataset import CTMDataset
 from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing, SimplePreprocessing
-
 import os
 import pytest
 import nltk
-from math import isclose
 
 
 nltk.download("stopwords")
@@ -36,7 +33,6 @@ def test_embeddings_from_scratch(data_dir):
     assert np.array_equal(handler.bow.todense(), np.array([[1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                                              [1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
                                              [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 2]]))
-
 
 def test_training_all_classes_ctm(data_dir):
     handler = TextHandler(data_dir + "sample_text_document")
