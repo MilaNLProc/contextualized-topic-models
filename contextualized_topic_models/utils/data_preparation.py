@@ -46,7 +46,7 @@ class TopicModelDataPreparation:
     def load_from_embeddings(self, bow_embeddings, contextualized_embeddings, id2token):
         return CTMDataset(bow_embeddings, contextualized_embeddings, id2token)
 
-    def create_training_set(self, text_for_bert, text_for_bow):
+    def create_training_set(self, text_for_contextual, text_for_bow):
 
         if self.contextualized_model is None:
             raise Exception("You should define a contextualized model if you want to create the embeddings")
@@ -55,13 +55,13 @@ class TopicModelDataPreparation:
         self.vectorizer = CountVectorizer()
 
         train_bow_embeddings = self.vectorizer.fit_transform(text_for_bow)
-        train_contextualized_embeddings = bert_embeddings_from_list(text_for_bert, self.contextualized_model)
+        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
         self.vocab = self.vectorizer.get_feature_names()
         self.id2token = {k: v for k, v in zip(range(0, len(self.vocab)), self.vocab)}
 
         return CTMDataset(train_bow_embeddings, train_contextualized_embeddings, self.id2token)
 
-    def create_test_set(self, text_for_bert, text_for_bow=None):
+    def create_test_set(self, text_for_contextual, text_for_bow=None):
 
         if self.contextualized_model is None:
             raise Exception("You should define a contextualized model if you want to create the embeddings")
@@ -70,8 +70,8 @@ class TopicModelDataPreparation:
             test_bow_embeddings = self.vectorizer.transform(text_for_bow)
         else:
             # dummy matrix
-            test_bow_embeddings = scipy.sparse.csr_matrix(np.ones((len(text_for_bert), 1)))
-        test_contextualized_embeddings = bert_embeddings_from_list(text_for_bert, self.contextualized_model)
+            test_bow_embeddings = scipy.sparse.csr_matrix(np.ones((len(text_for_contextual), 1)))
+        test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
 
         return CTMDataset(test_bow_embeddings, test_contextualized_embeddings, self.id2token)
 
