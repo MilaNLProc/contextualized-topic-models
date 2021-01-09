@@ -43,7 +43,7 @@ class TopicModelDataPreparation:
         self.id2token = {}
         self.vectorizer = None
 
-    def load_from_embeddings(self, bow_embeddings, contextualized_embeddings, id2token):
+    def load_from_embeddings(self, contextualized_embeddings, bow_embeddings, id2token):
         return CTMDataset(bow_embeddings, contextualized_embeddings, id2token)
 
     def create_training_set(self, text_for_contextual, text_for_bow):
