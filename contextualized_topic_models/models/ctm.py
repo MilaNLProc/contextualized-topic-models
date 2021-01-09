@@ -1,7 +1,7 @@
 import os
 from collections import defaultdict
 import multiprocessing as mp
-
+from tqdm import tqdm
 import numpy as np
 import datetime
 import warnings
@@ -180,7 +180,7 @@ class CTM:
 
         return samples_processed, train_loss
 
-    def fit(self, train_dataset, save_dir=None, verbose=True):
+    def fit(self, train_dataset, save_dir=None, verbose=False):
         """
         Train the CTM model.
 
@@ -219,6 +219,7 @@ class CTM:
         samples_processed = 0
 
         # train loop
+        pbar = tqdm(self.num_epochs, position=0, leave=True)
         for epoch in range(self.num_epochs):
             self.nn_epoch = epoch
             # train epoch
@@ -226,9 +227,8 @@ class CTM:
             sp, train_loss = self._train_epoch(train_loader)
             samples_processed += sp
             e = datetime.datetime.now()
-
-            if verbose:
-                print("Epoch: [{}/{}]\tSamples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
+            pbar.update(1)
+            pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
                     epoch+1, self.num_epochs, samples_processed,
                     len(self.train_data)*self.num_epochs, train_loss, e - s))
 
@@ -239,6 +239,7 @@ class CTM:
 
                 if save_dir is not None:
                     self.save(save_dir)
+        pbar.close()
 
     def get_thetas(self, dataset, n_samples=20):
         """
@@ -266,11 +267,12 @@ class CTM:
         loader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=False,
             num_workers=self.num_data_loader_workers)
-
+        pbar = tqdm(n_samples, position=0, leave=True)
         final_thetas = []
-        for _ in range(n_samples):
+        for sample_index in range(n_samples):
             with torch.no_grad():
                 collect_theta = []
+
                 for batch_samples in loader:
                     # batch_size x vocab_size
                     X = batch_samples['X']
@@ -285,8 +287,11 @@ class CTM:
                     self.model.zero_grad()
                     collect_theta.extend(self.model.get_theta(X, X_bert).cpu().numpy().tolist())
 
-                final_thetas.append(np.array(collect_theta))
+                pbar.update(1)
+                pbar.set_description("Sampling: [{}/{}]".format(sample_index + 1, n_samples))
 
+                final_thetas.append(np.array(collect_theta))
+        pbar.close()
         return np.sum(final_thetas, axis=0)/n_samples
 
     def get_most_likely_topic(self, doc_topic_distribution):
