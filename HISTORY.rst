@@ -7,6 +7,7 @@ History
 
 * novel way to handle text, we know allow for an easy usage of training and testing data
 * better visualization of the training progress and of the sampling process
+* removed old stuff from the documentation
 
 1.7.1 (2020-12-17)
 ------------------
