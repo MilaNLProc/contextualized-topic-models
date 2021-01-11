@@ -70,7 +70,7 @@ class TopicModelDataPreparation:
             test_bow_embeddings = self.vectorizer.transform(text_for_bow)
         else:
             # dummy matrix
-            test_bow_embeddings = scipy.sparse.csr_matrix(np.ones((len(text_for_contextual), 1)))
+            test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
         test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
 
         return CTMDataset(test_bow_embeddings, test_contextualized_embeddings, self.id2token)
