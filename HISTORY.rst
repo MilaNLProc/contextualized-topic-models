@@ -5,7 +5,7 @@ History
 1.8.0 (2020-?-?)
 ------------------
 
-* novel way to handle text, we know allow for an easy usage of training and testing data
+* novel way to handle text, we now allow for an easy usage of training and testing data
 * better visualization of the training progress and of the sampling process
 * removed old stuff from the documentation
 
