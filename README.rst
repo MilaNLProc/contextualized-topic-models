@@ -90,9 +90,9 @@ TL;DR
 -----
 
 + In CTMs we have two models. CombinedTM and ZeroShotTM, they have different use cases.
-+ CTMs work better when the size of the bag of words **has been restricted to a number of terms** that does not go over **2000 elements** (this is because we have a neural model that reconstructs the input bag of word). We have a preprocessing_ pipeline that can help you in dealing with this.
-+ Check the BERT model you are using, the **multilingual BERT model one used on English data might not give results that are as good** as the pure English trained one.
-+ **Preprocessing is key**. If you give BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
++ CTMs work better when the size of the bag of words **has been restricted to a number of terms** that does not go over **2000 elements** (this is because we have a neural model that reconstructs the input bag of word). This is **NOT** a strict limit, however, consider preprocessing your dataset. We have a preprocessing_ pipeline that can help you in dealing with this.
++ Check the contextual model you are using, the **multilingual model one used on English data might not give results that are as good** as the pure English trained one.
++ **Preprocessing is key**. If you give a contextual model like BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
 
 
 Software Details
@@ -106,10 +106,11 @@ Software Details
 Features
 ~~~~~~~~
 
-* Combines BERT and Neural Variational Topic Models
-* Two different methodologies: Combined, where we combine BoW and BERT embeddings and ZeroShot, that uses only BERT embeddings
+* Combines Contextual Language Models (e.g., BERT) and Neural Variational Topic Models
+* Two different methodologies: Combined, where we combine BoW and contextual embeddings and ZeroShot, that uses only contextual embeddings
 * Includes methods to create embedded representations and BoW
 * Includes evaluation metrics
+* Includes wordclouds
 
 
 Overview
