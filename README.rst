@@ -45,7 +45,7 @@ README
 Make **sure** you read the doc a bit.
 The cross-lingual topic modeling requires to use a ZeroShot model and it is trained only on **ONE** language;
 with the power of multilingual BERT it can then be used to predict the topics of documents in unseen languages.
-For more details you can read the two papers mentioned above.
+For more details, you can read the two papers mentioned above.
 
 
 Jump start Tutorial
@@ -89,7 +89,7 @@ Jump start Tutorial
 TL;DR
 -----
 
-+ In CTMs we have two models. CombinedTM and ZeroShotTM, they have different use cases.
++ In CTMs we have two models. CombinedTM and ZeroShotTM, which have different use cases.
 + CTMs work better when the size of the bag of words **has been restricted to a number of terms** that does not go over **2000 elements** (this is because we have a neural model that reconstructs the input bag of word). This is **NOT** a strict limit, however, consider preprocessing your dataset. We have a preprocessing_ pipeline that can help you in dealing with this.
 + Check the contextual model you are using, the **multilingual model one used on English data might not give results that are as good** as the pure English trained one.
 + **Preprocessing is key**. If you give a contextual model like BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
@@ -100,7 +100,7 @@ Software Details
 
 * Free software: MIT license
 * Documentation: https://contextualized-topic-models.readthedocs.io.
-* Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package from which we constructed the foundations of this package. We are happy to redistribute again this software under the MIT License.
+* Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package from which we constructed the foundations of this package. We are happy to redistribute this software again under the MIT License.
 
 
 Features
@@ -147,19 +147,18 @@ CombinedTM:
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
 
-Mono vs Multi-lingual Embeddings: Which Embeddings Should I Use?
+Mono vs Multilingual Embeddings: Which Embeddings Should I Use?
 ----------------------------------------------------------------
 
 All the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
 If you are doing topic modeling in English, **you SHOULD use the English sentence-bert model**, `bert-base-nli-mean-tokens`. In that case,
-it's really easy to update the code to support mono-lingual English topic modeling.
+it's really easy to update the code to support monolingual English topic modeling.
 
 .. code-block:: python
 
     qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
 
-In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
-and in HuggingFace.
+In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_ and in HuggingFace.
 
 Zero-Shot Cross-Lingual Topic Modeling
 --------------------------------------
@@ -195,9 +194,9 @@ More interestingly, this model can be used for cross-lingual topic modeling! See
     ctm.get_topics()
 
 
-As you cann see, the high level API to handle the text is pretty easy to use;
+As you can see, the high-level API to handle the text is pretty easy to use;
 **text_for_bert** should be used to pass to the model a list of documents that are not preprocessed.
-Instead, to **text_for_bow** you should pass the pre-processed text used to build the BoW.
+Instead, to **text_for_bow** you should pass the preprocessed text used to build the BoW.
 
 **Advanced Notes:** in this way, SBERT can use all the information in the text to generate the representations.
 
@@ -210,7 +209,7 @@ is covered by **distiluse-base-multilingual-cased**).
 
 .. code-block:: python
 
-    # here we have a spanish document
+    # here we have a Spanish document
     testing_text_for_contextual = [
         "hola, bienvenido",
     ]
@@ -220,7 +219,7 @@ is covered by **distiluse-base-multilingual-cased**).
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
 
-**Advanced Notes:** We do not need to pass the spanish bag of word: the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reason, but you cannot get
+**Advanced Notes:** We do not need to pass the Spanish bag of word: the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reasons, but you cannot get
 the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
 
 Showing The Topic Word Cloud
@@ -324,7 +323,7 @@ topics using NPMI using our simple and high-level API.
 Preprocessing
 ~~~~~~~~~~~~~
 
-Do you need a quick script to run the preprocessing pipeline? we got you covered! Load your documents
+Do you need a quick script to run the preprocessing pipeline? We got you covered! Load your documents
 and then use our SimplePreprocessing class. It will automatically filter infrequent words and remove documents
 that are empty after training. The preprocess method will return the preprocessed and the unpreprocessed documents.
 We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of Word.
