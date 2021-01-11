@@ -63,12 +63,12 @@ Jump start Tutorial
     :target: https://colab.research.google.com/drive/1GCKpfu6ZfyVTk9_FovxnyH48OkNIYOIb?usp=sharing
     :alt: Open In Colab
 
-.. |colab2new| image:: https://colab.research.google.com/assets/colab-badge.svg
+.. |colabzt18| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
     :alt: Open In Colab
 
 .. |colabzt| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1IxEg6GCgXw2weoDYRgU6fciG_CuJ9QiO?usp=sharing
+    :target: https://colab.research.google.com/drive/13YhYgJN9EjSQw5bsZYzMaaiNKQpt_SQn?usp=sharing
     :alt: Open In Colab
 
 
