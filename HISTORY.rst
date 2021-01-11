@@ -2,7 +2,7 @@
 History
 =======
 
-1.8.0 (2020-?-?)
+1.8.0 (2021-01-11)
 ------------------
 
 * novel way to handle text, we now allow for an easy usage of training and testing data
