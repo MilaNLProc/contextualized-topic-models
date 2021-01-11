@@ -214,7 +214,7 @@ is covered by **distiluse-base-multilingual-cased**).
         "hola, bienvenido",
     ]
 
-    training_dataset = qt.create_test_set(testing_text_for_contextual)
+    testing_dataset = qt.create_test_set(testing_text_for_contextual)
 
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
