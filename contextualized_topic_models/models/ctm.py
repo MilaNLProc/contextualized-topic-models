@@ -1,7 +1,7 @@
 import os
 from collections import defaultdict
 import multiprocessing as mp
-
+from tqdm import tqdm
 import numpy as np
 import datetime
 import warnings
@@ -14,7 +14,8 @@ import wordcloud
 import matplotlib.pyplot as plt
 from scipy.special import softmax
 
-class CTM(object):
+
+class CTM:
     """Class to train the contextualized topic model. This is the more general class that we are keeping to
     avoid braking code, user should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
 
@@ -43,14 +44,15 @@ class CTM(object):
         warnings.simplefilter('always', DeprecationWarning)
 
         if self.__class__.__name__ == "CTM":
+            warnings.warn(
+                "Direct call to CTM is deprecated and will be removed in version 2, use CombinedTM or ZeroShotTM",
+                DeprecationWarning)
 
-            warnings.warn("Direct call to CTM is deprecated and will be removed in version 2, use CombinedTM or ZeroShotTM", DeprecationWarning)
-
-        assert isinstance(input_size, int) and input_size > 0,\
+        assert isinstance(input_size, int) and input_size > 0, \
             "input_size must by type int > 0."
-        assert isinstance(n_components, int) and input_size > 0,\
+        assert isinstance(n_components, int) and input_size > 0, \
             "n_components must by type int > 0."
-        assert model_type in ['LDA', 'prodLDA'],\
+        assert model_type in ['LDA', 'prodLDA'], \
             "model must be 'LDA' or 'prodLDA'."
         assert isinstance(hidden_sizes, tuple), \
             "hidden_sizes must be type tuple."
@@ -58,13 +60,13 @@ class CTM(object):
             "activation must be 'softplus' or 'relu'."
         assert dropout >= 0, "dropout must be >= 0."
         assert isinstance(learn_priors, bool), "learn_priors must be boolean."
-        assert isinstance(batch_size, int) and batch_size > 0,\
+        assert isinstance(batch_size, int) and batch_size > 0, \
             "batch_size must be int > 0."
         assert lr > 0, "lr must be > 0."
-        assert isinstance(momentum, float) and 0 < momentum <= 1,\
+        assert isinstance(momentum, float) and 0 < momentum <= 1, \
             "momentum must be 0 < float <= 1."
         assert solver in ['adam', 'sgd'], "solver must be 'adam' or 'sgd'."
-        assert isinstance(reduce_on_plateau, bool),\
+        assert isinstance(reduce_on_plateau, bool), \
             "reduce_on_plateau must be type bool."
         assert isinstance(num_data_loader_workers, int) and num_data_loader_workers >= 0, \
             "num_data_loader_workers must by type int >= 0. set 0 if you are using windows"
@@ -163,8 +165,8 @@ class CTM(object):
             # forward pass
             self.model.zero_grad()
             prior_mean, prior_variance, \
-                posterior_mean, posterior_variance, posterior_log_variance, \
-                word_dists = self.model(X, X_bert)
+            posterior_mean, posterior_variance, posterior_log_variance, \
+            word_dists = self.model(X, X_bert)
 
             # backward pass
             loss = self._loss(
@@ -181,7 +183,7 @@ class CTM(object):
 
         return samples_processed, train_loss
 
-    def fit(self, train_dataset, save_dir=None, verbose=True):
+    def fit(self, train_dataset, save_dir=None, verbose=False):
         """
         Train the CTM model.
 
@@ -203,10 +205,10 @@ class CTM(object):
                    Momentum: {}\n\
                    Reduce On Plateau: {}\n\
                    Save Dir: {}".format(
-                       self.n_components, 0.0,
-                       1. - (1./self.n_components), self.model_type,
-                       self.hidden_sizes, self.activation, self.dropout, self.learn_priors,
-                       self.lr, self.momentum, self.reduce_on_plateau, save_dir))
+                self.n_components, 0.0,
+                1. - (1. / self.n_components), self.model_type,
+                self.hidden_sizes, self.activation, self.dropout, self.learn_priors,
+                self.lr, self.momentum, self.reduce_on_plateau, save_dir))
 
         self.model_dir = save_dir
         self.train_data = train_dataset
@@ -220,6 +222,7 @@ class CTM(object):
         samples_processed = 0
 
         # train loop
+        pbar = tqdm(self.num_epochs, position=0, leave=True)
         for epoch in range(self.num_epochs):
             self.nn_epoch = epoch
             # train epoch
@@ -227,11 +230,10 @@ class CTM(object):
             sp, train_loss = self._train_epoch(train_loader)
             samples_processed += sp
             e = datetime.datetime.now()
-
-            if verbose:
-                print("Epoch: [{}/{}]\tSamples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
-                    epoch+1, self.num_epochs, samples_processed,
-                    len(self.train_data)*self.num_epochs, train_loss, e - s))
+            pbar.update(1)
+            pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
+                epoch + 1, self.num_epochs, samples_processed,
+                len(self.train_data) * self.num_epochs, train_loss, e - s))
 
             # save best
             if train_loss < self.best_loss_train:
@@ -240,6 +242,7 @@ class CTM(object):
 
                 if save_dir is not None:
                     self.save(save_dir)
+        pbar.close()
 
     def get_thetas(self, dataset, n_samples=20):
         """
@@ -267,11 +270,12 @@ class CTM(object):
         loader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=False,
             num_workers=self.num_data_loader_workers)
-
+        pbar = tqdm(n_samples, position=0, leave=True)
         final_thetas = []
-        for _ in range(n_samples):
+        for sample_index in range(n_samples):
             with torch.no_grad():
                 collect_theta = []
+
                 for batch_samples in loader:
                     # batch_size x vocab_size
                     X = batch_samples['X']
@@ -286,9 +290,12 @@ class CTM(object):
                     self.model.zero_grad()
                     collect_theta.extend(self.model.get_theta(X, X_bert).cpu().numpy().tolist())
 
-                final_thetas.append(np.array(collect_theta))
+                pbar.update(1)
+                pbar.set_description("Sampling: [{}/{}]".format(sample_index + 1, n_samples))
 
-        return np.sum(final_thetas, axis=0)/n_samples
+                final_thetas.append(np.array(collect_theta))
+        pbar.close()
+        return np.sum(final_thetas, axis=0) / n_samples
 
     def get_most_likely_topic(self, doc_topic_distribution):
         """ get the most likely topic for each document
@@ -348,7 +355,6 @@ class CTM(object):
         """
         Retrieve the lists of topic words.
 
-
         :param k: (int) number of words to return per topic, default 10.
         """
         assert k <= self.input_size, "k must be <= input size."
@@ -363,8 +369,8 @@ class CTM(object):
         return topics
 
     def _format_file(self):
-        model_dir = "contextualized_topic_model_nc_{}_tpm_{}_tpv_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}".\
-            format(self.n_components, 0.0, 1 - (1./self.n_components),
+        model_dir = "contextualized_topic_model_nc_{}_tpm_{}_tpv_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}". \
+            format(self.n_components, 0.0, 1 - (1. / self.n_components),
                    self.model_type, self.hidden_sizes, self.activation,
                    self.dropout, self.lr, self.momentum,
                    self.reduce_on_plateau)
@@ -406,7 +412,7 @@ class CTM(object):
                       "https://github.com/MilaNLProc/contextualized-topic-models/issues/38",
                       Warning)
 
-        epoch_file = "epoch_"+str(epoch)+".pth"
+        epoch_file = "epoch_" + str(epoch) + ".pth"
         model_file = os.path.join(model_dir, epoch_file)
         with open(model_file, 'rb') as model_dict:
             checkpoint = torch.load(model_dict)
@@ -485,19 +491,63 @@ class CTM(object):
 class ZeroShotTM(CTM):
     """
     ZeroShotTM, as described in https://arxiv.org/pdf/2004.07737v1.pdf
+
+    :param input_size: int, dimension of input
+    :param bert_input_size: int, dimension of input that comes from BERT embeddings
+    :param n_components: int, number of topic components, (default 10)
+    :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
+    :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
+    :param activation: string, 'softplus', 'relu', (default 'softplus')
+    :param dropout: float, dropout to use (default 0.2)
+    :param learn_priors: bool, make priors a learnable parameter (default True)
+    :param batch_size: int, size of batch to use for training (default 64)
+    :param lr: float, learning rate to use for training (default 2e-3)
+    :param momentum: float, momentum to use for training (default 0.99)
+    :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
+    :param num_epochs: int, number of epochs to train for, (default 100)
+    :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
+    :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
+
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, input_size, bert_input_size, n_components=10, model_type='prodLDA',
+                 hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
+                 learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         inference_type = "zeroshot"
-        super().__init__(inference_type=inference_type, **kwargs)
+        super().__init__(input_size, bert_input_size, inference_type, n_components, model_type,
+                         hidden_sizes, activation, dropout,
+                         learn_priors, batch_size, lr, momentum,
+                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers)
 
 
 class CombinedTM(CTM):
     """
     CombinedTM, as described in https://arxiv.org/pdf/2004.03974.pdf
+
+    :param input_size: int, dimension of input
+    :param bert_input_size: int, dimension of input that comes from BERT embeddings
+    :param n_components: int, number of topic components, (default 10)
+    :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
+    :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
+    :param activation: string, 'softplus', 'relu', (default 'softplus')
+    :param dropout: float, dropout to use (default 0.2)
+    :param learn_priors: bool, make priors a learnable parameter (default True)
+    :param batch_size: int, size of batch to use for training (default 64)
+    :param lr: float, learning rate to use for training (default 2e-3)
+    :param momentum: float, momentum to use for training (default 0.99)
+    :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
+    :param num_epochs: int, number of epochs to train for, (default 100)
+    :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
+    :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
-    def __init__(self, **kwargs):
+
+    def __init__(self, input_size, bert_input_size, n_components=10, model_type='prodLDA',
+                 hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
+                 learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         inference_type = "combined"
-        super().__init__(inference_type=inference_type, **kwargs)
-
-
+        super().__init__(input_size, bert_input_size, inference_type, n_components, model_type,
+                         hidden_sizes, activation, dropout,
+                         learn_priors, batch_size, lr, momentum,
+                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers)

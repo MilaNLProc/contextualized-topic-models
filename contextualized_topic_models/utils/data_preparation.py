@@ -1,9 +1,11 @@
+import os
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import scipy.sparse
 import warnings
 import pickle
 from contextualized_topic_models.datasets.dataset import CTMDataset
+from sklearn.feature_extraction.text import CountVectorizer
 
 def get_bag_of_words(data, min_length):
     """
@@ -33,6 +35,45 @@ def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200):
     model = SentenceTransformer(sbert_model_to_load)
     return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
 
+class TopicModelDataPreparation:
+
+    def __init__(self, contextualized_model=None):
+        self.contextualized_model = contextualized_model
+        self.vocab = []
+        self.id2token = {}
+        self.vectorizer = None
+
+    def load(self, contextualized_embeddings, bow_embeddings, id2token):
+        return CTMDataset(bow_embeddings, contextualized_embeddings, id2token)
+
+    def create_training_set(self, text_for_contextual, text_for_bow):
+
+        if self.contextualized_model is None:
+            raise Exception("You should define a contextualized model if you want to create the embeddings")
+
+        # TODO: this count vectorizer removes tokens that have len = 1, might be unexpected for the users
+        self.vectorizer = CountVectorizer()
+
+        train_bow_embeddings = self.vectorizer.fit_transform(text_for_bow)
+        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
+        self.vocab = self.vectorizer.get_feature_names()
+        self.id2token = {k: v for k, v in zip(range(0, len(self.vocab)), self.vocab)}
+
+        return CTMDataset(train_bow_embeddings, train_contextualized_embeddings, self.id2token)
+
+    def create_test_set(self, text_for_contextual, text_for_bow=None):
+
+        if self.contextualized_model is None:
+            raise Exception("You should define a contextualized model if you want to create the embeddings")
+
+        if text_for_bow is not None:
+            test_bow_embeddings = self.vectorizer.transform(text_for_bow)
+        else:
+            # dummy matrix
+            test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
+        test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
+
+        return CTMDataset(test_bow_embeddings, test_contextualized_embeddings, self.id2token)
 
 class QuickText:
     """

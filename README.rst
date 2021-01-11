@@ -31,8 +31,8 @@ Contextualized Topic Models
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
 support topic modeling. See the papers for details:
 
-* `Cross-lingual Contextualized Topic Models with Zero-shot Learning` https://arxiv.org/pdf/2004.07737v1.pdf
-* `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence` https://arxiv.org/pdf/2004.03974.pdf
+* Bianchi, F., Terragni, S., Hovy, D., Nozza, D., & Fersini, E. (2021). `Cross-lingual Contextualized Topic Models with Zero-shot Learning`. EACL. https://arxiv.org/pdf/2004.07737v1.pdf
+* Bianchi, F., Terragni, S., & Hovy, D. (2020). `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence` https://arxiv.org/pdf/2004.03974.pdf
 
 
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/logo.png
@@ -75,16 +75,19 @@ Jump start Tutorial
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
 +================================================================+====================+
+| Zero-Shot Cross-lingual Topic Modeling (stable v1.8.0)         | |colabzt18|        |
++----------------------------------------------------------------+--------------------+
+| CombinedTM for Wikipedia Documents (stable v1.8.0)             | |colab118|         |
++----------------------------------------------------------------+--------------------+
+| CombinedTM with Preprocessing (stable v1.8.0)                  | |colab218|         |
++----------------------------------------------------------------+--------------------+
 | Zero-Shot Cross-lingual Topic Modeling (stable v1.7.0)         | |colabzt|          |
 +----------------------------------------------------------------+--------------------+
 | CombinedTM for Wikipedia Documents (stable v1.7.0)             | |colab1new|        |
 +----------------------------------------------------------------+--------------------+
 | CombinedTM with Preprocessing (stable v1.7.0)                  | |colab2new|        |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM for Wikipedia Documents (v1.6.0)                    | |colab1old|        |
-+----------------------------------------------------------------+--------------------+
-| CombinedTM with Preprocessing (v1.6.0)                         | |colab2old|        |
-+----------------------------------------------------------------+--------------------+
+
 
 TL;DR
 -----
@@ -155,9 +158,7 @@ it's really easy to update the code to support mono-lingual English topic modeli
 
 .. code-block:: python
 
-    qt = QuickText("bert-base-nli-mean-tokens",
-                text_for_bert=list_of_unpreprocessed_documents,
-                text_for_bow=list_of_preprocessed_documents)
+    qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
 
 In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_.
 and in HuggingFace.
@@ -175,7 +176,7 @@ More interestingly, this model can be used for cross-lingual topic modeling! See
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
-    text_for_bert = [
+    text_for_contextual = [
         "hello, this is unpreprocessed text you can give to the model",
         "have fun with our topic model",
     ]
@@ -185,12 +186,9 @@ More interestingly, this model can be used for cross-lingual topic modeling! See
         "fun topic model",
     ]
 
+    qt = TopicModelDataPreparation("distiluse-base-multilingual-cased")
 
-    qt = QuickText("distiluse-base-multilingual-cased",
-                    text_for_bert=list_of_ENGLISH_unpreprocessed_documents,
-                    text_for_bow=list_of_ENGLISH_preprocessed_documents)
-
-    training_dataset = qt.load_dataset()
+    training_dataset = qt.create_training_set(text_for_contextual, text_for_bow)
 
     ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
 
@@ -214,27 +212,17 @@ is covered by **distiluse-base-multilingual-cased**).
 
 .. code-block:: python
 
-    list_of_unpreprocessed_SPANISH_documents = [
-        "hola, bienvenido!!",
+    # here we have a spanish document
+    testing_text_for_contextual = [
+        "hola, bienvenido",
     ]
 
-    list_of_preprocessed_SPANISH_documents = [
-        "hola bienvenido", 
-    ] 
-    # note that this bag of words is added only for compatibility reasons related to how we train the model. You NEED to have/create it, but it WILL NOT be used.
-    
-    assert len(list_of_unpreprocessed_SPANISH_documents) == len(list_of_preprocessed_SPANISH_documents)
-    
-    qt = QuickText("distiluse-base-multilingual-cased",
-                    text_for_bert=list_of_unpreprocessed_SPANISH_documents,
-                    text_for_bow=list_of_preprocessed_SPANISH_documents)
-
-    testing_dataset = qt.load_dataset()
+    training_dataset = qt.create_test_set(testing_text_for_contextual)
 
     # n_sample how many times to sample the distribution (see the doc)
-    ctm.get_thetas(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
+    ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
 
-**Advanced Notes:** the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reason, but you cannot get
+**Advanced Notes:** We do not need to pass the spanish bag of word: the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reason, but you cannot get
 the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
 
 Showing The Topic Word Cloud
@@ -263,11 +251,9 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
-    qt = QuickText("bert-base-nli-mean-tokens",
-                    text_for_bert=list_of_unpreprocessed_documents,
-                    text_for_bow=list_of_preprocessed_documents)
+    qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
 
-    training_dataset = qt.load_dataset()
+    training_dataset = qt.create_training_set(list_of_unpreprocessed_documents, list_of_preprocessed_documents)
 
     ctm = CombinedTM(input_size=len(qt.vocab), bert_input_size=768, n_components=50)
 
@@ -275,14 +261,50 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
 
     ctm.get_topics()
 
-    #ctm.get_thetas(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
-
 
 **Advanced Notes:** Combined TM combines the BoW with SBERT, a process that seems to increase
 the coherence of the predicted topics (https://arxiv.org/pdf/2004.03974.pdf).
 
 More Advanced Stuff
 -------------------
+
+Training and Testing with CombinedTM
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    training_dataset = qt.create_test_set(testing_text_for_contextual, testing_text_for_bow)
+
+    # n_sample how many times to sample the distribution (see the doc)
+    ctm.get_doc_topic_distribution(testing_dataset, n_samples=20)
+
+
+Can I load my own embeddings?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Sure, here is a snippet that can help you. You need to create the embeddings (for bow and contextualized) and you also need
+to have the vocab and an id2token dictionary (maps integers ids to words).
+
+.. code-block:: python
+
+    qt = TopicModelDataPreparation()
+
+    training_dataset = qt.load(contextualized_embeddings, bow_embeddings, id2token)
+    ctm = CombinedTM(input_size=len(vocab), bert_input_size=768, n_components=50)
+    ctm.fit(training_dataset) # run the model
+    ctm.get_topics()
+
+You can give a look at the code we use in the TopicModelDataPreparation object to get an idea on how to create everything from scratch.
+For example:
+
+.. code-block:: python
+
+        self.vectorizer = CountVectorizer() #from sklearn
+
+        train_bow_embeddings = self.vectorizer.fit_transform(text_for_bow)
+        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
+        self.vocab = self.vectorizer.get_feature_names()
+        self.id2token = {k: v for k, v in zip(range(0, len(self.vocab)), self.vocab)}
 
 Evaluation
 ~~~~~~~~~~
@@ -294,7 +316,7 @@ topics using NPMI using our simple and high-level API.
 
     from contextualized_topic_models.evaluation.measures import CoherenceNPMI
 
-    with open('preprocessed_documents.txt',"r") as fr:
+    with open('preprocessed_documents.txt', "r") as fr:
         texts = [doc.split() for doc in fr.read().splitlines()] # load text for NPMI
 
     npmi = CoherenceNPMI(texts=texts, topics=ctm.get_topic_lists(10))
@@ -334,14 +356,12 @@ ZeroShotTM
 
 ::
 
-    @article{bianchi2020crosslingual,
+    @inproceedings{bianchi2020crosslingual,
         title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
         author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
-        year={2020},
-       journal={arXiv preprint arXiv:2004.07737},
+        booktitle={EACL},
+        year={2021}
     }
-
-
 
 CombinedTM
 
