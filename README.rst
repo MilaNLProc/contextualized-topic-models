@@ -51,12 +51,12 @@ For more details you can read the two papers mentioned above.
 Jump start Tutorial
 -------------------
 
-.. |colab1old| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1V0tkpJL1yhiHZUJ_vwQRu6I7_svjw1wb?usp=sharing
+.. |colab118| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1wVWHe8xHasnUbzNs40MwlkJsUhvN98se?usp=sharing
     :alt: Open In Colab
 
-.. |colab2old| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1quD11TMy-1D-GxPUj_Dea4iRYmOO8C2C?usp=sharing
+.. |colab218| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
     :alt: Open In Colab
 
 .. |colab1new| image:: https://colab.research.google.com/assets/colab-badge.svg
@@ -85,9 +85,6 @@ Jump start Tutorial
 +----------------------------------------------------------------+--------------------+
 | CombinedTM for Wikipedia Documents (stable v1.7.0)             | |colab1new|        |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM with Preprocessing (stable v1.7.0)                  | |colab2new|        |
-+----------------------------------------------------------------+--------------------+
-
 
 TL;DR
 -----
