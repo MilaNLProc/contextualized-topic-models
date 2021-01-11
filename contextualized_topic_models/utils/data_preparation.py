@@ -1,9 +1,7 @@
-import os
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import scipy.sparse
 import warnings
-import pickle
 from contextualized_topic_models.datasets.dataset import CTMDataset
 from sklearn.feature_extraction.text import CountVectorizer
 

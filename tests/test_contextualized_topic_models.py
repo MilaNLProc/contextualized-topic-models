@@ -82,6 +82,7 @@ def test_training_all_classes_ctm(data_dir):
 
     ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",
               n_components=5)
+
     ctm.fit(training_dataset)  # run the model
     topics = ctm.get_topic_lists(2)
 
@@ -118,6 +119,11 @@ def test_training_all_classes_ctm(data_dir):
     assert len(topics) == 5
 
     testing_dataset = tp.create_test_set(data)
+    predictions = ctm.get_doc_topic_distribution(testing_dataset, n_samples=2)
+
+    assert len(predictions) == len(testing_dataset)
+
+    testing_dataset = tp.create_test_set(data, data)
     predictions = ctm.get_doc_topic_distribution(testing_dataset, n_samples=2)
 
     assert len(predictions) == len(testing_dataset)
