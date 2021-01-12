@@ -48,8 +48,8 @@ with the power of multilingual BERT it can then be used to predict the topics of
 For more details, you can read the two papers mentioned above.
 
 
-Jump start Tutorial
--------------------
+Jump start Tutorials
+--------------------
 
 .. |colab118| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1wVWHe8xHasnUbzNs40MwlkJsUhvN98se?usp=sharing
