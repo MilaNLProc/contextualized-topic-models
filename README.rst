@@ -71,6 +71,11 @@ Jump start Tutorial
     :target: https://colab.research.google.com/drive/13YhYgJN9EjSQw5bsZYzMaaiNKQpt_SQn?usp=sharing
     :alt: Open In Colab
 
+.. |colabts| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1euxW3ya3_PX6Kj1tnCNrIQ7pjZIODsB6?usp=sharing
+    :alt: Open In Colab
+
+
 
 +----------------------------------------------------------------+--------------------+
 | Name                                                           | Link               |
@@ -80,6 +85,8 @@ Jump start Tutorial
 | CombinedTM for Wikipedia Documents (stable **v1.8.0**)         | |colab118|         |
 +----------------------------------------------------------------+--------------------+
 | CombinedTM with Preprocessing (stable **v1.8.0**)              | |colab218|         |
++----------------------------------------------------------------+--------------------+
+| CombinedTM Training, Saving and Loading (stable **v1.8.0**)    | |colabts|         |
 +----------------------------------------------------------------+--------------------+
 | Zero-Shot Cross-lingual Topic Modeling (**v1.7.0**)            | |colabzt|          |
 +----------------------------------------------------------------+--------------------+
