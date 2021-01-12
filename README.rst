@@ -86,7 +86,7 @@ Jump start Tutorial
 +----------------------------------------------------------------+--------------------+
 | CombinedTM with Preprocessing (stable **v1.8.0**)              | |colab218|         |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM Training, Saving and Loading (stable **v1.8.0**)    | |colabts|         |
+| CombinedTM Training, Saving and Loading (stable **v1.8.0**)    | |colabts|          |
 +----------------------------------------------------------------+--------------------+
 | Zero-Shot Cross-lingual Topic Modeling (**v1.7.0**)            | |colabzt|          |
 +----------------------------------------------------------------+--------------------+
