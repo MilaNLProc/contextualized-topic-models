@@ -176,7 +176,7 @@ More interestingly, this model can be used for cross-lingual topic modeling! See
 .. code-block:: python
 
     from contextualized_topic_models.models.ctm import ZeroShotTM
-    from contextualized_topic_models.utils.data_preparation import QuickText
+    from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
@@ -251,7 +251,7 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
 .. code-block:: python
 
     from contextualized_topic_models.models.ctm import CombinedTM
-    from contextualized_topic_models.utils.data_preparation import QuickText
+    from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
