@@ -303,12 +303,12 @@ For example:
 
 .. code-block:: python
 
-        self.vectorizer = CountVectorizer() #from sklearn
+        vectorizer = CountVectorizer() #from sklearn
 
-        train_bow_embeddings = self.vectorizer.fit_transform(text_for_bow)
-        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
-        self.vocab = self.vectorizer.get_feature_names()
-        self.id2token = {k: v for k, v in zip(range(0, len(self.vocab)), self.vocab)}
+        train_bow_embeddings = vectorizer.fit_transform(text_for_bow)
+        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, "chosen_contextualized_model")
+        vocab = vectorizer.get_feature_names()
+        id2token = {k: v for k, v in zip(range(0, len(vocab)), vocab)}
 
 Evaluation
 ~~~~~~~~~~
