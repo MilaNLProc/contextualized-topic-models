@@ -351,6 +351,11 @@ Development Team
 * `Silvia Terragni`_ <s.terragni4@campus.unimib.it> University of Milan-Bicocca
 * `Dirk Hovy`_ <dirk.hovy@unibocconi.it> Bocconi University
 
+EACL2021 Paper
+--------------
+
+ZeroShotTM is going to appear at EACL20201! If you want to replicate our results, you can use our code. You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
+
 References
 ----------
 
