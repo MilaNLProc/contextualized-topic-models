@@ -64,7 +64,7 @@ Jump start Tutorials
     :alt: Open In Colab
 
 .. |colabzt18| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
+    :target: https://colab.research.google.com/drive/13YhYgJN9EjSQw5bsZYzMaaiNKQpt_SQn?usp=sharing
     :alt: Open In Colab
 
 .. |colabzt| image:: https://colab.research.google.com/assets/colab-badge.svg
