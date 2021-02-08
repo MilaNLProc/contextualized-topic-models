@@ -5,7 +5,7 @@ History
 1.8.2 (2021-02-08)
 ------------------
 
-* remove constraint over pytorch version. This should solve problems for Windows users
+* removed constraint over pytorch version. This should solve problems for Windows users
 
 1.8.0 (2021-01-11)
 ------------------
