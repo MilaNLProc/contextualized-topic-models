@@ -25,7 +25,7 @@ Contextualized Topic Models
         :alt: Downloads
 
 .. image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1GCKpfu6ZfyVTk9_FovxnyH48OkNIYOIb?usp=sharing
+    :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
     :alt: Open In Colab
 
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
@@ -48,15 +48,15 @@ with the power of multilingual BERT it can then be used to predict the topics of
 For more details, you can read the two papers mentioned above.
 
 
-Jump start Tutorial
--------------------
+Jump start Tutorials
+--------------------
 
 .. |colab118| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1wVWHe8xHasnUbzNs40MwlkJsUhvN98se?usp=sharing
     :alt: Open In Colab
 
 .. |colab218| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
+    :target: https://colab.research.google.com/drive/1przCw0lBhFUcUofZBfRNWE7Q8e9kXExo?usp=sharing
     :alt: Open In Colab
 
 .. |colab1new| image:: https://colab.research.google.com/assets/colab-badge.svg
@@ -64,7 +64,7 @@ Jump start Tutorial
     :alt: Open In Colab
 
 .. |colabzt18| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
+    :target: https://colab.research.google.com/drive/13YhYgJN9EjSQw5bsZYzMaaiNKQpt_SQn?usp=sharing
     :alt: Open In Colab
 
 .. |colabzt| image:: https://colab.research.google.com/assets/colab-badge.svg
@@ -86,7 +86,7 @@ Jump start Tutorial
 +----------------------------------------------------------------+--------------------+
 | CombinedTM with Preprocessing (stable **v1.8.0**)              | |colab218|         |
 +----------------------------------------------------------------+--------------------+
-| CombinedTM Training, Saving and Loading (stable **v1.8.0**)    | |colabts|         |
+| CombinedTM Training, Saving and Loading (stable **v1.8.0**)    | |colabts|          |
 +----------------------------------------------------------------+--------------------+
 | Zero-Shot Cross-lingual Topic Modeling (**v1.7.0**)            | |colabzt|          |
 +----------------------------------------------------------------+--------------------+
@@ -176,7 +176,7 @@ More interestingly, this model can be used for cross-lingual topic modeling! See
 .. code-block:: python
 
     from contextualized_topic_models.models.ctm import ZeroShotTM
-    from contextualized_topic_models.utils.data_preparation import QuickText
+    from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
@@ -251,7 +251,7 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
 .. code-block:: python
 
     from contextualized_topic_models.models.ctm import CombinedTM
-    from contextualized_topic_models.utils.data_preparation import QuickText
+    from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
@@ -303,12 +303,12 @@ For example:
 
 .. code-block:: python
 
-        self.vectorizer = CountVectorizer() #from sklearn
+        vectorizer = CountVectorizer() #from sklearn
 
-        train_bow_embeddings = self.vectorizer.fit_transform(text_for_bow)
-        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
-        self.vocab = self.vectorizer.get_feature_names()
-        self.id2token = {k: v for k, v in zip(range(0, len(self.vocab)), self.vocab)}
+        train_bow_embeddings = vectorizer.fit_transform(text_for_bow)
+        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, "chosen_contextualized_model")
+        vocab = vectorizer.get_feature_names()
+        id2token = {k: v for k, v in zip(range(0, len(vocab)), vocab)}
 
 Evaluation
 ~~~~~~~~~~
@@ -350,6 +350,11 @@ Development Team
 * `Federico Bianchi`_ <f.bianchi@unibocconi.it> Bocconi University
 * `Silvia Terragni`_ <s.terragni4@campus.unimib.it> University of Milan-Bicocca
 * `Dirk Hovy`_ <dirk.hovy@unibocconi.it> Bocconi University
+
+EACL2021 Paper
+--------------
+
+ZeroShotTM is going to appear at EACL2021! If you want to replicate our results, you can use our code. You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
 
 References
 ----------
