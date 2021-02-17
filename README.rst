@@ -100,6 +100,34 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 | CombinedTM for Wikipedia Documents (**v1.7.0**)                | |colab1new|        |
 +----------------------------------------------------------------+--------------------+
 
+References
+----------
+
+If you find this useful you can cite the following papers :)
+
+**ZeroShotTM**
+
+::
+
+    @inproceedings{bianchi2020crosslingual,
+        title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
+        author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
+        booktitle={EACL},
+        year={2021}
+    }
+
+**CombinedTM**
+
+::
+
+    @article{bianchi2020pretraining,
+        title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
+        author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
+        year={2020},
+       journal={arXiv preprint arXiv:2004.03974},
+    }
+    
+
 TL;DR
 -----
 
@@ -363,32 +391,7 @@ EACL2021 Paper
 
 ZeroShotTM is going to appear at EACL2021! If you want to replicate our results, you can use our code. You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
 
-References
-----------
 
-If you use this in a research work please cite these papers:
-
-ZeroShotTM
-
-::
-
-    @inproceedings{bianchi2020crosslingual,
-        title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
-        author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
-        booktitle={EACL},
-        year={2021}
-    }
-
-CombinedTM
-
-::
-
-    @article{bianchi2020pretraining,
-        title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
-        author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
-        year={2020},
-       journal={arXiv preprint arXiv:2004.03974},
-    }
 
 ZeroShot Topic Model
 --------------------
