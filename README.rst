@@ -100,33 +100,7 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 | CombinedTM for Wikipedia Documents (**v1.7.0**)                | |colab1new|        |
 +----------------------------------------------------------------+--------------------+
 
-References
-----------
-
-If you find this useful you can cite the following papers :)
-
-**ZeroShotTM**
-
-::
-
-    @inproceedings{bianchi2020crosslingual,
-        title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
-        author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
-        booktitle={EACL},
-        year={2021}
-    }
-
-**CombinedTM**
-
-::
-
-    @article{bianchi2020pretraining,
-        title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
-        author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
-        year={2020},
-       journal={arXiv preprint arXiv:2004.03974},
-    }
-    
+   
 
 TL;DR
 -----
@@ -153,6 +127,33 @@ Features
 * Includes methods to create embedded representations and BoW
 * Includes evaluation metrics
 * Includes wordclouds
+
+References
+----------
+
+If you find this useful you can cite the following papers :)
+
+**ZeroShotTM**
+
+::
+
+    @inproceedings{bianchi2020crosslingual,
+        title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
+        author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
+        booktitle={EACL},
+        year={2021}
+    }
+
+**CombinedTM**
+
+::
+
+    @article{bianchi2020pretraining,
+        title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
+        author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
+        year={2020},
+       journal={arXiv preprint arXiv:2004.03974},
+    }
 
 
 Overview
