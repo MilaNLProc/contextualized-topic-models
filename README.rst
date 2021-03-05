@@ -51,6 +51,11 @@ The cross-lingual topic modeling requires to use a ZeroShot model and it is trai
 with the power of multilingual BERT it can then be used to predict the topics of documents in unseen languages.
 For more details, you can read the two papers mentioned above.
 
+EACL2021 Paper
+--------------
+
+ZeroShotTM is going to appear at EACL2021! If you want to replicate our results, you can use our code. You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
+
 
 Jump start Tutorials
 --------------------
@@ -387,28 +392,8 @@ Development Team
 * `Silvia Terragni`_ <s.terragni4@campus.unimib.it> University of Milan-Bicocca
 * `Dirk Hovy`_ <dirk.hovy@unibocconi.it> Bocconi University
 
-EACL2021 Paper
---------------
-
-ZeroShotTM is going to appear at EACL2021! If you want to replicate our results, you can use our code. You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
 
 
-
-ZeroShot Topic Model
---------------------
-
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
-   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model_multilingual.png
-   :align: center
-   :width: 400px
-
-Combined Topic Model
---------------------
-
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
-   :target: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/lm_topic_model.png
-   :align: center
-   :width: 400px
 
 
 Credits
