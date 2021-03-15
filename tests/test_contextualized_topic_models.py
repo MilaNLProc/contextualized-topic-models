@@ -25,6 +25,21 @@ def data_dir(root_dir):
     return root_dir + "/../contextualized_topic_models/data/"
 
 
+def test_validation_set(data_dir):
+
+    with open(data_dir + '/gnews/GoogleNews.txt') as filino:
+        data = filino.readlines()
+
+    tp = TopicModelDataPreparation("distiluse-base-multilingual-cased")
+
+    training_dataset = tp.create_training_set(data[:100], data[:100])
+    validation_dataset = tp.create_validation_set(data[100:105], data[100:105])
+
+    ctm = ZeroShotTM(input_size=len(tp.vocab), bert_input_size=512, num_epochs=100, n_components=5)
+    ctm.fit(training_dataset, validation_dataset=validation_dataset, patience=5, save_dir='test_checkpoint')
+
+    assert os.path.exists("test_checkpoint")
+
 def test_embeddings_from_scratch(data_dir):
 
     handler = TextHandler(data_dir + "sample_text_document")
@@ -145,5 +160,8 @@ def test_preprocessing(data_dir):
     assert len(prep_corpus) <= len(docs)  # preprocessed docs must be less than or equal the original docs
 
     assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
+
+
+
 
 
