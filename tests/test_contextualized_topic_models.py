@@ -36,9 +36,9 @@ def test_validation_set(data_dir):
     validation_dataset = tp.create_validation_set(data[100:105], data[100:105])
 
     ctm = ZeroShotTM(input_size=len(tp.vocab), bert_input_size=512, num_epochs=100, n_components=5)
-    ctm.fit(training_dataset, validation_dataset=validation_dataset, patience=5, save_dir='test_checkpoint')
+    ctm.fit(training_dataset, validation_dataset=validation_dataset, patience=5, save_dir=data_dir+'test_checkpoint')
 
-    assert os.path.exists("test_checkpoint")
+    assert os.path.exists(data_dir+"test_checkpoint")
 
 def test_embeddings_from_scratch(data_dir):
 

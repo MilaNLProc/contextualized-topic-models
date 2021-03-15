@@ -296,7 +296,7 @@ class CTM:
 
             if self.USE_CUDA:
                 X = X.cuda()
-            X_bert = X_bert.cuda()
+                X_bert = X_bert.cuda()
 
             # forward pass
             self.model.zero_grad()
