@@ -43,13 +43,12 @@ support topic modeling. See the papers for details:
    :align: center
    :width: 200px
 
-README
-------
 
-Make **sure** you read the doc a bit.
-The cross-lingual topic modeling requires to use a ZeroShot model and it is trained only on **ONE** language;
-with the power of multilingual BERT it can then be used to predict the topics of documents in unseen languages.
-For more details, you can read the two papers mentioned above.
+Topic Modeling with Contextualized Embeddings
+---------------------------------------------
+
+Our new topic model supports many different languages (i.e., the one supported by HuggingFace models) and comes in two fashion: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with muliglingual embeddings, inherits the property of being a multilingual topic model!
+
 
 EACL2021 Paper
 --------------
