@@ -1,18 +1,22 @@
-import os
-from collections import defaultdict
-import multiprocessing as mp
-from tqdm import tqdm
-import numpy as np
 import datetime
+import multiprocessing as mp
+import os
 import warnings
-import torch
-from torch import optim
-from torch.utils.data import DataLoader
-from torch.optim.lr_scheduler import ReduceLROnPlateau
-from contextualized_topic_models.networks.decoding_network import DecoderNetwork
-import wordcloud
+from collections import defaultdict
+
 import matplotlib.pyplot as plt
+import numpy as np
+import torch
+import wordcloud
 from scipy.special import softmax
+from torch import optim
+from torch.optim.lr_scheduler import ReduceLROnPlateau
+from torch.utils.data import DataLoader
+from tqdm import tqdm
+
+from contextualized_topic_models.early_stopping.pytorchtools import EarlyStopping
+
+from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 
 class CTM:
@@ -90,6 +94,7 @@ class CTM:
         self.model = DecoderNetwork(
             input_size, self.bert_size, inference_type, n_components, model_type, hidden_sizes, activation,
             dropout, learn_priors)
+        self.early_stopping = None
 
         # init optimizer
         if self.solver == 'adam':
@@ -106,10 +111,13 @@ class CTM:
         # performance attributes
         self.best_loss_train = float('inf')
 
-        # training atributes
+        # training attributes
         self.model_dir = None
         self.train_data = None
         self.nn_epoch = None
+
+        # validation attributes
+        self.validation_data = None
 
         # learned topics
         self.best_components = None
@@ -164,9 +172,8 @@ class CTM:
 
             # forward pass
             self.model.zero_grad()
-            prior_mean, prior_variance, \
-            posterior_mean, posterior_variance, posterior_log_variance, \
-            word_dists = self.model(X, X_bert)
+            prior_mean, prior_variance, posterior_mean, posterior_variance, posterior_log_variance, word_dists =\
+                self.model(X, X_bert)
 
             # backward pass
             loss = self._loss(
@@ -183,12 +190,18 @@ class CTM:
 
         return samples_processed, train_loss
 
-    def fit(self, train_dataset, save_dir=None, verbose=False):
+    def fit(self, train_dataset, validation_dataset=None, save_dir=None, verbose=False, patience=5, delta=0):
         """
         Train the CTM model.
 
         :param train_dataset: PyTorch Dataset class for training data.
+        :param validation_dataset: PyTorch Dataset class for validation data. If not None, the training stops if
+        validation loss doesn't improve after a given patience
         :param save_dir: directory to save checkpoint models to.
+        :param verbose: verbose
+        :param patience: How long to wait after last time validation loss improved. Default: 5
+        :param delta: Minimum change in the monitored quantity to qualify as an improvement. Default: 0
+
         """
         # Print settings to output file
         if verbose:
@@ -212,7 +225,9 @@ class CTM:
 
         self.model_dir = save_dir
         self.train_data = train_dataset
-
+        self.validation_data = validation_dataset
+        if self.validation_data is not None:
+            self.early_stopping = EarlyStopping(patience=patience, verbose=verbose, path=save_dir, delta=delta)
         train_loader = DataLoader(
             self.train_data, batch_size=self.batch_size, shuffle=True,
             num_workers=self.num_data_loader_workers)
@@ -235,14 +250,68 @@ class CTM:
                 epoch + 1, self.num_epochs, samples_processed,
                 len(self.train_data) * self.num_epochs, train_loss, e - s))
 
-            # save best
-            if train_loss < self.best_loss_train:
+            if self.validation_data is not None:
                 self.best_loss_train = train_loss
                 self.best_components = self.model.beta
 
+                validation_loader = DataLoader(self.validation_data, batch_size=self.batch_size, shuffle=True,
+                                               num_workers=self.num_data_loader_workers)
+                # train epoch
+                s = datetime.datetime.now()
+                val_samples_processed, val_loss = self._validation(validation_loader)
+                e = datetime.datetime.now()
+
+                # report
+                print("Epoch: [{}/{}]\tSamples: [{}/{}]\tValidation Loss: {}\tTime: {}".format(
+                    epoch + 1, self.num_epochs, val_samples_processed,
+                    len(self.validation_data) * self.num_epochs, val_loss, e - s))
+
+                self.early_stopping(val_loss, self)
+                if self.early_stopping.early_stop:
+                    print("Early stopping")
+                    #if save_dir is not None:
+                    #    self.save(save_dir)
+                    break
+            else:
+                # save best
+                if train_loss < self.best_loss_train:
+                    self.best_loss_train = train_loss
+                    self.best_components = self.model.beta
+
                 if save_dir is not None:
                     self.save(save_dir)
+
         pbar.close()
+
+    def _validation(self, loader):
+        """Validation epoch."""
+        self.model.eval()
+        val_loss = 0
+        samples_processed = 0
+        for batch_samples in loader:
+            # batch_size x vocab_size
+            X = batch_samples['X']
+            X = X.reshape(X.shape[0], -1)
+            X_bert = batch_samples['X_bert']
+
+            if self.USE_CUDA:
+                X = X.cuda()
+                X_bert = X_bert.cuda()
+
+            # forward pass
+            self.model.zero_grad()
+            prior_mean, prior_variance, posterior_mean, posterior_variance, posterior_log_variance, word_dists =\
+                self.model(X, X_bert)
+            loss = self._loss(X, word_dists, prior_mean, prior_variance,
+                              posterior_mean, posterior_variance, posterior_log_variance)
+
+            # compute train loss
+            samples_processed += X.size()[0]
+            val_loss += loss.item()
+
+        val_loss /= samples_processed
+
+        return samples_processed, val_loss
 
     def get_thetas(self, dataset, n_samples=20):
         """

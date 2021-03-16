@@ -5,6 +5,7 @@ import warnings
 from contextualized_topic_models.datasets.dataset import CTMDataset
 from sklearn.feature_extraction.text import CountVectorizer
 
+
 def get_bag_of_words(data, min_length):
     """
     Creates the bag of words
@@ -14,6 +15,7 @@ def get_bag_of_words(data, min_length):
 
     vect = scipy.sparse.csr_matrix(vect)
     return vect
+
 
 def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200):
     """
@@ -32,6 +34,7 @@ def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200):
     """
     model = SentenceTransformer(sbert_model_to_load)
     return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
+
 
 class TopicModelDataPreparation:
 
@@ -73,6 +76,10 @@ class TopicModelDataPreparation:
 
         return CTMDataset(test_bow_embeddings, test_contextualized_embeddings, self.id2token)
 
+    def create_validation_set(self, text_for_contextual, text_for_bow=None):
+        return self.create_test_set(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow)
+
+
 class QuickText:
     """
     Integrated class to handle all the text preprocessing needed
@@ -94,7 +101,6 @@ class QuickText:
         self.text_for_bow = text_for_bow
         self.text_for_bert = text_for_bert
         self.loaded_from_config = False
-
 
     def prepare_bow(self):
         indptr = [0]
@@ -186,14 +192,12 @@ class TextHandler:
         data = []
         vocabulary = {}
 
-
-
-        if self.sentences == None and self.file_name == None:
+        if self.sentences is None and self.file_name is None:
             raise Exception("Sentences and file_names cannot both be none")
 
-        if self.sentences != None:
+        if self.sentences is not None:
             docs = self.sentences
-        elif self.file_name != None:
+        elif self.file_name is not None:
             with open(self.file_name, encoding="utf-8") as filino:
                 docs = filino.readlines()
         else:
