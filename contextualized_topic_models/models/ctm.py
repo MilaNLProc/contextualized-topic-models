@@ -14,7 +14,7 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from contextualized_topic_models.early_stopping.pytorchtools import EarlyStopping
+from contextualized_topic_models.utils.early_stopping.early_stopping import EarlyStopping
 
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
@@ -262,15 +262,15 @@ class CTM:
                 e = datetime.datetime.now()
 
                 # report
-                print("Epoch: [{}/{}]\tSamples: [{}/{}]\tValidation Loss: {}\tTime: {}".format(
-                    epoch + 1, self.num_epochs, val_samples_processed,
-                    len(self.validation_data) * self.num_epochs, val_loss, e - s))
+                if verbose:
+                    print("Epoch: [{}/{}]\tSamples: [{}/{}]\tValidation Loss: {}\tTime: {}".format(
+                        epoch + 1, self.num_epochs, val_samples_processed,
+                        len(self.validation_data) * self.num_epochs, val_loss, e - s))
 
                 self.early_stopping(val_loss, self)
                 if self.early_stopping.early_stop:
                     print("Early stopping")
-                    #if save_dir is not None:
-                    #    self.save(save_dir)
+
                     break
             else:
                 # save best
