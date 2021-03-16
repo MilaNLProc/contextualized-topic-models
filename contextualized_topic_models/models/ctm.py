@@ -251,9 +251,6 @@ class CTM:
                 len(self.train_data) * self.num_epochs, train_loss, e - s))
 
             if self.validation_data is not None:
-                self.best_loss_train = train_loss
-                self.best_components = self.model.beta
-
                 validation_loader = DataLoader(self.validation_data, batch_size=self.batch_size, shuffle=True,
                                                num_workers=self.num_data_loader_workers)
                 # train epoch
@@ -273,11 +270,8 @@ class CTM:
 
                     break
             else:
-                # save best
-                if train_loss < self.best_loss_train:
-                    self.best_loss_train = train_loss
-                    self.best_components = self.model.beta
-
+                # save last epoch
+                self.best_components = self.model.beta
                 if save_dir is not None:
                     self.save(save_dir)
 
