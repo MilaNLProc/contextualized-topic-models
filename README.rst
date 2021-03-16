@@ -141,7 +141,7 @@ If you find this useful you can cite the following papers :)
 
 ::
 
-    @inproceedings{bianchi2020crosslingual,
+    @inproceedings{bianchi2021crosslingual,
         title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
         author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
         booktitle={EACL},
