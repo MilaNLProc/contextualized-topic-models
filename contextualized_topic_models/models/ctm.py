@@ -2,8 +2,8 @@ import datetime
 import multiprocessing as mp
 import os
 import warnings
+from sklearn.feature_extraction.text import CountVectorizer
 from collections import defaultdict
-
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -13,9 +13,7 @@ from torch import optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-
 from contextualized_topic_models.utils.early_stopping.early_stopping import EarlyStopping
-
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 
@@ -544,6 +542,24 @@ class CTM:
             predicted_topic = np.argmax(thetas[idd] / np.sum(thetas[idd]))
             predicted_topics.append(predicted_topic)
         return predicted_topics
+
+    def get_pyldavis_data_format(self, vocab, dataset):
+        """
+        Returns the data that can be used in input to pyldavis to plot
+        the topics
+        """
+        term_frequency = dataset.X_bow.toarray().sum(axis=0)
+        doc_lengths = dataset.X_bow.toarray().sum(axis=1)
+        term_topic = self.get_topic_word_distribution()
+        doc_topic_distribution = self.get_doc_topic_distribution(dataset, n_samples=20)
+
+        data = {'topic_term_dists': term_topic,
+                'doc_topic_dists': doc_topic_distribution,
+                'doc_lengths': doc_lengths,
+                'vocab': vocab,
+                'term_frequency': term_frequency}
+
+        return data
 
 
 class ZeroShotTM(CTM):
