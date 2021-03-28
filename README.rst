@@ -194,18 +194,39 @@ CombinedTM:
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
 
-Mono vs Multilingual Embeddings: Which Embeddings Should I Use?
-----------------------------------------------------------------
+Does it work for different languages? Of Course!
+------------------------------------------------
 
-All the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
-If you are doing topic modeling in English, **you SHOULD use the English sentence-bert model**, `bert-base-nli-mean-tokens`. In that case,
-it's really easy to update the code to support monolingual English topic modeling.
+
+Multilingual
+~~~~~~~~~~~~
+
+The examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`. This means that the representations you are going to use are mutlilinguals (16 languages). However you might need a broader coverage of languages. In that case, you can check `SBERT`_ to find a model you can use.
+
+English
+~~~~~~~
+
+
+If you are doing topic modeling in English, **you SHOULD use an English sentence-bert model**, for example `paraphrase-distilroberta-base-v1`. In that case,
+it's really easy to update the code to support monolingual English topic modeling. If you need other models you can check `SBERT`_ for other models.
 
 .. code-block:: python
 
     qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
+    
 
-In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_ and in HuggingFace.
+
+Language-Specific
+~~~~~~~~~~~~~~~~~
+
+In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_ and in HuggingFace. You need to take a look at `HuggingFace models <https://huggingface.co/models>`_ and find which is the one for your language. For example, for Italian, you can use `UmBERTo`_. How to use this in the model, you ask? well, just use the name of the model you want instead of the english/multilingual one:
+
+
+.. code-block:: python
+
+    qt = TopicModelDataPreparation("Musixmatch/umberto-commoncrawl-cased-v1")
+    
+
 
 Zero-Shot Cross-Lingual Topic Modeling
 --------------------------------------
@@ -417,5 +438,8 @@ Remember that this is a research tool :)
 .. _Federico Bianchi: https://federicobianchi.io
 .. _Silvia Terragni: https://silviatti.github.io/
 .. _Dirk Hovy: https://dirkhovy.com/
+.. _SBERT: https://www.sbert.net/docs/pretrained_models.html
+.. _HuggingFace: https://huggingface.co/models
+.. _UmBERTo: https://huggingface.co/Musixmatch/umberto-commoncrawl-cased-v1
 .. _medium: https://fbvinid.medium.com/contextualized-topic-modeling-with-python-eacl2021-eacf6dfa576
 
