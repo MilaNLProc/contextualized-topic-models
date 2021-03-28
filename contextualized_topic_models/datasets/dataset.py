@@ -4,9 +4,9 @@ import scipy.sparse
 
 class CTMDataset(Dataset):
 
-    """Class to load BOW dataset."""
+    """Class to load BoW and the contextualized embeddings."""
 
-    def __init__(self, X, X_bert, idx2token):
+    def __init__(self, X_bert, X, idx2token):
         """
         Args
             X : array-like, shape=(n_samples, n_features)

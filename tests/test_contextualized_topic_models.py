@@ -35,7 +35,7 @@ def test_validation_set(data_dir):
     training_dataset = tp.create_training_set(data[:100], data[:100])
     validation_dataset = tp.create_validation_set(data[100:105], data[100:105])
 
-    ctm = ZeroShotTM(input_size=len(tp.vocab), bert_input_size=512, num_epochs=100, n_components=5)
+    ctm = ZeroShotTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=100, n_components=5)
     ctm.fit(training_dataset, validation_dataset=validation_dataset, patience=5, save_dir=data_dir+'test_checkpoint')
 
     assert os.path.exists(data_dir+"test_checkpoint")
@@ -58,7 +58,7 @@ def test_training_all_classes_ctm(data_dir):
 
     training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
 
-    ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",
+    ctm = CTM(bow_size=len(handler.vocab), contextual_size=512, num_epochs=1, inference_type="combined",
               n_components=5)
 
     ctm.fit(training_dataset)  # run the model
@@ -68,7 +68,7 @@ def test_training_all_classes_ctm(data_dir):
     thetas = ctm.get_doc_topic_distribution(training_dataset)
     assert len(thetas) == len(train_bert)
 
-    ctm = ZeroShotTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1,
+    ctm = ZeroShotTM(bow_size=len(handler.vocab), contextual_size=512, num_epochs=1,
                      n_components=5)
     ctm.fit(training_dataset)  # run the model
     topics = ctm.get_topic_lists(2)
@@ -77,7 +77,7 @@ def test_training_all_classes_ctm(data_dir):
     thetas = ctm.get_doc_topic_distribution(training_dataset)
     assert len(thetas) == len(train_bert)
 
-    ctm = CombinedTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1,
+    ctm = CombinedTM(bow_size=len(handler.vocab), contextual_size=512, num_epochs=1,
                      n_components=5)
     ctm.fit(training_dataset)  # run the model
     topics = ctm.get_topic_lists(2)
@@ -95,7 +95,7 @@ def test_training_all_classes_ctm(data_dir):
     train_bert = bert_embeddings_from_list(data, "distiluse-base-multilingual-cased")
     training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
 
-    ctm = CTM(input_size=len(handler.vocab), bert_input_size=512, num_epochs=1, inference_type="combined",
+    ctm = CTM(bow_size=len(handler.vocab), contextual_size=512, num_epochs=1, inference_type="combined",
               n_components=5)
 
     ctm.fit(training_dataset)  # run the model
@@ -110,7 +110,7 @@ def test_training_all_classes_ctm(data_dir):
 
     dataset = qt.load_dataset()
 
-    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, num_epochs=1, n_components=5)
+    ctm = ZeroShotTM(bow_size=len(qt.vocab), contextual_size=512, num_epochs=1, n_components=5)
     ctm.fit(dataset)  # run the model
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
@@ -119,7 +119,7 @@ def test_training_all_classes_ctm(data_dir):
     qt_from_conf.load_configuration(qt.bow, qt.data_bert, qt.vocab, qt.idx2token)
     dataset = qt_from_conf.load_dataset()
 
-    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, num_epochs=1, n_components=5)
+    ctm = ZeroShotTM(bow_size=len(qt.vocab), contextual_size=512, num_epochs=1, n_components=5)
     ctm.fit(dataset)  # run the model
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
@@ -127,7 +127,7 @@ def test_training_all_classes_ctm(data_dir):
     tp = TopicModelDataPreparation("distiluse-base-multilingual-cased")
 
     training_dataset = tp.create_training_set(data, data)
-    ctm = ZeroShotTM(input_size=len(tp.vocab), bert_input_size=512, num_epochs=1, n_components=5)
+    ctm = ZeroShotTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5)
     ctm.fit(training_dataset)  # run the model
 
     topics = ctm.get_topic_lists(2)

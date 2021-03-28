@@ -2,6 +2,14 @@
 History
 =======
 
+2.0.0 (2021-xx-xx)
+------------------
+
+* warning, breaking changes were introduced:
+    * the order of the parameters in CTMDataset was changed (now first is contextual embeddings)
+    * CTM takes in input bow_size, contextual_size instead of input_size and bert_size
+* introduced early stopping
+
 1.8.2 (2021-02-08)
 ------------------
 

@@ -45,7 +45,7 @@ class TopicModelDataPreparation:
         self.vectorizer = None
 
     def load(self, contextualized_embeddings, bow_embeddings, id2token):
-        return CTMDataset(bow_embeddings, contextualized_embeddings, id2token)
+        return CTMDataset(contextualized_embeddings, bow_embeddings, id2token)
 
     def create_training_set(self, text_for_contextual, text_for_bow):
 
@@ -60,7 +60,7 @@ class TopicModelDataPreparation:
         self.vocab = self.vectorizer.get_feature_names()
         self.id2token = {k: v for k, v in zip(range(0, len(self.vocab)), self.vocab)}
 
-        return CTMDataset(train_bow_embeddings, train_contextualized_embeddings, self.id2token)
+        return CTMDataset(train_contextualized_embeddings, train_bow_embeddings, self.id2token)
 
     def create_test_set(self, text_for_contextual, text_for_bow=None):
 
@@ -74,7 +74,7 @@ class TopicModelDataPreparation:
             test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
         test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
 
-        return CTMDataset(test_bow_embeddings, test_contextualized_embeddings, self.id2token)
+        return CTMDataset(test_contextualized_embeddings, test_bow_embeddings, self.id2token)
 
     def create_validation_set(self, text_for_contextual, text_for_bow=None):
         return self.create_test_set(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow)
@@ -155,7 +155,7 @@ class QuickText:
 
     def load_dataset(self):
         if self.loaded_from_config:
-            training_dataset = CTMDataset(self.bow, self.data_bert, self.idx2token)
+            training_dataset = CTMDataset(self.data_bert, self.bow, self.idx2token)
         else:
             self.prepare_bow()
 
@@ -165,7 +165,7 @@ class QuickText:
                 else:
                     self.data_bert = bert_embeddings_from_list(self.text_for_bow, self.bert_model)
 
-            training_dataset = CTMDataset(self.bow, self.data_bert, self.idx2token)
+            training_dataset = CTMDataset(self.data_bert, self.bow, self.idx2token)
 
         return training_dataset
 
