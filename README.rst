@@ -110,7 +110,7 @@ TL;DR
 -----
 
 + In CTMs we have two models. CombinedTM and ZeroShotTM, which have different use cases.
-+ CTMs work better when the size of the bag of words **has been restricted to a number of terms** that does not go over **2000 elements*. This is because we have a neural model that reconstructs the input bag of word, Moreover, in CombinedTM we project the contextualized embedding to the vocab space, the bigger the vocab the more parameters you get, with the training being more difficult and prone to bad fitting. This is **NOT** a strict limit, however, consider preprocessing your dataset. We have a preprocessing_ pipeline that can help you in dealing with this.
++ CTMs work better when the size of the bag of words **has been restricted to a number of terms** that does not go over **2000 elements**. This is because we have a neural model that reconstructs the input bag of word, Moreover, in CombinedTM we project the contextualized embedding to the vocab space, the bigger the vocab the more parameters you get, with the training being more difficult and prone to bad fitting. This is **NOT** a strict limit, however, consider preprocessing your dataset. We have a preprocessing_ pipeline that can help you in dealing with this.
 + Check the contextual model you are using, the **multilingual model one used on English data might not give results that are as good** as the pure English trained one.
 + **Preprocessing is key**. If you give a contextual model like BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
 
@@ -121,16 +121,6 @@ Software Details
 * Free software: MIT license
 * Documentation: https://contextualized-topic-models.readthedocs.io.
 * Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package from which we constructed the foundations of this package. We are happy to redistribute this software again under the MIT License.
-
-
-Features
-~~~~~~~~
-
-* Combines Contextual Language Models (e.g., BERT) and Neural Variational Topic Models
-* Two different methodologies: Combined, where we combine BoW and contextual embeddings and ZeroShot, that uses only contextual embeddings
-* Includes methods to create embedded representations and BoW
-* Includes evaluation metrics
-* Includes wordclouds
 
 References
 ----------
@@ -172,10 +162,6 @@ Install the package using pip
 
     pip install -U contextualized_topic_models
 
-Contextual neural topic models can be easily instantiated using few parameters (although there is a wide range of
-parameters you can use to change the behaviour of the neural topic model). When you generate
-embeddings with BERT remember that there is a maximum length and for documents that are too long some words will be ignored.
-
 An important aspect to take into account is which network you want to use: the one that combines BERT and the BoW or the one that just uses BERT.
 It's easy to swap from one to the other:
 
@@ -194,18 +180,37 @@ CombinedTM:
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
 
-Mono vs Multilingual Embeddings: Which Embeddings Should I Use?
-----------------------------------------------------------------
+Does it work for different languages? Of Course!
+------------------------------------------------
 
-All the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`.
-If you are doing topic modeling in English, **you SHOULD use the English sentence-bert model**, `bert-base-nli-mean-tokens`. In that case,
-it's really easy to update the code to support monolingual English topic modeling.
+Multilingual
+~~~~~~~~~~~~
+
+The examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`. This means that the representations you are going to use are mutlilinguals (16 languages). However you might need a broader coverage of languages. In that case, you can check `SBERT`_ to find a model you can use.
+
+English
+~~~~~~~
+
+If you are doing topic modeling in English, **you SHOULD use an English sentence-bert model**, for example `paraphrase-distilroberta-base-v1`. In that case,
+it's really easy to update the code to support monolingual English topic modeling. If you need other models you can check `SBERT`_ for other models.
 
 .. code-block:: python
 
     qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
+    
 
-In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_ and in HuggingFace.
+
+Language-Specific
+~~~~~~~~~~~~~~~~~
+
+In general, our package should be able to support all the models described in the `sentence transformer package <https://github.com/UKPLab/sentence-transformers>`_ and in HuggingFace. You need to take a look at `HuggingFace models <https://huggingface.co/models>`_ and find which is the one for your language. For example, for Italian, you can use `UmBERTo`_. How to use this in the model, you ask? well, just use the name of the model you want instead of the english/multilingual one:
+
+
+.. code-block:: python
+
+    qt = TopicModelDataPreparation("Musixmatch/umberto-commoncrawl-cased-v1")
+    
+
 
 Zero-Shot Cross-Lingual Topic Modeling
 --------------------------------------
@@ -286,7 +291,7 @@ You can also create a word cloud of the topic!
 Combined Topic Modeling
 -----------------------
 
-Here is how you can use the CombinedTM. This is a standard topic model that also uses BERT.
+Here is how you can use the CombinedTM. This is a standard topic model that also uses contextualized embeddings. The good thing about CombinedTM is that it makes your topic much more coherent (see the paper https://arxiv.org/abs/2004.03974).
 
 .. code-block:: python
 
@@ -417,5 +422,8 @@ Remember that this is a research tool :)
 .. _Federico Bianchi: https://federicobianchi.io
 .. _Silvia Terragni: https://silviatti.github.io/
 .. _Dirk Hovy: https://dirkhovy.com/
+.. _SBERT: https://www.sbert.net/docs/pretrained_models.html
+.. _HuggingFace: https://huggingface.co/models
+.. _UmBERTo: https://huggingface.co/Musixmatch/umberto-commoncrawl-cased-v1
 .. _medium: https://fbvinid.medium.com/contextualized-topic-modeling-with-python-eacl2021-eacf6dfa576
 
