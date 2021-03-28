@@ -122,16 +122,6 @@ Software Details
 * Documentation: https://contextualized-topic-models.readthedocs.io.
 * Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package from which we constructed the foundations of this package. We are happy to redistribute this software again under the MIT License.
 
-
-Features
-~~~~~~~~
-
-* Combines Contextual Language Models (e.g., BERT) and Neural Variational Topic Models
-* Two different methodologies: Combined, where we combine BoW and contextual embeddings and ZeroShot, that uses only contextual embeddings
-* Includes methods to create embedded representations and BoW
-* Includes evaluation metrics
-* Includes wordclouds
-
 References
 ----------
 
@@ -172,10 +162,6 @@ Install the package using pip
 
     pip install -U contextualized_topic_models
 
-Contextual neural topic models can be easily instantiated using few parameters (although there is a wide range of
-parameters you can use to change the behaviour of the neural topic model). When you generate
-embeddings with BERT remember that there is a maximum length and for documents that are too long some words will be ignored.
-
 An important aspect to take into account is which network you want to use: the one that combines BERT and the BoW or the one that just uses BERT.
 It's easy to swap from one to the other:
 
@@ -197,7 +183,6 @@ But remember that you can do zero-shot cross-lingual topic modeling only with th
 Does it work for different languages? Of Course!
 ------------------------------------------------
 
-
 Multilingual
 ~~~~~~~~~~~~
 
@@ -205,7 +190,6 @@ The examples below use a multilingual embedding model :code:`distiluse-base-mult
 
 English
 ~~~~~~~
-
 
 If you are doing topic modeling in English, **you SHOULD use an English sentence-bert model**, for example `paraphrase-distilroberta-base-v1`. In that case,
 it's really easy to update the code to support monolingual English topic modeling. If you need other models you can check `SBERT`_ for other models.
@@ -307,7 +291,7 @@ You can also create a word cloud of the topic!
 Combined Topic Modeling
 -----------------------
 
-Here is how you can use the CombinedTM. This is a standard topic model that also uses BERT.
+Here is how you can use the CombinedTM. This is a standard topic model that also uses contextualized embeddings. The good thing about CombinedTM is that it makes your topic much more coherent (see the paper https://arxiv.org/abs/2004.03974).
 
 .. code-block:: python
 
