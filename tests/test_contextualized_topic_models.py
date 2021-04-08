@@ -56,9 +56,9 @@ def test_training_all_classes_ctm(data_dir):
     train_bert = bert_embeddings_from_file(data_dir + 'sample_text_document',
                                            "distiluse-base-multilingual-cased")
 
-    training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
+    training_dataset = CTMDataset(train_bert, handler.bow, handler.idx2token)
 
-    ctm = CTM(bow_size=len(handler.vocab), contextual_size=512, num_epochs=1, inference_type="combined",
+    ctm = CombinedTM(bow_size=len(handler.vocab), contextual_size=512, num_epochs=1,
               n_components=5)
 
     ctm.fit(training_dataset)  # run the model
@@ -93,9 +93,9 @@ def test_training_all_classes_ctm(data_dir):
     handler.prepare()  # create vocabulary and training data
 
     train_bert = bert_embeddings_from_list(data, "distiluse-base-multilingual-cased")
-    training_dataset = CTMDataset(handler.bow, train_bert, handler.idx2token)
+    training_dataset = CTMDataset(train_bert, handler.bow, handler.idx2token)
 
-    ctm = CTM(bow_size=len(handler.vocab), contextual_size=512, num_epochs=1, inference_type="combined",
+    ctm = CombinedTM(bow_size=len(handler.vocab), contextual_size=512, num_epochs=1,
               n_components=5)
 
     ctm.fit(training_dataset)  # run the model
