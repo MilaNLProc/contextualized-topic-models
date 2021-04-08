@@ -20,22 +20,22 @@ class CTM:
     """Class to train the contextualized topic model. This is the more general class that we are keeping to
     avoid braking code, user should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
 
-        :param bow_size: int, dimension of input
-        :param contextual_size: int, dimension of input that comes from BERT embeddings
-        :param inference_type: string, you can choose between the contextual model and the combined model
-        :param n_components: int, number of topic components, (default 10)
-        :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
-        :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
-        :param activation: string, 'softplus', 'relu', (default 'softplus')
-        :param dropout: float, dropout to use (default 0.2)
-        :param learn_priors: bool, make priors a learnable parameter (default True)
-        :param batch_size: int, size of batch to use for training (default 64)
-        :param lr: float, learning rate to use for training (default 2e-3)
-        :param momentum: float, momentum to use for training (default 0.99)
-        :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
-        :param num_epochs: int, number of epochs to train for, (default 100)
-        :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
-        :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
+    :param bow_size: int, dimension of input
+    :param contextual_size: int, dimension of input that comes from BERT embeddings
+    :param inference_type: string, you can choose between the contextual model and the combined model
+    :param n_components: int, number of topic components, (default 10)
+    :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
+    :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
+    :param activation: string, 'softplus', 'relu', (default 'softplus')
+    :param dropout: float, dropout to use (default 0.2)
+    :param learn_priors: bool, make priors a learnable parameter (default True)
+    :param batch_size: int, size of batch to use for training (default 64)
+    :param lr: float, learning rate to use for training (default 2e-3)
+    :param momentum: float, momentum to use for training (default 0.99)
+    :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
+    :param num_epochs: int, number of epochs to train for, (default 100)
+    :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
+    :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
 
     def __init__(self, bow_size, contextual_size, inference_type="combined", n_components=10, model_type='prodLDA',
@@ -190,8 +190,7 @@ class CTM:
         Train the CTM model.
 
         :param train_dataset: PyTorch Dataset class for training data.
-        :param validation_dataset: PyTorch Dataset class for validation data. If not None, the training stops if
-        validation loss doesn't improve after a given patience
+        :param validation_dataset: PyTorch Dataset class for validation data. If not None, the training stops if validation loss doesn't improve after a given patience
         :param save_dir: directory to save checkpoint models to.
         :param verbose: verbose
         :param patience: How long to wait after last time validation loss improved. Default: 5
@@ -564,8 +563,7 @@ class CTM:
 
 
 class ZeroShotTM(CTM):
-    """
-    ZeroShotTM, as described in https://arxiv.org/pdf/2004.07737v1.pdf
+    """ZeroShotTM, as described in https://arxiv.org/pdf/2004.07737v1.pdf
 
     :param bow_size: int, dimension of input
     :param contextual_size: int, dimension of input that comes from BERT embeddings
@@ -596,8 +594,7 @@ class ZeroShotTM(CTM):
 
 
 class CombinedTM(CTM):
-    """
-    CombinedTM, as described in https://arxiv.org/pdf/2004.03974.pdf
+    """CombinedTM, as described in https://arxiv.org/pdf/2004.03974.pdf
 
     :param bow_size: int, dimension of input
     :param contextual_size: int, dimension of input that comes from BERT embeddings
