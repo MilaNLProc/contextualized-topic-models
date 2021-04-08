@@ -160,4 +160,4 @@ texinfo_documents = [
 ]
 
 
-autodoc_mock_imports = ['numpy', 'pandas', 'torch']
+autodoc_mock_imports = ['numpy', 'pandas', 'torch', 'matplotlib', 'nltk']
