@@ -35,7 +35,7 @@ Contextualized Topic Models
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
 support topic modeling. See the papers for details:
 
-* Bianchi, F., Terragni, S., Hovy, D., Nozza, D., & Fersini, E. (2021). `Cross-lingual Contextualized Topic Models with Zero-shot Learning`. EACL. https://arxiv.org/pdf/2004.07737v2.pdf
+* Bianchi, F., Terragni, S., Hovy, D., Nozza, D., & Fersini, E. (2021). `Cross-lingual Contextualized Topic Models with Zero-shot Learning`. EACL. https://www.aclweb.org/anthology/2021.eacl-main.143/
 * Bianchi, F., Terragni, S., & Hovy, D. (2020). `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence` https://arxiv.org/pdf/2004.03974.pdf
 
 
@@ -131,11 +131,20 @@ If you find this useful you can cite the following papers :)
 
 ::
 
-    @inproceedings{bianchi2021crosslingual,
-        title={Cross-lingual Contextualized Topic Models with Zero-shot Learning},
-        author={Federico Bianchi and Silvia Terragni and Dirk Hovy and Debora Nozza and Elisabetta Fersini},
-        booktitle={EACL},
-        year={2021}
+    @inproceedings{bianchi-etal-2021-cross,
+        title = "Cross-lingual Contextualized Topic Models with Zero-shot Learning",
+        author = "Bianchi, Federico  and
+          Terragni, Silvia  and
+          Hovy, Dirk  and
+          Nozza, Debora  and
+          Fersini, Elisabetta",
+        booktitle = "Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics: Main Volume",
+        month = apr,
+        year = "2021",
+        address = "Online",
+        publisher = "Association for Computational Linguistics",
+        url = "https://www.aclweb.org/anthology/2021.eacl-main.143",
+        pages = "1676--1683",
     }
 
 **CombinedTM**
