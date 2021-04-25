@@ -27,7 +27,7 @@ Contextualized Topic Models
 .. image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
     :alt: Open In Colab
-    
+
 .. image:: https://raw.githubusercontent.com/aleen42/badges/master/src/medium.svg
     :target: https://fbvinid.medium.com/contextualized-topic-modeling-with-python-eacl2021-eacf6dfa576
     :alt: Medium Blog Post
@@ -43,6 +43,8 @@ support topic modeling. See the papers for details:
    :align: center
    :width: 200px
 
+.. contents:: Table of Contents
+   :depth: 2
 
 Topic Modeling with Contextualized Embeddings
 ---------------------------------------------
@@ -50,14 +52,14 @@ Topic Modeling with Contextualized Embeddings
 Our new topic modeling family supports many different languages (i.e., the one supported by HuggingFace models) and comes in two versions: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with muliglingual embeddings, inherits the property of being a multilingual topic model!
 
 
-EACL2021 Paper
---------------
+EACL2021
+~~~~~~~~
 
 ZeroShotTM is going to appear at EACL2021! If you want to replicate our results, you can use our code. You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
 
 
-Jump start Tutorials
---------------------
+Tutorials
+---------
 
 You can look at our `medium`_ blog post or start from one of our Colab Tutorials:
 
@@ -104,63 +106,21 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 | CombinedTM for Wikipedia Documents (**v1.7.0**)                                | |colab1new|      |
 +--------------------------------------------------------------------------------+------------------+
 
-   
+
+
+Overview
+--------
 
 TL;DR
------
+~~~~~
 
 + In CTMs we have two models. CombinedTM and ZeroShotTM, which have different use cases.
 + CTMs work better when the size of the bag of words **has been restricted to a number of terms** that does not go over **2000 elements**. This is because we have a neural model that reconstructs the input bag of word, Moreover, in CombinedTM we project the contextualized embedding to the vocab space, the bigger the vocab the more parameters you get, with the training being more difficult and prone to bad fitting. This is **NOT** a strict limit, however, consider preprocessing your dataset. We have a preprocessing_ pipeline that can help you in dealing with this.
 + Check the contextual model you are using, the **multilingual model one used on English data might not give results that are as good** as the pure English trained one.
 + **Preprocessing is key**. If you give a contextual model like BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
 
-
-Software Details
-~~~~~~~~~~~~~~~~
-
-* Free software: MIT license
-* Documentation: https://contextualized-topic-models.readthedocs.io.
-* Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package from which we constructed the foundations of this package. We are happy to redistribute this software again under the MIT License.
-
-References
-----------
-
-If you find this useful you can cite the following papers :)
-
-**ZeroShotTM**
-
-::
-
-    @inproceedings{bianchi-etal-2021-cross,
-        title = "Cross-lingual Contextualized Topic Models with Zero-shot Learning",
-        author = "Bianchi, Federico  and
-          Terragni, Silvia  and
-          Hovy, Dirk  and
-          Nozza, Debora  and
-          Fersini, Elisabetta",
-        booktitle = "Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics: Main Volume",
-        month = apr,
-        year = "2021",
-        address = "Online",
-        publisher = "Association for Computational Linguistics",
-        url = "https://www.aclweb.org/anthology/2021.eacl-main.143",
-        pages = "1676--1683",
-    }
-
-**CombinedTM**
-
-::
-
-    @article{bianchi2020pretraining,
-        title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
-        author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
-        year={2020},
-       journal={arXiv preprint arXiv:2004.03974},
-    }
-
-
-Overview
---------
+Installing
+~~~~~~~~~~
 
 **Important**: If you want to use CUDA you need to install the correct version of
 the CUDA systems that matches your distribution, see pytorch_.
@@ -189,6 +149,40 @@ CombinedTM:
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
 
+References
+----------
+
+If you find this useful you can cite the following papers :)
+
+**ZeroShotTM**
+
+::
+
+    @inproceedings{bianchi-etal-2021-cross,
+        title = "Cross-lingual Contextualized Topic Models with Zero-shot Learning",
+        author = "Bianchi, Federico and Terragni, Silvia and Hovy, Dirk  and
+          Nozza, Debora and Fersini, Elisabetta",
+        booktitle = "Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics: Main Volume",
+        month = apr,
+        year = "2021",
+        address = "Online",
+        publisher = "Association for Computational Linguistics",
+        url = "https://www.aclweb.org/anthology/2021.eacl-main.143",
+        pages = "1676--1683",
+    }
+
+**CombinedTM**
+
+::
+
+    @article{bianchi2020pretraining,
+        title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
+        author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
+        year={2020},
+       journal={arXiv preprint arXiv:2004.03974},
+    }
+
+
 Does it work for different languages? Of Course!
 ------------------------------------------------
 
@@ -206,7 +200,7 @@ it's really easy to update the code to support monolingual English topic modelin
 .. code-block:: python
 
     qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
-    
+
 
 
 Language-Specific
@@ -218,7 +212,7 @@ In general, our package should be able to support all the models described in th
 .. code-block:: python
 
     qt = TopicModelDataPreparation("Musixmatch/umberto-commoncrawl-cased-v1")
-    
+
 
 
 Zero-Shot Cross-Lingual Topic Modeling
@@ -406,6 +400,12 @@ Development Team
 * `Dirk Hovy`_ <dirk.hovy@unibocconi.it> Bocconi University
 
 
+Software Details
+----------------
+
+* Free software: MIT license
+* Documentation: https://contextualized-topic-models.readthedocs.io.
+* Super big shout-out to `Stephen Carrow`_ for creating the awesome https://github.com/estebandito22/PyTorchAVITM package from which we constructed the foundations of this package. We are happy to redistribute this software again under the MIT License.
 
 
 

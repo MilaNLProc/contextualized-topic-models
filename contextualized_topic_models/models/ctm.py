@@ -159,7 +159,7 @@ class CTM:
             # batch_size x vocab_size
             X_bow = batch_samples['X_bow']
             X_bow = X_bow.reshape(X_bow.shape[0], -1)
-            X_contextual = batch_samples['X_contexutal']
+            X_contextual = batch_samples['X_contextual']
             if self.USE_CUDA:
                 X_bow = X_bow.cuda()
                 X_contextual = X_contextual.cuda()
@@ -372,15 +372,15 @@ class CTM:
                 # batch_size x vocab_size
                 X_bow = batch_samples['X_bow']
                 X_bow = X_bow.reshape(X_bow.shape[0], -1)
-                X_contexutal = batch_samples['X_contexutal']
+                X_contextual = batch_samples['X_contextual']
 
                 if self.USE_CUDA:
                     X_bow = X_bow.cuda()
-                    X_contexutal = X_contexutal.cuda()
+                    X_contextual = X_contextual.cuda()
 
                 # forward pass
                 self.model.zero_grad()
-                _, _, _, _, _, word_dists = self.model(X_bow, X_contexutal)
+                _, _, _, _, _, word_dists = self.model(X_bow, X_contextual)
 
                 _, indices = torch.sort(word_dists, dim=1)
                 preds += [indices[:, :k]]

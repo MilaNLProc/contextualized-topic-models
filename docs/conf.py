@@ -21,6 +21,9 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
+autodoc_mock_imports = ["numpy", "pandas", "torch",
+                        "matplotlib", "nltk"]
+
 import contextualized_topic_models
 
 # -- General configuration ---------------------------------------------
@@ -36,8 +39,7 @@ autodoc_default_flags = ['members', 'inherited-members']
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
-autodoc_mock_imports = ["numpy", "pandas", "torch",
-                        "matplotlib", "nltk"]
+
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
