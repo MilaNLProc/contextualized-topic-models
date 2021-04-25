@@ -18,7 +18,7 @@ from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 class CTM:
     """Class to train the contextualized topic model. This is the more general class that we are keeping to
-    avoid braking code, user should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
+    avoid braking code, users should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
 
     :param bow_size: int, dimension of input
     :param contextual_size: int, dimension of input that comes from BERT embeddings
@@ -42,7 +42,6 @@ class CTM:
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
-
 
         if self.__class__.__name__ == "CTM":
             raise Exception("You cannot call this class. Use ZeroShotTM or CombinedTM")
@@ -158,27 +157,27 @@ class CTM:
 
         for batch_samples in loader:
             # batch_size x vocab_size
-            X = batch_samples['X']
-            X = X.reshape(X.shape[0], -1)
-            X_bert = batch_samples['X_bert']
+            X_bow = batch_samples['X_bow']
+            X_bow = X_bow.reshape(X_bow.shape[0], -1)
+            X_contextual = batch_samples['X_contexutal']
             if self.USE_CUDA:
-                X = X.cuda()
-                X_bert = X_bert.cuda()
+                X_bow = X_bow.cuda()
+                X_contextual = X_contextual.cuda()
 
             # forward pass
             self.model.zero_grad()
             prior_mean, prior_variance, posterior_mean, posterior_variance, posterior_log_variance, word_dists =\
-                self.model(X, X_bert)
+                self.model(X_bow, X_contextual)
 
             # backward pass
             loss = self._loss(
-                X, word_dists, prior_mean, prior_variance,
+                X_bow, word_dists, prior_mean, prior_variance,
                 posterior_mean, posterior_variance, posterior_log_variance)
             loss.backward()
             self.optimizer.step()
 
             # compute train loss
-            samples_processed += X.size()[0]
+            samples_processed += X_bow.size()[0]
             train_loss += loss.item()
 
         train_loss /= samples_processed
@@ -278,23 +277,23 @@ class CTM:
         samples_processed = 0
         for batch_samples in loader:
             # batch_size x vocab_size
-            X = batch_samples['X']
-            X = X.reshape(X.shape[0], -1)
-            X_bert = batch_samples['X_bert']
+            X_bow = batch_samples['X_bow']
+            X_bow = X_bow.reshape(X_bow.shape[0], -1)
+            X_contextual = batch_samples['X_contextual']
 
             if self.USE_CUDA:
-                X = X.cuda()
-                X_bert = X_bert.cuda()
+                X_bow = X_bow.cuda()
+                X_contextual = X_contextual.cuda()
 
             # forward pass
             self.model.zero_grad()
             prior_mean, prior_variance, posterior_mean, posterior_variance, posterior_log_variance, word_dists =\
-                self.model(X, X_bert)
-            loss = self._loss(X, word_dists, prior_mean, prior_variance,
+                self.model(X_bow, X_contextual)
+            loss = self._loss(X_bow, word_dists, prior_mean, prior_variance,
                               posterior_mean, posterior_variance, posterior_log_variance)
 
             # compute train loss
-            samples_processed += X.size()[0]
+            samples_processed += X_bow.size()[0]
             val_loss += loss.item()
 
         val_loss /= samples_processed
@@ -332,17 +331,17 @@ class CTM:
 
                 for batch_samples in loader:
                     # batch_size x vocab_size
-                    X = batch_samples['X']
-                    X = X.reshape(X.shape[0], -1)
-                    X_bert = batch_samples['X_bert']
+                    X_bow = batch_samples['X_bow']
+                    X_bow = X_bow.reshape(X_bow.shape[0], -1)
+                    X_contextual = batch_samples['X_contextual']
 
                     if self.USE_CUDA:
-                        X = X.cuda()
-                        X_bert = X_bert.cuda()
+                        X_bow = X_bow.cuda()
+                        X_contextual = X_contextual.cuda()
 
                     # forward pass
                     self.model.zero_grad()
-                    collect_theta.extend(self.model.get_theta(X, X_bert).cpu().numpy().tolist())
+                    collect_theta.extend(self.model.get_theta(X_bow, X_contextual).cpu().numpy().tolist())
 
                 pbar.update(1)
                 pbar.set_description("Sampling: [{}/{}]".format(sample_index + 1, n_samples))
@@ -371,17 +370,17 @@ class CTM:
         with torch.no_grad():
             for batch_samples in loader:
                 # batch_size x vocab_size
-                X = batch_samples['X']
-                X = X.reshape(X.shape[0], -1)
-                X_bert = batch_samples['X_bert']
+                X_bow = batch_samples['X_bow']
+                X_bow = X_bow.reshape(X_bow.shape[0], -1)
+                X_contexutal = batch_samples['X_contexutal']
 
                 if self.USE_CUDA:
-                    X = X.cuda()
-                    X_bert = X_bert.cuda()
+                    X_bow = X_bow.cuda()
+                    X_contexutal = X_contexutal.cuda()
 
                 # forward pass
                 self.model.zero_grad()
-                _, _, _, _, _, word_dists = self.model(X, X_bert)
+                _, _, _, _, _, word_dists = self.model(X_bow, X_contexutal)
 
                 _, indices = torch.sort(word_dists, dim=1)
                 preds += [indices[:, :k]]
@@ -543,7 +542,7 @@ class CTM:
             predicted_topics.append(predicted_topic)
         return predicted_topics
 
-    def get_pyldavis_data_format(self, vocab, dataset):
+    def get_ldavis_data_format(self, vocab, dataset):
         """
         Returns the data that can be used in input to pyldavis to plot
         the topics

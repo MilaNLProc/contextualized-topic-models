@@ -1,4 +1,4 @@
-numpy==1.19.1
+numpy>=1.19.1
 torchvision>=0.7.0
 torch>=1.6.0
 gensim==3.8.3

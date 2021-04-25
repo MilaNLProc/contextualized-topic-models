@@ -34,6 +34,6 @@ class CTMDataset(Dataset):
             X_contextual = torch.FloatTensor(self.X_contextual[i])
 
         # TODO : update the parameter of the dictionary
-        return {'X': X_bow, 'X_bert': X_contextual}
+        return {'X_bow': X_bow, 'X_contextual': X_contextual}
 
 
