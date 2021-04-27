@@ -21,8 +21,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
-autodoc_mock_imports = ["numpy", "pandas", "torch",
-                        "matplotlib", "nltk"]
+autodoc_mock_imports = ["torch"]
 
 import contextualized_topic_models
 
