@@ -268,6 +268,8 @@ Once you have trained the cross-lingual topic model,
 you can use this simple pipeline to predict the topics for documents in a different language (as long as this language
 is covered by **distiluse-base-multilingual-cased**).
 
+For the **ZeroShotTM** you can use the following snippet.
+
 .. code-block:: python
 
     # here we have a Spanish document
@@ -282,6 +284,16 @@ is covered by **distiluse-base-multilingual-cased**).
 
 **Advanced Notes:** We do not need to pass the Spanish bag of word: the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reasons, but you cannot get
 the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
+
+Instead, if you use **CombinedTM** you need to include the test text for the BOW:
+
+.. code-block:: python
+
+    testing_dataset = qt.create_test_set(testing_text_for_bow, testing_text_for_contextual)
+
+    # n_sample how many times to sample the distribution (see the doc)
+    ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
+
 
 Showing The Topic Word Cloud
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
