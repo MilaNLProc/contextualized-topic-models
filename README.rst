@@ -289,7 +289,7 @@ Instead, if you use **CombinedTM** you need to include the test text for the BOW
 
 .. code-block:: python
 
-    testing_dataset = qt.create_test_set(testing_text_for_bow, testing_text_for_contextual)
+    testing_dataset = qt.create_test_set(testing_text_for_contextual, testing_text_for_bow)
 
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
