@@ -36,7 +36,7 @@ Contextualized Topic Models (CTM) are a family of topic models that use pre-trai
 support topic modeling. See the papers for details:
 
 * Bianchi, F., Terragni, S., Hovy, D., Nozza, D., & Fersini, E. (2021). `Cross-lingual Contextualized Topic Models with Zero-shot Learning`. EACL. https://www.aclweb.org/anthology/2021.eacl-main.143/
-* Bianchi, F., Terragni, S., & Hovy, D. (2020). `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence` https://arxiv.org/pdf/2004.03974.pdf
+* Bianchi, F., Terragni, S., & Hovy, D. (2021). `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence`. ACL. https://arxiv.org/pdf/2004.03974.pdf
 
 
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/logo.png
@@ -51,11 +51,16 @@ Topic Modeling with Contextualized Embeddings
 
 Our new topic modeling family supports many different languages (i.e., the one supported by HuggingFace models) and comes in two versions: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with muliglingual embeddings, inherits the property of being a multilingual topic model!
 
+ACL2021 Paper
+-------------
+
+CombinedTM has been accepted at ACL2021! 
+
 
 EACL2021
 ~~~~~~~~
 
-ZeroShotTM is going to appear at EACL2021! If you want to replicate our results, you can use our code. You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
+ZeroShotTM  has been accepted at EACL2021! If you want to replicate our results, you can use our code. You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
 
 
 Tutorials
@@ -262,6 +267,8 @@ Once you have trained the cross-lingual topic model,
 you can use this simple pipeline to predict the topics for documents in a different language (as long as this language
 is covered by **distiluse-base-multilingual-cased**).
 
+For the **ZeroShotTM** you can use the following snippet.
+
 .. code-block:: python
 
     # here we have a Spanish document
@@ -276,6 +283,16 @@ is covered by **distiluse-base-multilingual-cased**).
 
 **Advanced Notes:** We do not need to pass the Spanish bag of word: the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reasons, but you cannot get
 the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
+
+Instead, if you use **CombinedTM** you need to include the test text for the BOW:
+
+.. code-block:: python
+
+    testing_dataset = qt.create_test_set(testing_text_for_contextual, testing_text_for_bow)
+
+    # n_sample how many times to sample the distribution (see the doc)
+    ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
+
 
 Showing The Topic Word Cloud
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
