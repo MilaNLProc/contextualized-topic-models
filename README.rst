@@ -51,16 +51,11 @@ Topic Modeling with Contextualized Embeddings
 
 Our new topic modeling family supports many different languages (i.e., the one supported by HuggingFace models) and comes in two versions: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with muliglingual embeddings, inherits the property of being a multilingual topic model!
 
-ACL2021 Paper
--------------
+Published Papers
+----------------
 
-CombinedTM has been accepted at ACL2021!
+CombinedTM has been accepted at ACL2021 and ZeroShotTM  has been accepted at EACL2021!
 
-
-EACL2021
-~~~~~~~~
-
-ZeroShotTM  has been accepted at EACL2021!
 If you want to replicate our results, you can use our code.
 You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
 
@@ -181,8 +176,6 @@ it's really easy to update the code to support monolingual English topic modelin
 
     qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
 
-
-
 Language-Specific
 ~~~~~~~~~~~~~~~~~
 
@@ -192,7 +185,6 @@ In general, our package should be able to support all the models described in th
 .. code-block:: python
 
     qt = TopicModelDataPreparation("Musixmatch/umberto-commoncrawl-cased-v1")
-
 
 Combined Topic Modeling
 -----------------------
@@ -208,9 +200,9 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
 
     qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
 
-    training_dataset = qt.create_training_set(list_of_unpreprocessed_documents, list_of_preprocessed_documents)
+    training_dataset = qt.create_training_set(text_for_contextual=list_of_unpreprocessed_documents, text_for_bow=list_of_preprocessed_documents)
 
-    ctm = CombinedTM(input_size=len(qt.vocab), bert_input_size=768, n_components=50)
+    ctm = CombinedTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50)
 
     ctm.fit(training_dataset) # run the model
 
@@ -245,9 +237,9 @@ More interestingly, this model can be used for cross-lingual topic modeling! See
 
     qt = TopicModelDataPreparation("distiluse-base-multilingual-cased")
 
-    training_dataset = qt.create_training_set(text_for_contextual, text_for_bow)
+    training_dataset = qt.create_training_set(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow)
 
-    ctm = ZeroShotTM(input_size=len(qt.vocab), bert_input_size=512, n_components=50)
+    ctm = ZeroShotTM(bow_size=len(qt.vocab), contextual_size=512, n_components=50)
 
     ctm.fit(training_dataset) # run the model
 
@@ -263,18 +255,34 @@ Instead, to **text_for_bow** you should pass the preprocessed text used to build
 Predict Topics for Test Documents
 ---------------------------------
 
+The `create_test_set` method will take care of most things for you, for example the generation
+of a corresponding BoW by considering only the words that the model has seen in training.
+However, this comes with some bumps when dealing with the ZeroShotTM, as we will se in the next section.
+
+You can, however, manually load the embeddings if you like (see the Advanced part of this documentation).
 
 Mono-Lingual Topic Modeling
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Instead, if you use **CombinedTM** you need to include the test text for the BOW:
+If you use **CombinedTM** you need to include the test text for the BOW:
 
 .. code-block:: python
 
-    testing_dataset = qt.create_test_set(testing_text_for_contextual, testing_text_for_bow)
+    testing_dataset = qt.create_test_set(text_for_contextual=testing_text_for_contextual, text_for_bow=testing_text_for_bow)
 
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
+
+If you use **ZeroShotTM** you do not need to use the `testing_text_for_bow` because if you are using
+a different set of test documents, this will create a BoW of a different size. Thus, the best
+way to do this is to pass just the text that is going to be given in input to the contexual model:
+
+.. code-block:: python
+
+    testing_dataset = qt.create_test_set(text_for_contextual=testing_text_for_contextual)
+
+    # n_sample how many times to sample the distribution (see the doc)
+    ctm.get_doc_topic_distribution(testing_dataset, n_samples=20)
 
 
 Cross-Lingual Topic Modeling
@@ -283,8 +291,6 @@ Cross-Lingual Topic Modeling
 Once you have trained the ZeroShotTM model with multilingual embeddings,
 you can use this simple pipeline to predict the topics for documents in a different language (as long as this language
 is covered by **distiluse-base-multilingual-cased**).
-
-For the **ZeroShotTM** you can use the following snippet.
 
 .. code-block:: python
 
@@ -306,7 +312,7 @@ the output of the model (i.e., the predicted BoW of the trained language) and co
 
 
 Visualization
-=============
+-------------
 
 PyLda Visualization
 ~~~~~~~~~~~~~~~~~~~
