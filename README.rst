@@ -291,10 +291,27 @@ Instead, if you use **CombinedTM** you need to include the test text for the BOW
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
 
+Visualization
+=============
+
 PyLda Visualization
 ~~~~~~~~~~~~~~~~~~~
 
-We support
+We support pyLDA visualizations we few lines of code!
+
+.. code-block:: python
+
+    import pyLDAvis as vis
+
+    lda_vis_data = ctm.get_ldavis_data_format(tp.vocab, training_dataset, n_samples=10)
+
+    ctm_pd = vis.prepare(**lda_vis_data)
+    vis.display(ctm_pd)
+
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/pyldavis.png
+   :align: center
+   :width: 400px
+
 
 Showing The Topic Word Cloud
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
