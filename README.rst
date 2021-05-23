@@ -60,7 +60,9 @@ CombinedTM has been accepted at ACL2021!
 EACL2021
 ~~~~~~~~
 
-ZeroShotTM  has been accepted at EACL2021! If you want to replicate our results, you can use our code. You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
+ZeroShotTM  has been accepted at EACL2021!
+If you want to replicate our results, you can use our code.
+You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
 
 
 Tutorials
@@ -70,7 +72,7 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 
 
 .. |colab1_2| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/
+    :target: https://colab.research.google.com/drive/1fXJjr_rwqvpp1IdNQ4dxqN4Dp88cxO97?usp=sharing
     :alt: Open In Colab
 
 .. |colab2_2| image:: https://colab.research.google.com/assets/colab-badge.svg
@@ -167,7 +169,7 @@ Does it work for different languages? Of Course!
 Multilingual
 ~~~~~~~~~~~~
 
-The examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`. This means that the representations you are going to use are mutlilinguals (16 languages). However you might need a broader coverage of languages. In that case, you can check `SBERT`_ to find a model you can use.
+Some of the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`. This means that the representations you are going to use are mutlilinguals (16 languages). However you might need a broader coverage of languages. In that case, you can check `SBERT`_ to find a model you can use.
 
 English
 ~~~~~~~
@@ -219,7 +221,7 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
 the coherence of the predicted topics (https://arxiv.org/pdf/2004.03974.pdf).
 
 Zero-Shot Topic Modeling
---------------------------------------
+------------------------
 
 Our ZeroShotTM can be used for zero-shot topic modeling. It can handle words that are not used during the training phase.
 More interestingly, this model can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
@@ -258,10 +260,27 @@ Instead, to **text_for_bow** you should pass the preprocessed text used to build
 
 **Advanced Notes:** in this way, SBERT can use all the information in the text to generate the representations.
 
-Predict Topics for Unseen Documents
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Predict Topics for Test Documents
+---------------------------------
 
-Once you have trained the cross-lingual topic model,
+
+Mono-Lingual Topic Modeling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Instead, if you use **CombinedTM** you need to include the test text for the BOW:
+
+.. code-block:: python
+
+    testing_dataset = qt.create_test_set(testing_text_for_contextual, testing_text_for_bow)
+
+    # n_sample how many times to sample the distribution (see the doc)
+    ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
+
+
+Cross-Lingual Topic Modeling
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Once you have trained the ZeroShotTM model with multilingual embeddings,
 you can use this simple pipeline to predict the topics for documents in a different language (as long as this language
 is covered by **distiluse-base-multilingual-cased**).
 
@@ -274,6 +293,9 @@ For the **ZeroShotTM** you can use the following snippet.
         "hola, bienvenido",
     ]
 
+    # since we are doing multilingual topic modeling, we do not need the BoW in
+    # ZeroShotTM when doing cross-lingual experiments (it does not make sense, since we trained with an english Bow
+    # to use the spanish BoW)
     testing_dataset = qt.create_test_set(testing_text_for_contextual)
 
     # n_sample how many times to sample the distribution (see the doc)
@@ -282,14 +304,6 @@ For the **ZeroShotTM** you can use the following snippet.
 **Advanced Notes:** We do not need to pass the Spanish bag of word: the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reasons, but you cannot get
 the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
 
-Instead, if you use **CombinedTM** you need to include the test text for the BOW:
-
-.. code-block:: python
-
-    testing_dataset = qt.create_test_set(testing_text_for_contextual, testing_text_for_bow)
-
-    # n_sample how many times to sample the distribution (see the doc)
-    ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
 
 Visualization
 =============
@@ -308,7 +322,7 @@ We support pyLDA visualizations we few lines of code!
     ctm_pd = vis.prepare(**lda_vis_data)
     vis.display(ctm_pd)
 
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/pyldavis.png
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/dev/img/pyldavis.png
    :align: center
    :width: 400px
 
@@ -331,17 +345,6 @@ You can also create a word cloud of the topic!
 
 More Advanced Stuff
 -------------------
-
-Training and Testing with CombinedTM
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-    training_dataset = qt.create_test_set(testing_text_for_contextual, testing_text_for_bow)
-
-    # n_sample how many times to sample the distribution (see the doc)
-    ctm.get_doc_topic_distribution(testing_dataset, n_samples=20)
-
 
 Can I load my own embeddings?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
