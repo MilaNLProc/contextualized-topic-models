@@ -35,8 +35,8 @@ Contextualized Topic Models
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
 support topic modeling. See the papers for details:
 
-* Bianchi, F., Terragni, S., Hovy, D., Nozza, D., & Fersini, E. (2021). `Cross-lingual Contextualized Topic Models with Zero-shot Learning`. EACL. https://www.aclweb.org/anthology/2021.eacl-main.143/
 * Bianchi, F., Terragni, S., & Hovy, D. (2021). `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence`. ACL. https://arxiv.org/pdf/2004.03974.pdf
+* Bianchi, F., Terragni, S., Hovy, D., Nozza, D., & Fersini, E. (2021). `Cross-lingual Contextualized Topic Models with Zero-shot Learning`. EACL. https://www.aclweb.org/anthology/2021.eacl-main.143/
 
 
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/logo.png
@@ -54,7 +54,7 @@ Our new topic modeling family supports many different languages (i.e., the one s
 ACL2021 Paper
 -------------
 
-CombinedTM has been accepted at ACL2021! 
+CombinedTM has been accepted at ACL2021!
 
 
 EACL2021
@@ -69,49 +69,22 @@ Tutorials
 You can look at our `medium`_ blog post or start from one of our Colab Tutorials:
 
 
-.. |colab118| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1wVWHe8xHasnUbzNs40MwlkJsUhvN98se?usp=sharing
+.. |colab1_2| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/
     :alt: Open In Colab
 
-.. |colab218| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1przCw0lBhFUcUofZBfRNWE7Q8e9kXExo?usp=sharing
+.. |colab2_2| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1bfWUYEypULFk_4Tfff-Pb_n7-tSjEe9v?usp=sharing
     :alt: Open In Colab
-
-.. |colab1new| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1GCKpfu6ZfyVTk9_FovxnyH48OkNIYOIb?usp=sharing
-    :alt: Open In Colab
-
-.. |colabzt18| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/13YhYgJN9EjSQw5bsZYzMaaiNKQpt_SQn?usp=sharing
-    :alt: Open In Colab
-
-.. |colabzt| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/13YhYgJN9EjSQw5bsZYzMaaiNKQpt_SQn?usp=sharing
-    :alt: Open In Colab
-
-.. |colabts| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1euxW3ya3_PX6Kj1tnCNrIQ7pjZIODsB6?usp=sharing
-    :alt: Open In Colab
-
 
 
 +--------------------------------------------------------------------------------+------------------+
 | Name                                                                           | Link             |
 +================================================================================+==================+
-| Zero-Shot Cross-lingual Topic Modeling (stable **v1.8.0**)                     | |colabzt18|      |
+| Combined TM on Wikipedia Data (Preproc+Saving+Viz) (stable **v2.0.0**)         | |colab1_2|       |
 +--------------------------------------------------------------------------------+------------------+
-| CombinedTM for Wikipedia Documents (Training and Testing) (stable **v1.8.0**)  | |colab118|       |
+| Zero-Shot Cross-lingual Topic Modeling (Preproc+Viz) (stable **v2.0.0**)       | |colab2_2|       |
 +--------------------------------------------------------------------------------+------------------+
-| CombinedTM with Preprocessing (stable **v1.8.0**)                              | |colab218|       |
-+--------------------------------------------------------------------------------+------------------+
-| CombinedTM Training, Saving and Loading (stable **v1.8.0**)                    | |colabts|        |
-+--------------------------------------------------------------------------------+------------------+
-| Zero-Shot Cross-lingual Topic Modeling (**v1.7.0**)                            | |colabzt|        |
-+--------------------------------------------------------------------------------+------------------+
-| CombinedTM for Wikipedia Documents (**v1.7.0**)                                | |colab1new|      |
-+--------------------------------------------------------------------------------+------------------+
-
-
 
 Overview
 --------
@@ -143,13 +116,13 @@ ZeroShotTM:
 
 .. code-block:: python
 
-    ZeroShotTM(input_size=len(qt.vocab), bert_input_size=embedding_dimension, n_components=number_of_topics)
+    ZeroShotTM(bow_size=len(qt.vocab), contextual_size=embedding_dimension, n_components=number_of_topics)
 
 CombinedTM:
 
 .. code-block:: python
 
-    CombinedTM(input_size=len(qt.vocab), bert_input_size=embedding_dimension,  n_components=number_of_topics)
+    CombinedTM(bow_size=len(qt.vocab), contextual_size=embedding_dimension,  n_components=number_of_topics)
 
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
@@ -180,11 +153,11 @@ If you find this useful you can cite the following papers :)
 
 ::
 
-    @article{bianchi2020pretraining,
+    @inproceedings{bianchi2021pretraining,
         title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
         author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
-        year={2020},
-       journal={arXiv preprint arXiv:2004.03974},
+        year={2021},
+       booktitle={ACL},
     }
 
 
@@ -219,8 +192,33 @@ In general, our package should be able to support all the models described in th
     qt = TopicModelDataPreparation("Musixmatch/umberto-commoncrawl-cased-v1")
 
 
+Combined Topic Modeling
+-----------------------
 
-Zero-Shot Cross-Lingual Topic Modeling
+Here is how you can use the CombinedTM. This is a standard topic model that also uses contextualized embeddings. The good thing about CombinedTM is that it makes your topic much more coherent (see the paper https://arxiv.org/abs/2004.03974).
+
+.. code-block:: python
+
+    from contextualized_topic_models.models.ctm import CombinedTM
+    from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
+    from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
+    from contextualized_topic_models.datasets.dataset import CTMDataset
+
+    qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
+
+    training_dataset = qt.create_training_set(list_of_unpreprocessed_documents, list_of_preprocessed_documents)
+
+    ctm = CombinedTM(input_size=len(qt.vocab), bert_input_size=768, n_components=50)
+
+    ctm.fit(training_dataset) # run the model
+
+    ctm.get_topics()
+
+
+**Advanced Notes:** Combined TM combines the BoW with SBERT, a process that seems to increase
+the coherence of the predicted topics (https://arxiv.org/pdf/2004.03974.pdf).
+
+Zero-Shot Topic Modeling
 --------------------------------------
 
 Our ZeroShotTM can be used for zero-shot topic modeling. It can handle words that are not used during the training phase.
@@ -293,6 +291,10 @@ Instead, if you use **CombinedTM** you need to include the test text for the BOW
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
 
+PyLda Visualization
+~~~~~~~~~~~~~~~~~~~
+
+We support
 
 Showing The Topic Word Cloud
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -308,31 +310,7 @@ You can also create a word cloud of the topic!
    :width: 400px
 
 
-Combined Topic Modeling
------------------------
 
-Here is how you can use the CombinedTM. This is a standard topic model that also uses contextualized embeddings. The good thing about CombinedTM is that it makes your topic much more coherent (see the paper https://arxiv.org/abs/2004.03974).
-
-.. code-block:: python
-
-    from contextualized_topic_models.models.ctm import CombinedTM
-    from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
-    from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
-    from contextualized_topic_models.datasets.dataset import CTMDataset
-
-    qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
-
-    training_dataset = qt.create_training_set(list_of_unpreprocessed_documents, list_of_preprocessed_documents)
-
-    ctm = CombinedTM(input_size=len(qt.vocab), bert_input_size=768, n_components=50)
-
-    ctm.fit(training_dataset) # run the model
-
-    ctm.get_topics()
-
-
-**Advanced Notes:** Combined TM combines the BoW with SBERT, a process that seems to increase
-the coherence of the predicted topics (https://arxiv.org/pdf/2004.03974.pdf).
 
 More Advanced Stuff
 -------------------
@@ -359,7 +337,7 @@ to have the vocab and an id2token dictionary (maps integers ids to words).
     qt = TopicModelDataPreparation()
 
     training_dataset = qt.load(contextualized_embeddings, bow_embeddings, id2token)
-    ctm = CombinedTM(input_size=len(vocab), bert_input_size=768, n_components=50)
+    ctm = CombinedTM(bow_size=len(vocab), contextual_size=768, n_components=50)
     ctm.fit(training_dataset) # run the model
     ctm.get_topics()
 
@@ -405,7 +383,7 @@ We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of
     from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing
 
     documents = [line.strip() for line in open("unpreprocessed_documents.txt").readlines()]
-    sp = WhiteSpacePreprocessing(documents)
+    sp = WhiteSpacePreprocessing(documents, "english")
     preprocessed_documents, unpreprocessed_documents, vocab = sp.preprocess()
 
 

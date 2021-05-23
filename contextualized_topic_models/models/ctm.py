@@ -239,9 +239,7 @@ class CTM:
             samples_processed += sp
             e = datetime.datetime.now()
             pbar.update(1)
-            pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
-                epoch + 1, self.num_epochs, samples_processed,
-                len(self.train_data) * self.num_epochs, train_loss, e - s))
+
 
             if self.validation_data is not None:
                 validation_loader = DataLoader(self.validation_data, batch_size=self.batch_size, shuffle=True,
@@ -257,6 +255,10 @@ class CTM:
                         epoch + 1, self.num_epochs, val_samples_processed,
                         len(self.validation_data) * self.num_epochs, val_loss, e - s))
 
+                pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tValid Loss: {}\tTime: {}".format(
+                    epoch + 1, self.num_epochs, samples_processed,
+                    len(self.train_data) * self.num_epochs, train_loss, val_loss, e - s))
+
                 self.early_stopping(val_loss, self)
                 if self.early_stopping.early_stop:
                     print("Early stopping")
@@ -267,6 +269,9 @@ class CTM:
                 self.best_components = self.model.beta
                 if save_dir is not None:
                     self.save(save_dir)
+            pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
+                epoch + 1, self.num_epochs, samples_processed,
+                len(self.train_data) * self.num_epochs, train_loss, e - s))
 
         pbar.close()
 
@@ -542,7 +547,7 @@ class CTM:
             predicted_topics.append(predicted_topic)
         return predicted_topics
 
-    def get_ldavis_data_format(self, vocab, dataset):
+    def get_ldavis_data_format(self, vocab, dataset, n_samples):
         """
         Returns the data that can be used in input to pyldavis to plot
         the topics
@@ -550,7 +555,7 @@ class CTM:
         term_frequency = dataset.X_bow.toarray().sum(axis=0)
         doc_lengths = dataset.X_bow.toarray().sum(axis=1)
         term_topic = self.get_topic_word_distribution()
-        doc_topic_distribution = self.get_doc_topic_distribution(dataset, n_samples=20)
+        doc_topic_distribution = self.get_doc_topic_distribution(dataset, n_samples=n_samples)
 
         data = {'topic_term_dists': term_topic,
                 'doc_topic_dists': doc_topic_distribution,
