@@ -32,9 +32,9 @@ def test_validation_set(data_dir):
     tp = TopicModelDataPreparation("distiluse-base-multilingual-cased")
 
     training_dataset = tp.fit(data[:100], data[:100])
-    validation_dataset = tp.fit(data[100:105], data[100:105])
+    validation_dataset = tp.transform(data[100:105], data[100:105])
 
-    ctm = ZeroShotTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=100, n_components=5)
+    ctm = CombinedTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=100, n_components=5)
     ctm.fit(training_dataset, validation_dataset=validation_dataset, patience=5, save_dir=data_dir+'test_checkpoint')
 
     assert os.path.exists(data_dir+"test_checkpoint")
