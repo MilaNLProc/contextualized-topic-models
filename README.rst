@@ -25,7 +25,7 @@ Contextualized Topic Models
         :alt: Downloads
 
 .. image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1-KZ7bwS7eM24Q4dbIBEv2C4gC-6xWOmB?usp=sharing
+    :target: https://colab.research.google.com/drive/1fXJjr_rwqvpp1IdNQ4dxqN4Dp88cxO97?usp=sharing
     :alt: Open In Colab
 
 .. image:: https://raw.githubusercontent.com/aleen42/badges/master/src/medium.svg
@@ -44,7 +44,7 @@ support topic modeling. See the papers for details:
    :width: 200px
 
 .. contents:: Table of Contents
-   :depth: 2
+   :depth: 1
 
 Topic Modeling with Contextualized Embeddings
 ---------------------------------------------
@@ -52,7 +52,7 @@ Topic Modeling with Contextualized Embeddings
 Our new topic modeling family supports many different languages (i.e., the one supported by HuggingFace models) and comes in two versions: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with muliglingual embeddings, inherits the property of being a multilingual topic model!
 
 Published Papers
-----------------
+~~~~~~~~~~~~~~~~
 
 CombinedTM has been accepted at ACL2021 and ZeroShotTM  has been accepted at EACL2021!
 
@@ -186,8 +186,11 @@ In general, our package should be able to support all the models described in th
 
     qt = TopicModelDataPreparation("Musixmatch/umberto-commoncrawl-cased-v1")
 
-Combined Topic Modeling
------------------------
+Topic Models
+------------
+
+Combined Topic Model
+~~~~~~~~~~~~~~~~~~~~
 
 Here is how you can use the CombinedTM. This is a standard topic model that also uses contextualized embeddings. The good thing about CombinedTM is that it makes your topic much more coherent (see the paper https://arxiv.org/abs/2004.03974).
 
@@ -212,11 +215,11 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
 **Advanced Notes:** Combined TM combines the BoW with SBERT, a process that seems to increase
 the coherence of the predicted topics (https://arxiv.org/pdf/2004.03974.pdf).
 
-Zero-Shot Topic Modeling
-------------------------
+Zero-Shot Topic Model
+~~~~~~~~~~~~~~~~~~~~~
 
 Our ZeroShotTM can be used for zero-shot topic modeling. It can handle words that are not used during the training phase.
-More interestingly, this model can be used for cross-lingual topic modeling! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
+More interestingly, this model can be used for cross-lingual topic modeling (See next sections)! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
 
 .. code-block:: python
 
@@ -252,8 +255,20 @@ Instead, to **text_for_bow** you should pass the preprocessed text used to build
 
 **Advanced Notes:** in this way, SBERT can use all the information in the text to generate the representations.
 
-Predict Topics for Test Documents
----------------------------------
+Using The Topic Models
+----------------------
+
+Getting The Topics
+~~~~~~~~~~~~~~~~~~
+
+Once the model is trained, it is very easy to get the topics!
+
+.. code-block:: python
+
+    ctm.get_topics()
+
+Predicting Topics For Unseen Documents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The **transform** method will take care of most things for you, for example the generation
 of a corresponding BoW by considering only the words that the model has seen in training.
@@ -262,7 +277,7 @@ However, this comes with some bumps when dealing with the ZeroShotTM, as we will
 You can, however, manually load the embeddings if you like (see the Advanced part of this documentation).
 
 Mono-Lingual Topic Modeling
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+===========================
 
 If you use **CombinedTM** you need to include the test text for the BOW:
 
@@ -286,7 +301,7 @@ way to do this is to pass just the text that is going to be given in input to th
 
 
 Cross-Lingual Topic Modeling
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+============================
 
 Once you have trained the ZeroShotTM model with multilingual embeddings,
 you can use this simple pipeline to predict the topics for documents in a different language (as long as this language
@@ -345,8 +360,6 @@ You can also create a word cloud of the topic!
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/displaying_topic.png
    :align: center
    :width: 400px
-
-
 
 
 More Advanced Stuff
