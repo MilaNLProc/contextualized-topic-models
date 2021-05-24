@@ -47,7 +47,10 @@ class TopicModelDataPreparation:
     def load(self, contextualized_embeddings, bow_embeddings, id2token):
         return CTMDataset(contextualized_embeddings, bow_embeddings, id2token)
 
-    def create_training_set(self, text_for_contextual, text_for_bow):
+    def fit(self, text_for_contextual, text_for_bow):
+        """
+        This method fits the vectorizer and gets the embeddings from the contextual model
+        """
 
         if self.contextualized_model is None:
             raise Exception("You should define a contextualized model if you want to create the embeddings")
@@ -62,7 +65,13 @@ class TopicModelDataPreparation:
 
         return CTMDataset(train_contextualized_embeddings, train_bow_embeddings, self.id2token)
 
-    def create_test_set(self, text_for_contextual, text_for_bow=None):
+    def transform(self, text_for_contextual, text_for_bow=None):
+        """
+        This methods create the input for the prediction. Essentially, it creates the embeddings with the contextualized
+        model of choice and with trained vectorizer.
+
+        If text_for_bow is missing, it should be because we are using ZeroShotTM
+        """
 
         if self.contextualized_model is None:
             raise Exception("You should define a contextualized model if you want to create the embeddings")
@@ -71,155 +80,11 @@ class TopicModelDataPreparation:
             test_bow_embeddings = self.vectorizer.transform(text_for_bow)
         else:
             # dummy matrix
+            warnings.simplefilter('always', DeprecationWarning)
+            warnings.warn("The method did not have in input the text_for_bow parameter. This IS EXPECTED if you "
+                          "are using ZeroShotTM in a cross-lingual setting")
+
             test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
         test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
 
         return CTMDataset(test_contextualized_embeddings, test_bow_embeddings, self.id2token)
-
-    def create_validation_set(self, text_for_contextual, text_for_bow=None):
-        return self.create_test_set(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow)
-
-
-class QuickText:
-    """
-    Integrated class to handle all the text preprocessing needed
-    """
-    def __init__(self, bert_model, text_for_bow, text_for_bert=None):
-        """
-        :param bert_model: string, bert model to use
-        :param text_for_bow: list, list of sentences with the preprocessed text
-        :param text_for_bert: list, list of sentences with the unpreprocessed text
-        """
-        self.vocab_dict = {}
-        self.vocab = []
-        self.index_dd = None
-        self.idx2token = None
-        self.bow = None
-        self.bert_model = bert_model
-        self.text_handler = ""
-        self.data_bert = None
-        self.text_for_bow = text_for_bow
-        self.text_for_bert = text_for_bert
-        self.loaded_from_config = False
-
-    def prepare_bow(self):
-        indptr = [0]
-        indices = []
-        data = []
-        vocabulary = {}
-
-        if self.text_for_bow is not None:
-            docs = self.text_for_bow
-        else:
-            docs = self.text_for_bert
-
-        for d in docs:
-            for term in d.split():
-                index = vocabulary.setdefault(term, len(vocabulary))
-                indices.append(index)
-                data.append(1)
-            indptr.append(len(indices))
-
-        self.vocab_dict = vocabulary
-        self.vocab = list(vocabulary.keys())
-
-        warnings.simplefilter('always', DeprecationWarning)
-        if len(self.vocab) > 2000:
-            warnings.warn("The vocab you are using has more than 2000 words, reconstructing high-dimensional vectors requires"
-                          "significantly more training epochs and training samples. "
-                          "Consider reducing the number of vocabulary items. "
-                          "See https://github.com/MilaNLProc/contextualized-topic-models#preprocessing "
-                          "and https://github.com/MilaNLProc/contextualized-topic-models#tldr", Warning)
-
-        self.idx2token = {v: k for (k, v) in self.vocab_dict.items()}
-        self.bow = scipy.sparse.csr_matrix((data, indices, indptr), dtype=int)
-
-    def load_configuration(self, bow_embeddings, contextualized_embeddings, vocab, id2token):
-        """
-        This method defines a way to instantiate the model with pre-trained data.
-        """
-
-        assert len(contextualized_embeddings) == bow_embeddings.shape[0]
-        assert len(vocab) == len(id2token)
-        self.data_bert = contextualized_embeddings
-        self.bow = bow_embeddings
-        self.vocab = vocab
-        self.idx2token = id2token
-        self.loaded_from_config = True
-
-    def load_pre_trained_contextualized(self, contextualized_embeddings):
-        """
-        In case the contextualized embeddings have been already trained, it is possible to load them with this method
-        """
-        self.data_bert = contextualized_embeddings
-
-    def load_dataset(self):
-        if self.loaded_from_config:
-            training_dataset = CTMDataset(self.data_bert, self.bow, self.idx2token)
-        else:
-            self.prepare_bow()
-
-            if self.data_bert is None:
-                if self.text_for_bert is not None:
-                    self.data_bert = bert_embeddings_from_list(self.text_for_bert, self.bert_model)
-                else:
-                    self.data_bert = bert_embeddings_from_list(self.text_for_bow, self.bert_model)
-
-            training_dataset = CTMDataset(self.data_bert, self.bow, self.idx2token)
-
-        return training_dataset
-
-class TextHandler:
-    """
-    Class used to handle the text preparation and the BagOfWord
-    """
-    def __init__(self, file_name=None, sentences=None):
-        self.file_name = file_name
-        self.sentences = sentences
-        self.vocab_dict = {}
-        self.vocab = []
-        self.index_dd = None
-        self.idx2token = None
-        self.bow = None
-
-        warnings.simplefilter('always', DeprecationWarning)
-        if len(self.vocab) > 2000:
-            warnings.warn("TextHandler class is deprecated and will be removed in version 2.0. Use QuickText.", Warning)
-
-    def prepare(self):
-        indptr = [0]
-        indices = []
-        data = []
-        vocabulary = {}
-
-        if self.sentences is None and self.file_name is None:
-            raise Exception("Sentences and file_names cannot both be none")
-
-        if self.sentences is not None:
-            docs = self.sentences
-        elif self.file_name is not None:
-            with open(self.file_name, encoding="utf-8") as filino:
-                docs = filino.readlines()
-        else:
-            raise Exception("One parameter between sentences and file_name should be selected")
-
-        for d in docs:
-            for term in d.split():
-                index = vocabulary.setdefault(term, len(vocabulary))
-                indices.append(index)
-                data.append(1)
-            indptr.append(len(indices))
-
-        self.vocab_dict = vocabulary
-        self.vocab = list(vocabulary.keys())
-
-        warnings.simplefilter('always', DeprecationWarning)
-        if len(self.vocab) > 2000:
-            warnings.warn("The vocab you are using has more than 2000 words, reconstructing high-dimensional vectors requires"
-                          "significantly more training epochs and training samples. "
-                          "Consider reducing the number of vocabulary items. "
-                          "See https://github.com/MilaNLProc/contextualized-topic-models#preprocessing "
-                          "and https://github.com/MilaNLProc/contextualized-topic-models#tldr", Warning)
-
-        self.idx2token = {v: k for (k, v) in self.vocab_dict.items()}
-        self.bow = scipy.sparse.csr_matrix((data, indices, indptr), dtype=int)

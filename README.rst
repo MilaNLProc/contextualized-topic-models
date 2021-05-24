@@ -200,7 +200,7 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
 
     qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
 
-    training_dataset = qt.create_training_set(text_for_contextual=list_of_unpreprocessed_documents, text_for_bow=list_of_preprocessed_documents)
+    training_dataset = qt.fit(text_for_contextual=list_of_unpreprocessed_documents, text_for_bow=list_of_preprocessed_documents)
 
     ctm = CombinedTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50)
 
@@ -237,7 +237,7 @@ More interestingly, this model can be used for cross-lingual topic modeling! See
 
     qt = TopicModelDataPreparation("distiluse-base-multilingual-cased")
 
-    training_dataset = qt.create_training_set(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow)
+    training_dataset = qt.fit(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow)
 
     ctm = ZeroShotTM(bow_size=len(qt.vocab), contextual_size=512, n_components=50)
 
@@ -255,7 +255,7 @@ Instead, to **text_for_bow** you should pass the preprocessed text used to build
 Predict Topics for Test Documents
 ---------------------------------
 
-The `create_test_set` method will take care of most things for you, for example the generation
+The **transform** method will take care of most things for you, for example the generation
 of a corresponding BoW by considering only the words that the model has seen in training.
 However, this comes with some bumps when dealing with the ZeroShotTM, as we will se in the next section.
 
@@ -268,7 +268,7 @@ If you use **CombinedTM** you need to include the test text for the BOW:
 
 .. code-block:: python
 
-    testing_dataset = qt.create_test_set(text_for_contextual=testing_text_for_contextual, text_for_bow=testing_text_for_bow)
+    testing_dataset = qt.transform(text_for_contextual=testing_text_for_contextual, text_for_bow=testing_text_for_bow)
 
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
@@ -279,7 +279,7 @@ way to do this is to pass just the text that is going to be given in input to th
 
 .. code-block:: python
 
-    testing_dataset = qt.create_test_set(text_for_contextual=testing_text_for_contextual)
+    testing_dataset = qt.transform(text_for_contextual=testing_text_for_contextual)
 
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20)

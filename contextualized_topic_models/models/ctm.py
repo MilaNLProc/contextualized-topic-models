@@ -240,7 +240,6 @@ class CTM:
             e = datetime.datetime.now()
             pbar.update(1)
 
-
             if self.validation_data is not None:
                 validation_loader = DataLoader(self.validation_data, batch_size=self.batch_size, shuffle=True,
                                                num_workers=self.num_data_loader_workers)
