@@ -302,7 +302,7 @@ is covered by **distiluse-base-multilingual-cased**).
     # since we are doing multilingual topic modeling, we do not need the BoW in
     # ZeroShotTM when doing cross-lingual experiments (it does not make sense, since we trained with an english Bow
     # to use the spanish BoW)
-    testing_dataset = qt.create_test_set(testing_text_for_contextual)
+    testing_dataset = qt.transform(testing_text_for_contextual)
 
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
