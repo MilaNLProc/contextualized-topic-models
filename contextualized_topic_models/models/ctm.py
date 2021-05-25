@@ -361,36 +361,6 @@ class CTM:
         """
         return np.argmax(doc_topic_distribution, axis=0)
 
-    def predict(self, dataset, k=10):
-        """Predict input."""
-        self.model.eval()
-
-        loader = DataLoader(
-            dataset, batch_size=self.batch_size, shuffle=False,
-            num_workers=self.num_data_loader_workers)
-
-        preds = []
-
-        with torch.no_grad():
-            for batch_samples in loader:
-                # batch_size x vocab_size
-                X_bow = batch_samples['X_bow']
-                X_bow = X_bow.reshape(X_bow.shape[0], -1)
-                X_contextual = batch_samples['X_contextual']
-
-                if self.USE_CUDA:
-                    X_bow = X_bow.cuda()
-                    X_contextual = X_contextual.cuda()
-
-                # forward pass
-                self.model.zero_grad()
-                _, _, _, _, _, word_dists = self.model(X_bow, X_contextual)
-
-                _, indices = torch.sort(word_dists, dim=1)
-                preds += [indices[:, :k]]
-
-            preds = torch.cat(preds, dim=0)
-        return preds
 
     def get_topics(self, k=10):
         """
