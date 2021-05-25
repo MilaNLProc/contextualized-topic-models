@@ -124,7 +124,7 @@ CombinedTM:
 
 .. code-block:: python
 
-    CombinedTM(bow_size=len(qt.vocab), contextual_size=embedding_dimension,  n_components=number_of_topics)
+    CombinedTM(bow_size=len(qt.vocab), contextual_size=embedding_dimension, n_components=number_of_topics)
 
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
@@ -206,7 +206,7 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
-    qt = TopicModelDataPreparation(" paraphrase-distilroberta-base-v1")
+    qt = TopicModelDataPreparation("paraphrase-distilroberta-base-v1")
 
     training_dataset = qt.fit(text_for_contextual=list_of_unpreprocessed_documents, text_for_bow=list_of_preprocessed_documents)
 
@@ -224,7 +224,7 @@ Zero-Shot Topic Model
 ~~~~~~~~~~~~~~~~~~~~~
 
 Our ZeroShotTM can be used for zero-shot topic modeling. It can handle words that are not used during the training phase.
-More interestingly, this model can be used for cross-lingual topic modeling (See next sections)! See the paper (https://arxiv.org/pdf/2004.07737v1.pdf)
+More interestingly, this model can be used for cross-lingual topic modeling (See next sections)! See the paper (https://www.aclweb.org/anthology/2021.eacl-main.143)
 
 .. code-block:: python
 
