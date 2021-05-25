@@ -3,7 +3,6 @@ import multiprocessing as mp
 import os
 import warnings
 from collections import defaultdict
-
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -13,48 +12,43 @@ from torch import optim
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-
 from contextualized_topic_models.utils.early_stopping.early_stopping import EarlyStopping
-
 from contextualized_topic_models.networks.decoding_network import DecoderNetwork
 
 
 class CTM:
     """Class to train the contextualized topic model. This is the more general class that we are keeping to
-    avoid braking code, user should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
+    avoid braking code, users should use the two subclasses ZeroShotTM and CombinedTm to do topic modeling.
 
-        :param input_size: int, dimension of input
-        :param bert_input_size: int, dimension of input that comes from BERT embeddings
-        :param inference_type: string, you can choose between the contextual model and the combined model
-        :param n_components: int, number of topic components, (default 10)
-        :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
-        :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
-        :param activation: string, 'softplus', 'relu', (default 'softplus')
-        :param dropout: float, dropout to use (default 0.2)
-        :param learn_priors: bool, make priors a learnable parameter (default True)
-        :param batch_size: int, size of batch to use for training (default 64)
-        :param lr: float, learning rate to use for training (default 2e-3)
-        :param momentum: float, momentum to use for training (default 0.99)
-        :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
-        :param num_epochs: int, number of epochs to train for, (default 100)
-        :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
-        :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
+    :param bow_size: int, dimension of input
+    :param contextual_size: int, dimension of input that comes from BERT embeddings
+    :param inference_type: string, you can choose between the contextual model and the combined model
+    :param n_components: int, number of topic components, (default 10)
+    :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
+    :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
+    :param activation: string, 'softplus', 'relu', (default 'softplus')
+    :param dropout: float, dropout to use (default 0.2)
+    :param learn_priors: bool, make priors a learnable parameter (default True)
+    :param batch_size: int, size of batch to use for training (default 64)
+    :param lr: float, learning rate to use for training (default 2e-3)
+    :param momentum: float, momentum to use for training (default 0.99)
+    :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
+    :param num_epochs: int, number of epochs to train for, (default 100)
+    :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
+    :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
 
-    def __init__(self, input_size, bert_input_size, inference_type="combined", n_components=10, model_type='prodLDA',
+    def __init__(self, bow_size, contextual_size, inference_type="combined", n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
-        warnings.simplefilter('always', DeprecationWarning)
 
         if self.__class__.__name__ == "CTM":
-            warnings.warn(
-                "Direct call to CTM is deprecated and will be removed in version 2, use CombinedTM or ZeroShotTM",
-                DeprecationWarning)
+            raise Exception("You cannot call this class. Use ZeroShotTM or CombinedTM")
 
-        assert isinstance(input_size, int) and input_size > 0, \
+        assert isinstance(bow_size, int) and bow_size > 0, \
             "input_size must by type int > 0."
-        assert isinstance(n_components, int) and input_size > 0, \
+        assert isinstance(n_components, int) and bow_size > 0, \
             "n_components must by type int > 0."
         assert model_type in ['LDA', 'prodLDA'], \
             "model must be 'LDA' or 'prodLDA'."
@@ -75,7 +69,7 @@ class CTM:
         assert isinstance(num_data_loader_workers, int) and num_data_loader_workers >= 0, \
             "num_data_loader_workers must by type int >= 0. set 0 if you are using windows"
 
-        self.input_size = input_size
+        self.bow_size = bow_size
         self.n_components = n_components
         self.model_type = model_type
         self.hidden_sizes = hidden_sizes
@@ -84,7 +78,7 @@ class CTM:
         self.learn_priors = learn_priors
         self.batch_size = batch_size
         self.lr = lr
-        self.bert_size = bert_input_size
+        self.contextual_size = contextual_size
         self.momentum = momentum
         self.solver = solver
         self.num_epochs = num_epochs
@@ -92,7 +86,7 @@ class CTM:
         self.num_data_loader_workers = num_data_loader_workers
 
         self.model = DecoderNetwork(
-            input_size, self.bert_size, inference_type, n_components, model_type, hidden_sizes, activation,
+            bow_size, self.contextual_size, inference_type, n_components, model_type, hidden_sizes, activation,
             dropout, learn_priors)
         self.early_stopping = None
 
@@ -163,27 +157,27 @@ class CTM:
 
         for batch_samples in loader:
             # batch_size x vocab_size
-            X = batch_samples['X']
-            X = X.reshape(X.shape[0], -1)
-            X_bert = batch_samples['X_bert']
+            X_bow = batch_samples['X_bow']
+            X_bow = X_bow.reshape(X_bow.shape[0], -1)
+            X_contextual = batch_samples['X_contextual']
             if self.USE_CUDA:
-                X = X.cuda()
-                X_bert = X_bert.cuda()
+                X_bow = X_bow.cuda()
+                X_contextual = X_contextual.cuda()
 
             # forward pass
             self.model.zero_grad()
             prior_mean, prior_variance, posterior_mean, posterior_variance, posterior_log_variance, word_dists =\
-                self.model(X, X_bert)
+                self.model(X_bow, X_contextual)
 
             # backward pass
             loss = self._loss(
-                X, word_dists, prior_mean, prior_variance,
+                X_bow, word_dists, prior_mean, prior_variance,
                 posterior_mean, posterior_variance, posterior_log_variance)
             loss.backward()
             self.optimizer.step()
 
             # compute train loss
-            samples_processed += X.size()[0]
+            samples_processed += X_bow.size()[0]
             train_loss += loss.item()
 
         train_loss /= samples_processed
@@ -195,8 +189,7 @@ class CTM:
         Train the CTM model.
 
         :param train_dataset: PyTorch Dataset class for training data.
-        :param validation_dataset: PyTorch Dataset class for validation data. If not None, the training stops if
-        validation loss doesn't improve after a given patience
+        :param validation_dataset: PyTorch Dataset class for validation data. If not None, the training stops if validation loss doesn't improve after a given patience
         :param save_dir: directory to save checkpoint models to.
         :param verbose: verbose
         :param patience: How long to wait after last time validation loss improved. Default: 5
@@ -246,14 +239,8 @@ class CTM:
             samples_processed += sp
             e = datetime.datetime.now()
             pbar.update(1)
-            pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
-                epoch + 1, self.num_epochs, samples_processed,
-                len(self.train_data) * self.num_epochs, train_loss, e - s))
 
             if self.validation_data is not None:
-                self.best_loss_train = train_loss
-                self.best_components = self.model.beta
-
                 validation_loader = DataLoader(self.validation_data, batch_size=self.batch_size, shuffle=True,
                                                num_workers=self.num_data_loader_workers)
                 # train epoch
@@ -267,19 +254,23 @@ class CTM:
                         epoch + 1, self.num_epochs, val_samples_processed,
                         len(self.validation_data) * self.num_epochs, val_loss, e - s))
 
+                pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tValid Loss: {}\tTime: {}".format(
+                    epoch + 1, self.num_epochs, samples_processed,
+                    len(self.train_data) * self.num_epochs, train_loss, val_loss, e - s))
+
                 self.early_stopping(val_loss, self)
                 if self.early_stopping.early_stop:
                     print("Early stopping")
 
                     break
             else:
-                # save best
-                if train_loss < self.best_loss_train:
-                    self.best_loss_train = train_loss
-                    self.best_components = self.model.beta
-
+                # save last epoch
+                self.best_components = self.model.beta
                 if save_dir is not None:
                     self.save(save_dir)
+            pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
+                epoch + 1, self.num_epochs, samples_processed,
+                len(self.train_data) * self.num_epochs, train_loss, e - s))
 
         pbar.close()
 
@@ -290,23 +281,23 @@ class CTM:
         samples_processed = 0
         for batch_samples in loader:
             # batch_size x vocab_size
-            X = batch_samples['X']
-            X = X.reshape(X.shape[0], -1)
-            X_bert = batch_samples['X_bert']
+            X_bow = batch_samples['X_bow']
+            X_bow = X_bow.reshape(X_bow.shape[0], -1)
+            X_contextual = batch_samples['X_contextual']
 
             if self.USE_CUDA:
-                X = X.cuda()
-                X_bert = X_bert.cuda()
+                X_bow = X_bow.cuda()
+                X_contextual = X_contextual.cuda()
 
             # forward pass
             self.model.zero_grad()
             prior_mean, prior_variance, posterior_mean, posterior_variance, posterior_log_variance, word_dists =\
-                self.model(X, X_bert)
-            loss = self._loss(X, word_dists, prior_mean, prior_variance,
+                self.model(X_bow, X_contextual)
+            loss = self._loss(X_bow, word_dists, prior_mean, prior_variance,
                               posterior_mean, posterior_variance, posterior_log_variance)
 
             # compute train loss
-            samples_processed += X.size()[0]
+            samples_processed += X_bow.size()[0]
             val_loss += loss.item()
 
         val_loss /= samples_processed
@@ -321,9 +312,6 @@ class CTM:
         :param dataset: a PyTorch Dataset containing the documents
         :param n_samples: the number of sample to collect to estimate the final distribution (the more the better).
         """
-        warnings.warn("Call to `get_thetas` is deprecated and will be removed in version 2, "
-                      "use `get_doc_topic_distribution` instead",
-                      DeprecationWarning)
         return self.get_doc_topic_distribution(dataset, n_samples=n_samples)
 
     def get_doc_topic_distribution(self, dataset, n_samples=20):
@@ -347,17 +335,17 @@ class CTM:
 
                 for batch_samples in loader:
                     # batch_size x vocab_size
-                    X = batch_samples['X']
-                    X = X.reshape(X.shape[0], -1)
-                    X_bert = batch_samples['X_bert']
+                    X_bow = batch_samples['X_bow']
+                    X_bow = X_bow.reshape(X_bow.shape[0], -1)
+                    X_contextual = batch_samples['X_contextual']
 
                     if self.USE_CUDA:
-                        X = X.cuda()
-                        X_bert = X_bert.cuda()
+                        X_bow = X_bow.cuda()
+                        X_contextual = X_contextual.cuda()
 
                     # forward pass
                     self.model.zero_grad()
-                    collect_theta.extend(self.model.get_theta(X, X_bert).cpu().numpy().tolist())
+                    collect_theta.extend(self.model.get_theta(X_bow, X_contextual).cpu().numpy().tolist())
 
                 pbar.update(1)
                 pbar.set_description("Sampling: [{}/{}]".format(sample_index + 1, n_samples))
@@ -373,36 +361,6 @@ class CTM:
         """
         return np.argmax(doc_topic_distribution, axis=0)
 
-    def predict(self, dataset, k=10):
-        """Predict input."""
-        self.model.eval()
-
-        loader = DataLoader(
-            dataset, batch_size=self.batch_size, shuffle=False,
-            num_workers=self.num_data_loader_workers)
-
-        preds = []
-
-        with torch.no_grad():
-            for batch_samples in loader:
-                # batch_size x vocab_size
-                X = batch_samples['X']
-                X = X.reshape(X.shape[0], -1)
-                X_bert = batch_samples['X_bert']
-
-                if self.USE_CUDA:
-                    X = X.cuda()
-                    X_bert = X_bert.cuda()
-
-                # forward pass
-                self.model.zero_grad()
-                _, _, _, _, _, word_dists = self.model(X, X_bert)
-
-                _, indices = torch.sort(word_dists, dim=1)
-                preds += [indices[:, :k]]
-
-            preds = torch.cat(preds, dim=0)
-        return preds
 
     def get_topics(self, k=10):
         """
@@ -410,7 +368,7 @@ class CTM:
 
         :param k: int, number of words to return per topic, default 10.
         """
-        assert k <= self.input_size, "k must be <= input size."
+        assert k <= self.bow_size, "k must be <= input size."
         component_dists = self.best_components
         topics = defaultdict(list)
         for i in range(self.n_components):
@@ -426,7 +384,7 @@ class CTM:
 
         :param k: (int) number of words to return per topic, default 10.
         """
-        assert k <= self.input_size, "k must be <= input size."
+        assert k <= self.bow_size, "k must be <= input size."
         # TODO: collapse this method with the one that just returns the topics
         component_dists = self.best_components
         topics = []
@@ -521,7 +479,7 @@ class CTM:
             t = sorted(t, key=lambda x: -x[1])
         return t
 
-    def get_wordcloud(self, topic_id, n_words=5, background_color="black"):
+    def get_wordcloud(self, topic_id, n_words=5, background_color="black", width=1000, height=400):
         """
         Plotting the wordcloud. It is an adapted version of the code found here:
         http://amueller.github.io/word_cloud/auto_examples/simple.html#sphx-glr-auto-examples-simple-py and
@@ -530,12 +488,14 @@ class CTM:
         :param topic_id: id of the topic
         :param n_words: number of words to show in word cloud
         :param background_color: color of the background
+        :param width: width of the produced image
+        :param height: height of the produced image
         """
         word_score_list = self.get_word_distribution_by_topic_id(topic_id)[:n_words]
         word_score_dict = {tup[0]: tup[1] for tup in word_score_list}
         plt.figure(figsize=(10, 4), dpi=200)
         plt.axis("off")
-        plt.imshow(wordcloud.WordCloud(width=1000, height=400, background_color=background_color
+        plt.imshow(wordcloud.WordCloud(width=width, height=height, background_color=background_color
                                        ).generate_from_frequencies(word_score_dict))
         plt.title("Displaying Topic " + str(topic_id), loc='center', fontsize=24)
         plt.show()
@@ -556,13 +516,30 @@ class CTM:
             predicted_topics.append(predicted_topic)
         return predicted_topics
 
+    def get_ldavis_data_format(self, vocab, dataset, n_samples):
+        """
+        Returns the data that can be used in input to pyldavis to plot
+        the topics
+        """
+        term_frequency = dataset.X_bow.toarray().sum(axis=0)
+        doc_lengths = dataset.X_bow.toarray().sum(axis=1)
+        term_topic = self.get_topic_word_distribution()
+        doc_topic_distribution = self.get_doc_topic_distribution(dataset, n_samples=n_samples)
+
+        data = {'topic_term_dists': term_topic,
+                'doc_topic_dists': doc_topic_distribution,
+                'doc_lengths': doc_lengths,
+                'vocab': vocab,
+                'term_frequency': term_frequency}
+
+        return data
+
 
 class ZeroShotTM(CTM):
-    """
-    ZeroShotTM, as described in https://arxiv.org/pdf/2004.07737v1.pdf
+    """ZeroShotTM, as described in https://arxiv.org/pdf/2004.07737v1.pdf
 
-    :param input_size: int, dimension of input
-    :param bert_input_size: int, dimension of input that comes from BERT embeddings
+    :param bow_size: int, dimension of input
+    :param contextual_size: int, dimension of input that comes from BERT embeddings
     :param n_components: int, number of topic components, (default 10)
     :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
     :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
@@ -576,26 +553,24 @@ class ZeroShotTM(CTM):
     :param num_epochs: int, number of epochs to train for, (default 100)
     :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
     :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
-
     """
 
-    def __init__(self, input_size, bert_input_size, n_components=10, model_type='prodLDA',
+    def __init__(self, bow_size, contextual_size, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         inference_type = "zeroshot"
-        super().__init__(input_size, bert_input_size, inference_type, n_components, model_type,
+        super().__init__(bow_size, contextual_size, inference_type, n_components, model_type,
                          hidden_sizes, activation, dropout,
                          learn_priors, batch_size, lr, momentum,
                          solver, num_epochs, reduce_on_plateau, num_data_loader_workers)
 
 
 class CombinedTM(CTM):
-    """
-    CombinedTM, as described in https://arxiv.org/pdf/2004.03974.pdf
+    """CombinedTM, as described in https://arxiv.org/pdf/2004.03974.pdf
 
-    :param input_size: int, dimension of input
-    :param bert_input_size: int, dimension of input that comes from BERT embeddings
+    :param bow_size: int, dimension of input
+    :param contextual_size: int, dimension of input that comes from BERT embeddings
     :param n_components: int, number of topic components, (default 10)
     :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
     :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
@@ -611,12 +586,12 @@ class CombinedTM(CTM):
     :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
 
-    def __init__(self, input_size, bert_input_size, n_components=10, model_type='prodLDA',
+    def __init__(self, bow_size, contextual_size, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
                  solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
         inference_type = "combined"
-        super().__init__(input_size, bert_input_size, inference_type, n_components, model_type,
+        super().__init__(bow_size, contextual_size, inference_type, n_components, model_type,
                          hidden_sizes, activation, dropout,
                          learn_priors, batch_size, lr, momentum,
                          solver, num_epochs, reduce_on_plateau, num_data_loader_workers)

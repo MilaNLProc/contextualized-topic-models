@@ -17,6 +17,10 @@
 # relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
 #
+
+autodoc_mock_imports = ["torch"]
+
+
 import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
@@ -32,9 +36,11 @@ import contextualized_topic_models
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode']
-
+autodoc_default_flags = ['members', 'inherited-members']
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+
+
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -77,13 +83,14 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+html_favicon = "ctm_piclo.png"
 
 # -- Options for HTML output -------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+#html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a
 # theme further.  For a list of options available for each theme, see the
@@ -159,4 +166,3 @@ texinfo_documents = [
 ]
 
 
-autodoc_mock_imports = ['numpy', 'pandas', 'torch']
