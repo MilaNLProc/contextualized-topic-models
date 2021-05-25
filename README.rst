@@ -51,6 +51,7 @@ Topic Modeling with Contextualized Embeddings
 
 Our new topic modeling family supports many different languages (i.e., the one supported by HuggingFace models) and comes in two versions: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with muliglingual embeddings, inherits the property of being a multilingual topic model!
 
+
 Published Papers
 ~~~~~~~~~~~~~~~~
 
@@ -58,6 +59,10 @@ CombinedTM has been accepted at ACL2021 and ZeroShotTM  has been accepted at EAC
 
 If you want to replicate our results, you can use our code.
 You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
+
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/dev/img/ctm_both.jpeg
+   :align: center
+   :width: 600px
 
 
 Tutorials
