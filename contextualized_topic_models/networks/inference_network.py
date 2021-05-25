@@ -1,5 +1,3 @@
-"""PyTorch class for feed foward inference network."""
-
 from collections import OrderedDict
 from torch import nn
 import torch

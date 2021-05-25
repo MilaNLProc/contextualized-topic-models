@@ -10,6 +10,7 @@ History
     * CTM takes in input bow_size, contextual_size instead of input_size and bert_size
     * changed the name of the parameters in the dataset
 * introduced early stopping
+* introduced visualization with pyldavis
 
 1.8.2 (2021-02-08)
 ------------------
