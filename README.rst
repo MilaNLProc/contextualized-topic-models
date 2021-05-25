@@ -179,7 +179,7 @@ it's really easy to update the code to support monolingual English topic modelin
 
 .. code-block:: python
 
-    qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
+    qt = TopicModelDataPreparation(" paraphrase-distilroberta-base-v1")
 
 Language-Specific
 ~~~~~~~~~~~~~~~~~
@@ -206,7 +206,7 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
-    qt = TopicModelDataPreparation("bert-base-nli-mean-tokens")
+    qt = TopicModelDataPreparation(" paraphrase-distilroberta-base-v1")
 
     training_dataset = qt.fit(text_for_contextual=list_of_unpreprocessed_documents, text_for_bow=list_of_preprocessed_documents)
 
