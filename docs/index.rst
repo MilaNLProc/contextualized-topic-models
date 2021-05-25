@@ -1,5 +1,5 @@
 Welcome to Contextualized Topic Models's documentation!
-======================================
+=======================================================
 
 .. toctree::
    :maxdepth: 2
