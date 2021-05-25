@@ -5,4 +5,3 @@ __email__ = 'f.bianchi@unibocconi.it'
 __version__ = '1.8.2'
 
 
-from .models.ctm import ZeroShotTM, CombinedTM
