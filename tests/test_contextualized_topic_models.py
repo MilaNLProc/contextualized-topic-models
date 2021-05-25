@@ -34,10 +34,11 @@ def test_validation_set(data_dir):
     training_dataset = tp.fit(data[:100], data[:100])
     validation_dataset = tp.transform(data[100:105], data[100:105])
 
-    ctm = CombinedTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=100, n_components=5)
+    ctm = CombinedTM(reduce_on_plateau=True, solver='sgd', bow_size=len(tp.vocab), contextual_size=512, num_epochs=100, n_components=5)
     ctm.fit(training_dataset, validation_dataset=validation_dataset, patience=5, save_dir=data_dir+'test_checkpoint')
 
     assert os.path.exists(data_dir+"test_checkpoint")
+
 
 def test_training_all_classes_ctm(data_dir):
 
@@ -69,6 +70,7 @@ def test_training_all_classes_ctm(data_dir):
     predictions = ctm.get_doc_topic_distribution(testing_dataset, n_samples=2)
 
     assert len(predictions) == len(testing_dataset)
+
 
 def test_preprocessing(data_dir):
     docs = [line.strip() for line in open(data_dir + "gnews/GoogleNews.txt", 'r').readlines()]
