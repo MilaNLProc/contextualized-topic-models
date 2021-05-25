@@ -1,5 +1,3 @@
-"""PyTorch class for feed foward AVITM network."""
-
 import torch
 from torch import nn
 from torch.nn import functional as F
@@ -9,7 +7,6 @@ from contextualized_topic_models.networks.inference_network import CombinedInfer
 
 class DecoderNetwork(nn.Module):
 
-    """AVITM Network."""
 
     def __init__(self, input_size, bert_size, infnet, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100,100), activation='softplus', dropout=0.2,

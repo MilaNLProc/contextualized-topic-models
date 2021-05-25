@@ -188,6 +188,7 @@ class Matches(Measure):
          :param doc_distribution_unseen_language: numpy array of the topical distribution of the
           documents in an unseen language (dim: num docs x num topics)
          """
+        super().__init__()
         self.orig_lang_docs = doc_distribution_original_language
         self.unseen_lang_docs = doc_distribution_unseen_language
         if len(self.orig_lang_docs) != len(self.unseen_lang_docs):
@@ -206,13 +207,14 @@ class Matches(Measure):
 
 
 class KLDivergence(Measure):
-    def __init__(self,  doc_distribution_original_language, doc_distribution_unseen_language):
+    def __init__(self, doc_distribution_original_language, doc_distribution_unseen_language):
         """
-         :param doc_distribution_original_language: numpy array of the topical distribution of 
+         :param doc_distribution_original_language: numpy array of the topical distribution of
          the documents in the original language (dim: num docs x num topics)
          :param doc_distribution_unseen_language: numpy array of the topical distribution of the
           documents in an unseen language (dim: num docs x num topics)
          """
+        super().__init__()
         self.orig_lang_docs = doc_distribution_original_language
         self.unseen_lang_docs = doc_distribution_unseen_language
         if len(self.orig_lang_docs) != len(self.unseen_lang_docs):
@@ -235,8 +237,8 @@ def kl_div(a, b):
 
 
 class CentroidDistance(Measure):
-    def __init__(self, doc_distribution_original_language, doc_distribution_unseen_language, topics,
-                 word2vec_path=None, binary=True, topk=10):
+    def __init__(self, doc_distribution_original_language, doc_distribution_unseen_language, topics, word2vec_path=None,
+                 binary=True, topk=10):
         """
          :param doc_distribution_original_language: numpy array of the topical distribution of the
          documents in the original language (dim: num docs x num topics)
@@ -249,6 +251,7 @@ class CentroidDistance(Measure):
          :param binary: if the word2vec file is binary
          :param topk: max number of topical words
          """
+        super().__init__()
         self.topics = [t[:topk] for t in topics]
         self.orig_lang_docs = doc_distribution_original_language
         self.unseen_lang_docs = doc_distribution_unseen_language

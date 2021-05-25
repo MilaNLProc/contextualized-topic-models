@@ -1,5 +1,5 @@
 Welcome to Contextualized Topic Models's documentation!
-======================================
+=======================================================
 
 .. toctree::
    :maxdepth: 2
@@ -8,7 +8,6 @@ Welcome to Contextualized Topic Models's documentation!
    readme
    installation
    usage
-   ctm
    contributing
    authors
    history

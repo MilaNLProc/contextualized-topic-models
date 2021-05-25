@@ -10,7 +10,7 @@ Am I forced to use the SBERT Embeddings?
 
 Not at all! you can actually the embedding you like most. Keep in mind to check that the matrix you create
 as the same number of documents (first dimension) as the Bag of Word representation and you are good to go!
-Check the code `here <https://github.com/MilaNLProc/contextualized-topic-models/blob/master/contextualized_topic_models/utils/data_preparation.py#L25>`_
+Check the code `here <https://github.com/MilaNLProc/contextualized-topic-models/blob/master/contextualized_topic_models/utils/data_preparation.py>`_
 to see how we create the representations.
 
 
