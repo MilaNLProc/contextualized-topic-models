@@ -1,7 +1,7 @@
 import pytest
 import os
 
-from contextualized_topic_models import ZeroShotTM
+from contextualized_topic_models.models.ctm import ZeroShotTM
 from contextualized_topic_models.evaluation.measures import CoherenceNPMI, CoherenceCV, InvertedRBO, TopicDiversity
 from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
 
