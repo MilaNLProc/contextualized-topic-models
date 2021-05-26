@@ -179,7 +179,7 @@ it's really easy to update the code to support monolingual English topic modelin
 
 .. code-block:: python
 
-    qt = TopicModelDataPreparation(" paraphrase-distilroberta-base-v1")
+    qt = TopicModelDataPreparation("paraphrase-distilroberta-base-v1")
 
 Language-Specific
 ~~~~~~~~~~~~~~~~~
@@ -337,7 +337,7 @@ Visualization
 PyLda Visualization
 ~~~~~~~~~~~~~~~~~~~
 
-We support pyLDA visualizations we few lines of code!
+We support pyLDA visualizations with few lines of code!
 
 .. code-block:: python
 
