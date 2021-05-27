@@ -251,7 +251,7 @@ More interestingly, this model can be used for cross-lingual topic modeling (See
 
     ctm.fit(training_dataset) # run the model
 
-    ctm.get_topics()
+    ctm.get_topics(2)
 
 
 As you can see, the high-level API to handle the text is pretty easy to use;
