@@ -174,12 +174,12 @@ Some of the examples below use a multilingual embedding model :code:`distiluse-b
 English
 ~~~~~~~
 
-If you are doing topic modeling in English, **you SHOULD use an English sentence-bert model**, for example `paraphrase-distilroberta-base-v1`. In that case,
+If you are doing topic modeling in English, **you SHOULD use an English sentence-bert model**, for example `paraphrase-distilroberta-base-v2`. In that case,
 it's really easy to update the code to support monolingual English topic modeling. If you need other models you can check `SBERT`_ for other models.
 
 .. code-block:: python
 
-    qt = TopicModelDataPreparation("paraphrase-distilroberta-base-v1")
+    qt = TopicModelDataPreparation("paraphrase-distilroberta-base-v2")
 
 Language-Specific
 ~~~~~~~~~~~~~~~~~
@@ -206,7 +206,7 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
     from contextualized_topic_models.datasets.dataset import CTMDataset
 
-    qt = TopicModelDataPreparation("paraphrase-distilroberta-base-v1")
+    qt = TopicModelDataPreparation("paraphrase-distilroberta-base-v2")
 
     training_dataset = qt.fit(text_for_contextual=list_of_unpreprocessed_documents, text_for_bow=list_of_preprocessed_documents)
 
