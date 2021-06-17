@@ -6,7 +6,7 @@ class CTMDataset(Dataset):
 
     """Class to load BoW and the contextualized embeddings."""
 
-    def __init__(self, X_contextual, X_bow, idx2token):
+    def __init__(self, X_contextual, X_bow, idx2token, labels=None):
         """
         Args
             X : array-like, shape=(n_samples, n_features)
@@ -19,6 +19,7 @@ class CTMDataset(Dataset):
         self.X_bow = X_bow
         self.X_contextual = X_contextual
         self.idx2token = idx2token
+        self.labels = labels
 
     def __len__(self):
         """Return length of dataset."""
@@ -33,7 +34,12 @@ class CTMDataset(Dataset):
             X_bow = torch.FloatTensor(self.X_bow[i])
             X_contextual = torch.FloatTensor(self.X_contextual[i])
 
-        # TODO : update the parameter of the dictionary
-        return {'X_bow': X_bow, 'X_contextual': X_contextual}
+        return_dict = {'X_bow': X_bow, 'X_contextual': X_contextual}
+
+        if self.labels:
+            labels = self.labels[i]
+            return_dict["labels"] = labels
+
+        return return_dict
 
 
