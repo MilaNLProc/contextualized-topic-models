@@ -46,10 +46,10 @@ class DecoderNetwork(nn.Module):
 
         if infnet == "zeroshot":
             self.inf_net = ContextualInferenceNetwork(
-                input_size, bert_size, n_components, hidden_sizes, activation, label_size)
+                input_size, bert_size, n_components, hidden_sizes, activation, label_size=label_size)
         elif infnet == "combined":
             self.inf_net = CombinedInferenceNetwork(
-                input_size, bert_size, n_components, hidden_sizes, activation, label_size)
+                input_size, bert_size, n_components, hidden_sizes, activation, label_size=label_size)
         else:
             raise Exception('Missing infnet parameter, options are zeroshot and combined')
 
@@ -125,19 +125,16 @@ class DecoderNetwork(nn.Module):
 
         estimated_labels = None
 
-        if labels:
+        if labels is not None:
             estimated_labels = self.label_classification(theta)
-
-
-
 
         return self.prior_mean, self.prior_variance, \
             posterior_mu, posterior_sigma, posterior_log_sigma, word_dist, estimated_labels
 
-    def get_theta(self, x, x_bert):
+    def get_theta(self, x, x_bert, labels=None):
         with torch.no_grad():
             # batch_size x n_components
-            posterior_mu, posterior_log_sigma = self.inf_net(x, x_bert)
+            posterior_mu, posterior_log_sigma = self.inf_net(x, x_bert, labels)
             #posterior_sigma = torch.exp(posterior_log_sigma)
 
             # generate samples from theta

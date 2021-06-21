@@ -168,7 +168,8 @@ class CTM:
 
             if "labels" in batch_samples.keys():
                 labels = batch_samples["labels"]
-                labels.to(self.device)
+                labels = labels.reshape(labels.shape[0], -1)
+                labels = labels.to(self.device)
             else:
                 labels = None
 
@@ -186,9 +187,14 @@ class CTM:
                 X_bow, word_dists, prior_mean, prior_variance,
                 posterior_mean, posterior_variance, posterior_log_variance)
 
-            if labels:
+            if labels is not None:
                 target_labels = torch.argmax(labels, 1)
-                label_loss = torch.nn.CrossEntropyLoss(estimated_labels, target_labels)
+
+                print("labels", labels)
+                print("target_labels", target_labels)
+                print("estimated_labels", estimated_labels)
+
+                label_loss = torch.nn.CrossEntropyLoss()(estimated_labels, target_labels)
                 loss += label_loss
 
             loss.backward()
@@ -303,16 +309,30 @@ class CTM:
             X_bow = X_bow.reshape(X_bow.shape[0], -1)
             X_contextual = batch_samples['X_contextual']
 
+            if "labels" in batch_samples.keys():
+                labels = batch_samples["labels"]
+                labels = labels.to(self.device)
+                labels = labels.reshape(labels.shape[0], -1)
+            else:
+                labels = None
+
             if self.USE_CUDA:
                 X_bow = X_bow.cuda()
                 X_contextual = X_contextual.cuda()
 
             # forward pass
             self.model.zero_grad()
-            prior_mean, prior_variance, posterior_mean, posterior_variance, posterior_log_variance, word_dists =\
-                self.model(X_bow, X_contextual)
+            prior_mean, prior_variance, posterior_mean, posterior_variance, posterior_log_variance, word_dists, \
+            estimated_labels =\
+                self.model(X_bow, X_contextual, labels)
+
             loss = self._loss(X_bow, word_dists, prior_mean, prior_variance,
                               posterior_mean, posterior_variance, posterior_log_variance)
+
+            if labels is not None:
+                target_labels = torch.argmax(labels, 1)
+                label_loss = torch.nn.CrossEntropyLoss()(estimated_labels, target_labels)
+                loss += label_loss
 
             # compute train loss
             samples_processed += X_bow.size()[0]
@@ -357,13 +377,19 @@ class CTM:
                     X_bow = X_bow.reshape(X_bow.shape[0], -1)
                     X_contextual = batch_samples['X_contextual']
 
+                    if "labels" in batch_samples.keys():
+                        labels = batch_samples["labels"]
+                        labels.to(self.device)
+                    else:
+                        labels = None
+
                     if self.USE_CUDA:
                         X_bow = X_bow.cuda()
                         X_contextual = X_contextual.cuda()
 
                     # forward pass
                     self.model.zero_grad()
-                    collect_theta.extend(self.model.get_theta(X_bow, X_contextual).cpu().numpy().tolist())
+                    collect_theta.extend(self.model.get_theta(X_bow, X_contextual, labels).cpu().numpy().tolist())
 
                 pbar.update(1)
                 pbar.set_description("Sampling: [{}/{}]".format(sample_index + 1, n_samples))
@@ -576,12 +602,12 @@ class ZeroShotTM(CTM):
     def __init__(self, bow_size, contextual_size, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
-                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count(), label_size=0):
         inference_type = "zeroshot"
         super().__init__(bow_size, contextual_size, inference_type, n_components, model_type,
                          hidden_sizes, activation, dropout,
                          learn_priors, batch_size, lr, momentum,
-                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers)
+                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers, label_size=label_size)
 
 
 class CombinedTM(CTM):
@@ -607,9 +633,9 @@ class CombinedTM(CTM):
     def __init__(self, bow_size, contextual_size, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
-                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count()):
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count(), label_size=0):
         inference_type = "combined"
         super().__init__(bow_size, contextual_size, inference_type, n_components, model_type,
                          hidden_sizes, activation, dropout,
                          learn_priors, batch_size, lr, momentum,
-                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers)
+                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers, label_size=label_size)

@@ -36,9 +36,12 @@ class CTMDataset(Dataset):
 
         return_dict = {'X_bow': X_bow, 'X_contextual': X_contextual}
 
-        if self.labels:
+        if self.labels is not None:
             labels = self.labels[i]
-            return_dict["labels"] = labels
+            if type(labels) == scipy.sparse.csr.csr_matrix:
+                return_dict["labels"] = torch.FloatTensor(labels.todense())
+            else:
+                return_dict["labels"] = torch.FloatTensor(labels)
 
         return return_dict
 

@@ -10,6 +10,7 @@ class ContextualInferenceNetwork(nn.Module):
     def __init__(self, input_size, bert_size, output_size, hidden_sizes,
                  activation='softplus', dropout=0.2, label_size=0):
         """
+        # TODO: check dropout in main caller
         Initialize InferenceNetwork.
 
         Args
@@ -108,7 +109,7 @@ class CombinedInferenceNetwork(nn.Module):
 
 
         self.adapt_bert = nn.Linear(bert_size, input_size)
-        self.bert_layer = nn.Linear(hidden_sizes[0], hidden_sizes[0])
+        #self.bert_layer = nn.Linear(hidden_sizes[0], hidden_sizes[0])
         self.input_layer = nn.Linear(input_size + input_size + label_size, hidden_sizes[0])
 
         self.hiddens = nn.Sequential(OrderedDict([
@@ -126,12 +127,15 @@ class CombinedInferenceNetwork(nn.Module):
     def forward(self, x, x_bert, labels=None):
         """Forward pass."""
         x_bert = self.adapt_bert(x_bert)
-
+        print("x", x.shape)
+        print("x_bert", x_bert.shape)
+        print("labels", labels.shape)
         x = torch.cat((x, x_bert), 1)
 
-        if labels:
+        if labels is not None:
             x = torch.cat((x, labels), 1)
 
+        print("xx", x.shape)
         x = self.input_layer(x)
 
         x = self.activation(x)

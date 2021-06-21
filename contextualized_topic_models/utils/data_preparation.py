@@ -4,7 +4,7 @@ import scipy.sparse
 import warnings
 from contextualized_topic_models.datasets.dataset import CTMDataset
 from sklearn.feature_extraction.text import CountVectorizer
-
+from sklearn.preprocessing import OneHotEncoder
 
 def get_bag_of_words(data, min_length):
     """
@@ -43,11 +43,12 @@ class TopicModelDataPreparation:
         self.vocab = []
         self.id2token = {}
         self.vectorizer = None
+        self.label_encoder = None
 
-    def load(self, contextualized_embeddings, bow_embeddings, id2token):
-        return CTMDataset(contextualized_embeddings, bow_embeddings, id2token)
+    def load(self, contextualized_embeddings, bow_embeddings, id2token, labels=None):
+        return CTMDataset(contextualized_embeddings, bow_embeddings, id2token, labels)
 
-    def fit(self, text_for_contextual, text_for_bow):
+    def fit(self, text_for_contextual, text_for_bow, labels=None):
         """
         This method fits the vectorizer and gets the embeddings from the contextual model
         """
@@ -63,9 +64,16 @@ class TopicModelDataPreparation:
         self.vocab = self.vectorizer.get_feature_names()
         self.id2token = {k: v for k, v in zip(range(0, len(self.vocab)), self.vocab)}
 
-        return CTMDataset(train_contextualized_embeddings, train_bow_embeddings, self.id2token)
+        if labels:
+            self.label_encoder = OneHotEncoder()
 
-    def transform(self, text_for_contextual, text_for_bow=None):
+            encoded_labels = self.label_encoder.fit_transform(np.array([labels]).reshape(-1, 1))
+        else:
+            encoded_labels = None
+
+        return CTMDataset(train_contextualized_embeddings, train_bow_embeddings, self.id2token, encoded_labels)
+
+    def transform(self, text_for_contextual, text_for_bow=None, labels=None):
         """
         This methods create the input for the prediction. Essentially, it creates the embeddings with the contextualized
         model of choice and with trained vectorizer.
@@ -87,4 +95,9 @@ class TopicModelDataPreparation:
             test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
         test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
 
-        return CTMDataset(test_contextualized_embeddings, test_bow_embeddings, self.id2token)
+        if labels:
+            encoded_labels = self.label_encoder.transform(np.array([labels]).reshape(-1, 1))
+        else:
+            encoded_labels = None
+
+        return CTMDataset(test_contextualized_embeddings, test_bow_embeddings, self.id2token, encoded_labels)
