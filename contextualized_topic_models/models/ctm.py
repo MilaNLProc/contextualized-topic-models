@@ -190,9 +190,7 @@ class CTM:
             if labels is not None:
                 target_labels = torch.argmax(labels, 1)
 
-                print("labels", labels)
-                print("target_labels", target_labels)
-                print("estimated_labels", estimated_labels)
+
 
                 label_loss = torch.nn.CrossEntropyLoss()(estimated_labels, target_labels)
                 loss += label_loss

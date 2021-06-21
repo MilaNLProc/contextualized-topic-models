@@ -127,15 +127,12 @@ class CombinedInferenceNetwork(nn.Module):
     def forward(self, x, x_bert, labels=None):
         """Forward pass."""
         x_bert = self.adapt_bert(x_bert)
-        print("x", x.shape)
-        print("x_bert", x_bert.shape)
-        print("labels", labels.shape)
+
         x = torch.cat((x, x_bert), 1)
 
         if labels is not None:
             x = torch.cat((x, labels), 1)
 
-        print("xx", x.shape)
         x = self.input_layer(x)
 
         x = self.activation(x)
