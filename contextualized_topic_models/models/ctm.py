@@ -609,7 +609,7 @@ class ZeroShotTM(CTM):
     :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
     :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
-
+    # TODO: we definitely need to fix this initialization
     def __init__(self, bow_size, contextual_size, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
@@ -621,7 +621,8 @@ class ZeroShotTM(CTM):
         super().__init__(bow_size, contextual_size, inference_type, n_components, model_type,
                          hidden_sizes, activation, dropout,
                          learn_priors, batch_size, lr, momentum,
-                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers, label_size=label_size)
+                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers, label_size=label_size,
+                 weights=weights)
 
 
 class CombinedTM(CTM):
@@ -644,6 +645,7 @@ class CombinedTM(CTM):
     :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
 
+    # TODO: we definitely need to fix this initialization
     def __init__(self, bow_size, contextual_size, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
@@ -654,4 +656,5 @@ class CombinedTM(CTM):
         super().__init__(bow_size, contextual_size, inference_type, n_components, model_type,
                          hidden_sizes, activation, dropout,
                          learn_priors, batch_size, lr, momentum,
-                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers, label_size=label_size)
+                         solver, num_epochs, reduce_on_plateau, num_data_loader_workers, label_size=label_size,
+                 weights=weights)
