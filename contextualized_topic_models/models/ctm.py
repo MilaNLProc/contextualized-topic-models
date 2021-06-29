@@ -378,6 +378,7 @@ class CTM:
                     if "labels" in batch_samples.keys():
                         labels = batch_samples["labels"]
                         labels.to(self.device)
+                        labels = labels.reshape(labels.shape[0], -1)
                     else:
                         labels = None
 
