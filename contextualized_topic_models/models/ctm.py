@@ -41,7 +41,9 @@ class CTM:
     def __init__(self, bow_size, contextual_size, inference_type="combined", n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
-                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count(), label_size=0):
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count(),
+                 label_size=0,
+                 weights=None):
 
         self.device = (
                 torch.device("cuda")
@@ -91,9 +93,15 @@ class CTM:
         self.reduce_on_plateau = reduce_on_plateau
         self.num_data_loader_workers = num_data_loader_workers
 
+        if weights:
+            self.weights = weights
+        else:
+            self.weights = {"beta": 1}
+
         self.model = DecoderNetwork(
             bow_size, self.contextual_size, inference_type, n_components, model_type, hidden_sizes, activation,
             dropout, learn_priors, label_size=label_size)
+
         self.early_stopping = None
 
         # init optimizer
@@ -150,9 +158,9 @@ class CTM:
         # Reconstruction term
         RL = -torch.sum(inputs * torch.log(word_dists + 1e-10), dim=1)
 
-        loss = KL + RL
+        #loss = self.weights["beta"]*KL + RL
 
-        return loss.sum()
+        return KL, RL
 
     def _train_epoch(self, loader):
         """Train epoch."""
@@ -165,6 +173,7 @@ class CTM:
             X_bow = batch_samples['X_bow']
             X_bow = X_bow.reshape(X_bow.shape[0], -1)
             X_contextual = batch_samples['X_contextual']
+
 
             if "labels" in batch_samples.keys():
                 labels = batch_samples["labels"]
@@ -183,14 +192,15 @@ class CTM:
             posterior_log_variance, word_dists, estimated_labels = self.model(X_bow, X_contextual, labels)
 
             # backward pass
-            loss = self._loss(
+            kl_loss, rl_loss = self._loss(
                 X_bow, word_dists, prior_mean, prior_variance,
                 posterior_mean, posterior_variance, posterior_log_variance)
 
+            loss = self.weights["beta"]*kl_loss + rl_loss
+            loss = loss.sum()
+
             if labels is not None:
                 target_labels = torch.argmax(labels, 1)
-
-
 
                 label_loss = torch.nn.CrossEntropyLoss()(estimated_labels, target_labels)
                 loss += label_loss
@@ -324,8 +334,11 @@ class CTM:
             estimated_labels =\
                 self.model(X_bow, X_contextual, labels)
 
-            loss = self._loss(X_bow, word_dists, prior_mean, prior_variance,
+            kl_loss, rl_loss = self._loss(X_bow, word_dists, prior_mean, prior_variance,
                               posterior_mean, posterior_variance, posterior_log_variance)
+
+            loss = self.weights["beta"]*kl_loss + rl_loss
+            loss = loss.sum()
 
             if labels is not None:
                 target_labels = torch.argmax(labels, 1)
@@ -601,7 +614,10 @@ class ZeroShotTM(CTM):
     def __init__(self, bow_size, contextual_size, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
-                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count(), label_size=0):
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count(),
+                 label_size=0,
+                 weights=None):
+
         inference_type = "zeroshot"
         super().__init__(bow_size, contextual_size, inference_type, n_components, model_type,
                          hidden_sizes, activation, dropout,
@@ -632,7 +648,9 @@ class CombinedTM(CTM):
     def __init__(self, bow_size, contextual_size, n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
                  learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
-                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count(), label_size=0):
+                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count(),
+                 label_size=0,
+                 weights=None):
         inference_type = "combined"
         super().__init__(bow_size, contextual_size, inference_type, n_components, model_type,
                          hidden_sizes, activation, dropout,
