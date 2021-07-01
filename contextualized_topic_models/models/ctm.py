@@ -174,7 +174,6 @@ class CTM:
             X_bow = X_bow.reshape(X_bow.shape[0], -1)
             X_contextual = batch_samples['X_contextual']
 
-
             if "labels" in batch_samples.keys():
                 labels = batch_samples["labels"]
                 labels = labels.reshape(labels.shape[0], -1)
@@ -376,6 +375,7 @@ class CTM:
         loader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=False,
             num_workers=self.num_data_loader_workers)
+
         pbar = tqdm(n_samples, position=0, leave=True)
         final_thetas = []
         for sample_index in range(n_samples):
@@ -390,7 +390,7 @@ class CTM:
 
                     if "labels" in batch_samples.keys():
                         labels = batch_samples["labels"]
-                        labels.to(self.device)
+                        labels = labels.to(self.device)
                         labels = labels.reshape(labels.shape[0], -1)
                     else:
                         labels = None
