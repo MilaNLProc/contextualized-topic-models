@@ -60,7 +60,7 @@ CombinedTM has been accepted at ACL2021 and ZeroShotTM  has been accepted at EAC
 If you want to replicate our results, you can use our code.
 You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
 
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/dev/img/ctm_both.jpeg
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/ctm_both.jpeg
    :align: center
    :width: 600px
 
