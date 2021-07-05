@@ -365,7 +365,7 @@ We support pyLDA visualizations with few lines of code!
     ctm_pd = vis.prepare(**lda_vis_data)
     vis.display(ctm_pd)
 
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/dev/img/pyldavis.png
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/pyldavis.png
    :align: center
    :width: 400px
 
