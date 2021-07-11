@@ -60,9 +60,26 @@ CombinedTM has been accepted at ACL2021 and ZeroShotTM  has been accepted at EAC
 If you want to replicate our results, you can use our code.
 You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
 
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/dev/img/ctm_both.jpeg
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/ctm_both.jpeg
    :align: center
    :width: 600px
+
+
+**Note:** Thanks to Camille DeJarnett (Stanford/CMU),  Xinyi Wang (CMU), and Graham Neubig (CMU) we found out that with the current version of the package and all the dependencies (e.g., the sentence transformers embedding model, CUDA version, PyTorch version), results with the model *distiluse-base-multilingual-cased* are lower than what appears in the paper. We suggest to use *paraphrase-multilingual-mpnet-base-v2* which is a newer multilingual model that has results that are higher than those in the paper.
+
+See for example the results on the matches metric for Italian in the following table.
+
++---------------------------------------+---------------------------------------+
+| Model Name                            |              Matches                  |
++=======================================+=======================================+
+| paraphrase-multilingual-mpnet-base-v2 |               **0.67**                |
++---------------------------------------+---------------------------------------+
+| distiluse-base-multilingual-cased     |               0.57                    |
++---------------------------------------+---------------------------------------+
+| paper                                 |               0.62                    |
++---------------------------------------+---------------------------------------+
+
+Thus, if you use ZeroShotTM for a multilingual task, we suggest the use of *paraphrase-multilingual-mpnet-base-v2*.
 
 
 Tutorials
@@ -169,7 +186,7 @@ Does it work for different languages? Of Course!
 Multilingual
 ~~~~~~~~~~~~
 
-Some of the examples below use a multilingual embedding model :code:`distiluse-base-multilingual-cased`. This means that the representations you are going to use are mutlilinguals (16 languages). However you might need a broader coverage of languages. In that case, you can check `SBERT`_ to find a model you can use.
+Some of the examples below use a multilingual embedding model :code:`paraphrase-multilingual-mpnet-base-v2`. This means that the representations you are going to use are mutlilinguals. However you might need a broader coverage of languages. In that case, you can check `SBERT`_ to find a model you can use.
 
 English
 ~~~~~~~
@@ -243,11 +260,11 @@ More interestingly, this model can be used for cross-lingual topic modeling (See
         "fun topic model",
     ]
 
-    qt = TopicModelDataPreparation("distiluse-base-multilingual-cased")
+    qt = TopicModelDataPreparation("paraphrase-multilingual-mpnet-base-v2")
 
     training_dataset = qt.fit(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow)
 
-    ctm = ZeroShotTM(bow_size=len(qt.vocab), contextual_size=512, n_components=50)
+    ctm = ZeroShotTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50)
 
     ctm.fit(training_dataset) # run the model
 
@@ -310,7 +327,7 @@ Cross-Lingual Topic Modeling
 
 Once you have trained the ZeroShotTM model with multilingual embeddings,
 you can use this simple pipeline to predict the topics for documents in a different language (as long as this language
-is covered by **distiluse-base-multilingual-cased**).
+is covered by **paraphrase-multilingual-mpnet-base-v2**).
 
 .. code-block:: python
 
@@ -348,7 +365,7 @@ We support pyLDA visualizations with few lines of code!
     ctm_pd = vis.prepare(**lda_vis_data)
     vis.display(ctm_pd)
 
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/dev/img/pyldavis.png
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/pyldavis.png
    :align: center
    :width: 400px
 
