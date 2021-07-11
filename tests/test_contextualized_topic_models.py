@@ -81,6 +81,13 @@ def test_training_all_classes_ctm(data_dir):
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
 
+    ctm = CombinedTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5, weights={"beta": 10})
+    ctm.fit(training_dataset)  # run the model
+    assert ctm.weights == {"beta": 10}
+
+    topics = ctm.get_topic_lists(2)
+    assert len(topics) == 5
+
     testing_dataset = tp.transform(data, data)
     predictions = ctm.get_doc_topic_distribution(testing_dataset, n_samples=2)
 
