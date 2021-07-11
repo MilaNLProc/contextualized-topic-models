@@ -7,19 +7,21 @@ class CTMDataset(Dataset):
     """Class to load BoW and the contextualized embeddings."""
 
     def __init__(self, X_contextual, X_bow, idx2token, labels=None):
-        """
-        Args
-            X : array-like, shape=(n_samples, n_features)
-                Document word matrix.
-        """
+
         if X_bow.shape[0] != len(X_contextual):
             raise Exception("Wait! BoW and Contextual Embeddings have different sizes! "
                             "You might want to check if the BoW preparation method has removed some documents. ")
+
+        if labels:
+            if len(labels) != len(X_bow.shape[0]):
+                raise Exception(f"There is something wrong in the length of the labels (size: {len(labels)}) "
+                                f"and the bow (len: {len(X_bow.shape[0])}). These two numbers should match.")
 
         self.X_bow = X_bow
         self.X_contextual = X_contextual
         self.idx2token = idx2token
         self.labels = labels
+
 
     def __len__(self):
         """Return length of dataset."""
