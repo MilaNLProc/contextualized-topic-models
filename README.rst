@@ -347,8 +347,8 @@ is covered by **paraphrase-multilingual-mpnet-base-v2**).
 **Advanced Notes:** We do not need to pass the Spanish bag of word: the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reasons, but you cannot get
 the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
 
-Other Variants
---------------
+Extensions
+----------
 
 We have developed two extensions to CTM, one that supports supervision and another one that
 uses a weight on the KL loss to generate disentangled representations.
