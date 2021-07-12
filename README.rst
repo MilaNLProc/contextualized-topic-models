@@ -347,6 +347,78 @@ is covered by **paraphrase-multilingual-mpnet-base-v2**).
 **Advanced Notes:** We do not need to pass the Spanish bag of word: the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reasons, but you cannot get
 the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
 
+Other Variants
+--------------
+
+We have developed two extensions to CTM, one that support supervision and another one that
+uses a weight on the KL loss to generate disentangled representations.
+
+SuperCTM
+~~~~~~~~
+
+Inspiration for SuperCTM has been taken directly from the work by `Card et al., 2018 <https://aclanthology.org/P18-1189/>`_ (you can read this as
+we essentially implemented their approach in our architecture). SuperCTM should give better representations of the documents
+and in theory should also make the model able to find topics more coherent with respect to the labels.
+The model is super easy to use and requires minor modification to the already implemented pipeline:
+
+.. code-block:: python
+
+    from contextualized_topic_models.models.ctm import ZeroShotTM
+    from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
+    from contextualized_topic_models.datasets.dataset import CTMDataset
+
+    text_for_contextual = [
+        "hello, this is unpreprocessed text you can give to the model",
+        "have fun with our topic model",
+    ]
+
+    text_for_bow = [
+        "hello unpreprocessed give model",
+        "fun topic model",
+    ]
+
+    labels = [0, 1]
+
+    qt = TopicModelDataPreparation("paraphrase-multilingual-mpnet-base-v2")
+
+    training_dataset = qt.fit(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow, labels=labels)
+
+    ctm = CombinedTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50, label_size=len(set(labels)))
+
+    ctm.fit(training_dataset) # run the model
+
+    ctm.get_topics(2)
+
+
+β-CTM
+~~~~~~
+
+We also implemented the intuition found in the work by `Higgins et al., 2018 <https://openreview.net/forum?id=Sy2fzU9gl>`_, where a weight is applied
+to the KL loss function. The idea is that giving more weight to the KL part of the loss function helps in creating disentangled representations
+by forcing independence in the components. Again, the model should be straightforward to use:
+
+.. code-block:: python
+
+     ctm = CombinedTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50, weights={"beta" : 3})
+
+Results
+~~~~~~~
+As an example fo the results we tested on the 20 NewsGroup dataset (vocab=2000, labels from 20NG) using CombinedTM trained for 50 epochs and sampling the doc representations
+50 times, using KNN for the clustering (embedding model was paraphrase-distilroberta-base-v2). Both SuperCTM and β-CTM should
+help you in creating better representations. We have some evidence that higher β values lead to good representation but bad topics, while SuperCTM
+seems more stable.
+
+
++---------------------------------------+---------------------------------------+
+| Model Name                            |              Adjusted Mutual Info     |
++=======================================+=======================================+
+| SuperCombinedTM                       |               **0.1945 +- 0.0105**    |
++---------------------------------------+---------------------------------------+
+| β-CombinedTM  (β=4)                   |               0.1669 +- 0.0109        |
++---------------------------------------+---------------------------------------+
+| CombinedTM                            |               0.1619 +- 0.0157        |
++---------------------------------------+---------------------------------------+
+
 
 Visualization
 -------------

@@ -592,21 +592,6 @@ class CTM:
 class ZeroShotTM(CTM):
     """ZeroShotTM, as described in https://arxiv.org/pdf/2004.07737v1.pdf
 
-    :param bow_size: int, dimension of input
-    :param contextual_size: int, dimension of input that comes from BERT embeddings
-    :param n_components: int, number of topic components, (default 10)
-    :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
-    :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
-    :param activation: string, 'softplus', 'relu', (default 'softplus')
-    :param dropout: float, dropout to use (default 0.2)
-    :param learn_priors: bool, make priors a learnable parameter (default True)
-    :param batch_size: int, size of batch to use for training (default 64)
-    :param lr: float, learning rate to use for training (default 2e-3)
-    :param momentum: float, momentum to use for training (default 0.99)
-    :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
-    :param num_epochs: int, number of epochs to train for, (default 100)
-    :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
-    :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
 
     def __init__(self, **kwargs):
@@ -617,21 +602,6 @@ class ZeroShotTM(CTM):
 class CombinedTM(CTM):
     """CombinedTM, as described in https://arxiv.org/pdf/2004.03974.pdf
 
-    :param bow_size: int, dimension of input
-    :param contextual_size: int, dimension of input that comes from BERT embeddings
-    :param n_components: int, number of topic components, (default 10)
-    :param model_type: string, 'prodLDA' or 'LDA' (default 'prodLDA')
-    :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
-    :param activation: string, 'softplus', 'relu', (default 'softplus')
-    :param dropout: float, dropout to use (default 0.2)
-    :param learn_priors: bool, make priors a learnable parameter (default True)
-    :param batch_size: int, size of batch to use for training (default 64)
-    :param lr: float, learning rate to use for training (default 2e-3)
-    :param momentum: float, momentum to use for training (default 0.99)
-    :param solver: string, optimizer 'adam' or 'sgd' (default 'adam')
-    :param num_epochs: int, number of epochs to train for, (default 100)
-    :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
-    :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     """
 
     def __init__(self, **kwargs):
