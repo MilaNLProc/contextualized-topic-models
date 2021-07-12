@@ -350,7 +350,7 @@ the output of the model (i.e., the predicted BoW of the trained language) and co
 Other Variants
 --------------
 
-We have developed two extensions to CTM, one that support supervision and another one that
+We have developed two extensions to CTM, one that supports supervision and another one that
 uses a weight on the KL loss to generate disentangled representations.
 
 SuperCTM
