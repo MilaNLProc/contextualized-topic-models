@@ -384,7 +384,7 @@ The model is super easy to use and requires minor modifications to the already i
     # training dataset should contain the labels
     training_dataset = qt.fit(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow, labels=labels)
 
-    # model should now the label size in advance
+    # model should know the label size in advance
     ctm = CombinedTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50, label_size=len(set(labels)))
 
     ctm.fit(training_dataset) # run the model
