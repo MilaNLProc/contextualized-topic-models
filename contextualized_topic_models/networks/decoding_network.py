@@ -53,7 +53,7 @@ class DecoderNetwork(nn.Module):
         else:
             raise Exception('Missing infnet parameter, options are zeroshot and combined')
 
-        if label_size!=0:
+        if label_size != 0:
             self.label_classification = nn.Linear(n_components, label_size)
 
         # init prior parameters
