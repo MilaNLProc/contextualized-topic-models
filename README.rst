@@ -404,8 +404,9 @@ by forcing independence in the components. Again, the model should be straightfo
 Results
 ~~~~~~~
 As an example fo the results we tested on the 20 NewsGroup dataset (vocab=2000, labels from 20NG) using CombinedTM trained for 50 epochs and sampling the doc representations
-50 times, using KNN for the clustering (embedding model was paraphrase-distilroberta-base-v2). Both SuperCTM and β-CTM should
-help you in creating better representations. We have some evidence that higher β values lead to good representation but bad topics, while SuperCTM
+50 times, using KNN for the clustering (embedding model was paraphrase-distilroberta-base-v2). We evaluate the quality of the clusters
+with the adjusted mutual information.
+Both SuperCTM and β-CTM should help you in creating better representations. We have some evidence that higher β values lead to good representation but bad topics, while SuperCTM
 seems more stable.
 
 
