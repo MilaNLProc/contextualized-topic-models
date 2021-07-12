@@ -359,7 +359,7 @@ SuperCTM
 Inspiration for SuperCTM has been taken directly from the work by `Card et al., 2018 <https://aclanthology.org/P18-1189/>`_ (you can read this as
 we essentially implemented their approach in our architecture). SuperCTM should give better representations of the documents
 and in theory should also make the model able to find topics more coherent with respect to the labels.
-The model is super easy to use and requires minor modification to the already implemented pipeline:
+The model is super easy to use and requires minor modifications to the already implemented pipeline:
 
 .. code-block:: python
 
@@ -377,12 +377,14 @@ The model is super easy to use and requires minor modification to the already im
         "fun topic model",
     ]
 
-    labels = [0, 1]
+    labels = [0, 1] # we need to have  a label for each document
 
     qt = TopicModelDataPreparation("paraphrase-multilingual-mpnet-base-v2")
 
+    # training dataset should contain the labels
     training_dataset = qt.fit(text_for_contextual=text_for_contextual, text_for_bow=text_for_bow, labels=labels)
 
+    # model should now the label size in advance
     ctm = CombinedTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50, label_size=len(set(labels)))
 
     ctm.fit(training_dataset) # run the model
