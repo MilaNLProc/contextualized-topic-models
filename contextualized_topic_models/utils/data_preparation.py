@@ -71,7 +71,6 @@ class TopicModelDataPreparation:
 
         if labels:
             self.label_encoder = OneHotEncoder()
-
             encoded_labels = self.label_encoder.fit_transform(np.array([labels]).reshape(-1, 1))
         else:
             encoded_labels = None

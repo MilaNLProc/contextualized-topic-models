@@ -14,9 +14,9 @@ class CTMDataset(Dataset):
                             "You might want to check if the BoW preparation method has removed some documents. ")
 
         if labels is not None:
-            if len(labels) != len(X_bow.shape[0]):
-                raise Exception(f"There is something wrong in the length of the labels (size: {len(labels)}) "
-                                f"and the bow (len: {len(X_bow.shape[0])}). These two numbers should match.")
+            if labels.shape[0] != X_bow.shape[0]:
+                raise Exception(f"There is something wrong in the length of the labels (size: {labels.shape[0]}) "
+                                f"and the bow (len: {X_bow.shape[0]}). These two numbers should match.")
 
         self.X_bow = X_bow
         self.X_contextual = X_contextual
