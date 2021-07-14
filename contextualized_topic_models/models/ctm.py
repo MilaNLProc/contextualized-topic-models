@@ -36,13 +36,16 @@ class CTM:
     :param num_epochs: int, number of epochs to train for, (default 100)
     :param reduce_on_plateau: bool, reduce learning rate by 10x on plateau of 10 epochs (default False)
     :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
+    :param label_size: int, number of total labels (default: 0)
+    :param loss_weights: dict, it contains the name of the weight parameter (key) and the weight (value) for each loss.
+    It supports only the weight parameter beta for now. If None, then the weights are set to 1 (default: None).
+
     """
 
     def __init__(self, bow_size, contextual_size, inference_type="combined", n_components=10, model_type='prodLDA',
-                 hidden_sizes=(100, 100), activation='softplus', dropout=0.2,
-                 learn_priors=True, batch_size=64, lr=2e-3, momentum=0.99,
-                 solver='adam', num_epochs=100, reduce_on_plateau=False, num_data_loader_workers=mp.cpu_count(),
-                 label_size=0, weights=None):
+                 hidden_sizes=(100, 100), activation='softplus', dropout=0.2, learn_priors=True, batch_size=64,
+                 lr=2e-3, momentum=0.99, solver='adam', num_epochs=100, reduce_on_plateau=False,
+                 num_data_loader_workers=mp.cpu_count(), label_size=0, loss_weights=None):
 
         self.device = (
                 torch.device("cuda")
@@ -92,8 +95,8 @@ class CTM:
         self.reduce_on_plateau = reduce_on_plateau
         self.num_data_loader_workers = num_data_loader_workers
 
-        if weights:
-            self.weights = weights
+        if loss_weights:
+            self.weights = loss_weights
         else:
             self.weights = {"beta": 1}
 
