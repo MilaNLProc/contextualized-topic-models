@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import Dataset
 import scipy.sparse
 
+
 class CTMDataset(Dataset):
 
     """Class to load BoW and the contextualized embeddings."""
@@ -21,7 +22,6 @@ class CTMDataset(Dataset):
         self.X_contextual = X_contextual
         self.idx2token = idx2token
         self.labels = labels
-
 
     def __len__(self):
         """Return length of dataset."""

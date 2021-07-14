@@ -51,6 +51,11 @@ class TopicModelDataPreparation:
     def fit(self, text_for_contextual, text_for_bow, labels=None):
         """
         This method fits the vectorizer and gets the embeddings from the contextual model
+
+        :param text_for_contextual: list of unpreprocessed documents to generate the contextualized embeddings
+        :param text_for_bow: list of preprocessed documents for creating the bag-of-words
+        :param labels: list of labels associated with each document (optional).
+
         """
 
         if self.contextualized_model is None:
