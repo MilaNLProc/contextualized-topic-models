@@ -221,7 +221,6 @@ Here is how you can use the CombinedTM. This is a standard topic model that also
     from contextualized_topic_models.models.ctm import CombinedTM
     from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
-    from contextualized_topic_models.datasets.dataset import CTMDataset
 
     qt = TopicModelDataPreparation("paraphrase-distilroberta-base-v2")
 
@@ -248,7 +247,6 @@ More interestingly, this model can be used for cross-lingual topic modeling (See
     from contextualized_topic_models.models.ctm import ZeroShotTM
     from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
-    from contextualized_topic_models.datasets.dataset import CTMDataset
 
     text_for_contextual = [
         "hello, this is unpreprocessed text you can give to the model",
@@ -365,7 +363,6 @@ The model is super easy to use and requires minor modifications to the already i
 
     from contextualized_topic_models.models.ctm import ZeroShotTM
     from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
-    from contextualized_topic_models.datasets.dataset import CTMDataset
 
     text_for_contextual = [
         "hello, this is unpreprocessed text you can give to the model",
