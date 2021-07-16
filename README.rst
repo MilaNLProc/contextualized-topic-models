@@ -95,6 +95,10 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 .. |colab2_2| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1bfWUYEypULFk_4Tfff-Pb_n7-tSjEe9v?usp=sharing
     :alt: Open In Colab
+    
+.. |colab3_3| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1NWTC-w9YZ6knESynVyK4zhoP1h2tTyZw?usp=sharing
+    :alt: Open In Colab  
 
 
 +--------------------------------------------------------------------------------+------------------+
@@ -103,6 +107,8 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 | Combined TM on Wikipedia Data (Preproc+Saving+Viz) (stable **v2.0.0**)         | |colab1_2|       |
 +--------------------------------------------------------------------------------+------------------+
 | Zero-Shot Cross-lingual Topic Modeling (Preproc+Viz) (stable **v2.0.0**)       | |colab2_2|       |
++--------------------------------------------------------------------------------+------------------+
+| Supervised and β-CombinedTM (stable **v2.0.0**)                                | |colab3_3|       |
 +--------------------------------------------------------------------------------+------------------+
 
 Overview
