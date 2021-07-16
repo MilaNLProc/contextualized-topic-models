@@ -397,7 +397,7 @@ by forcing independence in the components. Again, the model should be straightfo
 
 .. code-block:: python
 
-     ctm = CombinedTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50, weights={"beta" : 3})
+     ctm = CombinedTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50, loss_weights={"beta" : 3})
 
 Results
 ~~~~~~~
