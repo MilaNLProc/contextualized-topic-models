@@ -355,8 +355,7 @@ SuperCTM
 ~~~~~~~~
 
 Inspiration for SuperCTM has been taken directly from the work by `Card et al., 2018 <https://aclanthology.org/P18-1189/>`_ (you can read this as
-"we essentially implemented their approach in our architecture"). SuperCTM should give better representations of the documents
-and in theory should also make the model able to find topics more coherent with respect to the labels.
+"we essentially implemented their approach in our architecture"). SuperCTM should give better representations of the documents - this is somewhat expected, since we are using the labels to give more information to the model - and in theory should also make the model able to find topics more coherent with respect to the labels.
 The model is super easy to use and requires minor modifications to the already implemented pipeline:
 
 .. code-block:: python
