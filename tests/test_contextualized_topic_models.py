@@ -24,6 +24,23 @@ def data_dir(root_dir):
     return root_dir + "/../contextualized_topic_models/data/"
 
 
+def test_labels_set(data_dir):
+
+    with open(data_dir + '/gnews/GoogleNews.txt') as filino:
+        data = filino.readlines()
+
+    with open(data_dir + '/gnews/GoogleNews_LABEL.txt') as filino:
+        labels = list(map(lambda x:x.replace("\n", ""), filino.readlines()))
+
+    tp = TopicModelDataPreparation("distiluse-base-multilingual-cased")
+
+    training_dataset = tp.fit(data[:100], data[:100], labels[:100])
+
+    ctm = CombinedTM(reduce_on_plateau=True, solver='sgd', bow_size=len(tp.vocab),
+                     contextual_size=512, num_epochs=2, n_components=5, batch_size=2, label_size=len(set(labels[:100])))
+    ctm.fit(training_dataset)
+
+
 def test_validation_set(data_dir):
 
     with open(data_dir + '/gnews/GoogleNews.txt') as filino:
@@ -62,6 +79,13 @@ def test_training_all_classes_ctm(data_dir):
     training_dataset = tp.fit(data, data)
     ctm = CombinedTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5)
     ctm.fit(training_dataset)  # run the model
+
+    topics = ctm.get_topic_lists(2)
+    assert len(topics) == 5
+
+    ctm = CombinedTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5,loss_weights={"beta": 10})
+    ctm.fit(training_dataset)  # run the model
+    assert ctm.weights == {"beta": 10}
 
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
