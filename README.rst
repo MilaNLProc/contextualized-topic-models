@@ -96,6 +96,9 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
     :target: https://colab.research.google.com/drive/1bfWUYEypULFk_4Tfff-Pb_n7-tSjEe9v?usp=sharing
     :alt: Open In Colab
 
+.. |colab3_3| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1upTRu4zSm1VMbl633n9qkIDA526l22E_?usp=sharing
+    :alt: Open In Colab
 
 +--------------------------------------------------------------------------------+------------------+
 | Name                                                                           | Link             |
@@ -103,6 +106,8 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 | Combined TM on Wikipedia Data (Preproc+Saving+Viz) (stable **v2.0.0**)         | |colab1_2|       |
 +--------------------------------------------------------------------------------+------------------+
 | Zero-Shot Cross-lingual Topic Modeling (Preproc+Viz) (stable **v2.0.0**)       | |colab2_2|       |
++--------------------------------------------------------------------------------+------------------+
+| SuperCTM and  β-CTM (High-level usage) (stable **v2.1.0**)                     | |colab3_3|       |
 +--------------------------------------------------------------------------------+------------------+
 
 Overview
@@ -351,12 +356,15 @@ Extensions
 We have developed two extensions to CTM, one that supports supervision and another one that
 uses a weight on the KL loss to generate disentangled representations.
 
+**NOTE**: both model haven't been thoroughly validated. Use them with care and let us know if you find something cool!
+
 SuperCTM
 ~~~~~~~~
 
 Inspiration for SuperCTM has been taken directly from the work by `Card et al., 2018 <https://aclanthology.org/P18-1189/>`_ (you can read this as
 "we essentially implemented their approach in our architecture"). SuperCTM should give better representations of the documents - this is somewhat expected, since we are using the labels to give more information to the model - and in theory should also make the model able to find topics more coherent with respect to the labels.
 The model is super easy to use and requires minor modifications to the already implemented pipeline:
+
 
 .. code-block:: python
 
@@ -399,24 +407,7 @@ by forcing independence in the components. Again, the model should be straightfo
 
      ctm = CombinedTM(bow_size=len(qt.vocab), contextual_size=768, n_components=50, loss_weights={"beta" : 3})
 
-Results
-~~~~~~~
-As an example fo the results we tested on the 20 NewsGroup dataset (vocab=2000, labels from 20NG) using CombinedTM trained for 50 epochs and sampling the doc representations
-50 times, using KNN for the clustering (embedding model was paraphrase-distilroberta-base-v2). We evaluate the quality of the clusters
-with the adjusted mutual information.
-Both SuperCTM and β-CTM should help you in creating better representations. We have some evidence that higher β values lead to good representation but bad topics, while SuperCTM
-seems more stable.
 
-
-+---------------------------------------+---------------------------------------+
-| Model Name                            |              Adjusted Mutual Info     |
-+=======================================+=======================================+
-| SuperCombinedTM                       |               **0.1945 +- 0.0105**    |
-+---------------------------------------+---------------------------------------+
-| β-CombinedTM  (β=4)                   |               0.1669 +- 0.0109        |
-+---------------------------------------+---------------------------------------+
-| CombinedTM                            |               0.1619 +- 0.0157        |
-+---------------------------------------+---------------------------------------+
 
 
 Visualization
