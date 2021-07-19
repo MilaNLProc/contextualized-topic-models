@@ -2,6 +2,12 @@
 History
 =======
 
+2.1.0 (2021-07-16)
+------------------
+
+* new model introduced SuperCTM
+* new model introduced β-CTM
+
 2.0.0 (2021-xx-xx)
 ------------------
 
