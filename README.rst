@@ -177,12 +177,21 @@ If you find this useful you can cite the following papers :)
 
 ::
 
-    @inproceedings{bianchi2021pretraining,
-        title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
-        author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
-        year={2021},
-       booktitle={ACL},
+    @inproceedings{bianchi-etal-2021-pre,
+        title = "Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence",
+        author = "Bianchi, Federico  and
+          Terragni, Silvia  and
+          Hovy, Dirk",
+        booktitle = "Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 2: Short Papers)",
+        month = aug,
+        year = "2021",
+        address = "Online",
+        publisher = "Association for Computational Linguistics",
+        url = "https://aclanthology.org/2021.acl-short.96",
+        doi = "10.18653/v1/2021.acl-short.96",
+        pages = "759--766",
     }
+
 
 
 Does it work for different languages? Of Course!
