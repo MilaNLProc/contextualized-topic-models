@@ -499,7 +499,7 @@ class CTM:
         epoch_file = "epoch_" + str(epoch) + ".pth"
         model_file = os.path.join(model_dir, epoch_file)
         with open(model_file, 'rb') as model_dict:
-            checkpoint = torch.load(model_dict)
+            checkpoint = torch.load(model_dict, map_location=torch.device(self.device))
 
         for (k, v) in checkpoint['dcue_dict'].items():
             setattr(self, k, v)
