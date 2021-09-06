@@ -7,6 +7,7 @@ Welcome to Contextualized Topic Models's documentation!
 
    readme
    kitty
+   extensions
    installation
    usage
    contributing
