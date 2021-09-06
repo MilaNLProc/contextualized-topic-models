@@ -8,8 +8,10 @@ Welcome to Contextualized Topic Models's documentation!
    readme
    installation
    usage
+   kitty
    contributing
    authors
+
    history
 
 
