@@ -35,7 +35,7 @@ Contextualized Topic Models
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
 support topic modeling. See the papers for details:
 
-* Bianchi, F., Terragni, S., & Hovy, D. (2021). `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence`. ACL. https://arxiv.org/pdf/2004.03974.pdf
+* Bianchi, F., Terragni, S., & Hovy, D. (2021). `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence`. ACL. https://aclanthology.org/2021.acl-short.96/
 * Bianchi, F., Terragni, S., Hovy, D., Nozza, D., & Fersini, E. (2021). `Cross-lingual Contextualized Topic Models with Zero-shot Learning`. EACL. https://www.aclweb.org/anthology/2021.eacl-main.143/
 
 
@@ -50,6 +50,9 @@ Topic Modeling with Contextualized Embeddings
 ---------------------------------------------
 
 Our new topic modeling family supports many different languages (i.e., the one supported by HuggingFace models) and comes in two versions: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with muliglingual embeddings, inherits the property of being a multilingual topic model!
+
+We also have kitty! a new submodule that can be used to quickly create an human in the loop
+classifier to quickly classify your documents and create named clusters.
 
 
 Published Papers
@@ -95,10 +98,6 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 .. |colab2_2| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1bfWUYEypULFk_4Tfff-Pb_n7-tSjEe9v?usp=sharing
     :alt: Open In Colab
-    
-.. |colab3_3| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1NWTC-w9YZ6knESynVyK4zhoP1h2tTyZw?usp=sharing
-    :alt: Open In Colab  
 
 .. |colab3_3| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/drive/1upTRu4zSm1VMbl633n9qkIDA526l22E_?usp=sharing
@@ -181,12 +180,21 @@ If you find this useful you can cite the following papers :)
 
 ::
 
-    @inproceedings{bianchi2021pretraining,
-        title={Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence},
-        author={Federico Bianchi and Silvia Terragni and Dirk Hovy},
-        year={2021},
-       booktitle={ACL},
+    @inproceedings{bianchi-etal-2021-pre,
+        title = "Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence",
+        author = "Bianchi, Federico  and
+          Terragni, Silvia  and
+          Hovy, Dirk",
+        booktitle = "Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing (Volume 2: Short Papers)",
+        month = aug,
+        year = "2021",
+        address = "Online",
+        publisher = "Association for Computational Linguistics",
+        url = "https://aclanthology.org/2021.acl-short.96",
+        doi = "10.18653/v1/2021.acl-short.96",
+        pages = "759--766",
     }
+
 
 
 Does it work for different languages? Of Course!

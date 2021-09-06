@@ -38,12 +38,13 @@ def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200):
 
 class TopicModelDataPreparation:
 
-    def __init__(self, contextualized_model=None):
+    def __init__(self, contextualized_model=None, show_warning=True):
         self.contextualized_model = contextualized_model
         self.vocab = []
         self.id2token = {}
         self.vectorizer = None
         self.label_encoder = None
+        self.show_warning = show_warning
 
     def load(self, contextualized_embeddings, bow_embeddings, id2token, labels=None):
         return CTMDataset(contextualized_embeddings, bow_embeddings, id2token, labels)
@@ -92,8 +93,9 @@ class TopicModelDataPreparation:
             test_bow_embeddings = self.vectorizer.transform(text_for_bow)
         else:
             # dummy matrix
-            warnings.simplefilter('always', DeprecationWarning)
-            warnings.warn("The method did not have in input the text_for_bow parameter. This IS EXPECTED if you "
+            if self.show_warning:
+                warnings.simplefilter('always', DeprecationWarning)
+                warnings.warn("The method did not have in input the text_for_bow parameter. This IS EXPECTED if you "
                           "are using ZeroShotTM in a cross-lingual setting")
 
             test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))

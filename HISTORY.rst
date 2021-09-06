@@ -2,6 +2,19 @@
 History
 =======
 
+2.1.2 (2021-09-03)
+------------------
+
+* patching `Issue 38 <https://github.com/MilaNLProc/contextualized-topic-models/issues/38>`_
+* improvements `PR 80 <https://github.com/MilaNLProc/contextualized-topic-models/pull/80>`_
+
+
+2.1.0 (2021-07-16)
+------------------
+
+* new model introduced SuperCTM
+* new model introduced β-CTM
+
 2.0.0 (2021-xx-xx)
 ------------------
 
