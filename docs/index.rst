@@ -6,12 +6,11 @@ Welcome to Contextualized Topic Models's documentation!
    :caption: Contents:
 
    readme
+   kitty
    installation
    usage
-   kitty
    contributing
    authors
-
    history
 
 
