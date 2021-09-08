@@ -14,7 +14,7 @@ Usage
 .. code-block:: python
 
     from contextualized_topic_models.models.kitty_classifier import Kitty
-    
+
     # read the training data
     training_set = list(map(lambda x : x.strip(), open("train_data").readlines()))
 
@@ -38,7 +38,8 @@ example, topic 0 seems to be describing nature related things.
 
 .. code-block:: python
 
-    kt.assigned_classes = {0 : "nature", 1 : "location", 2 : "entertainment", 3 : "shop/offices", 4: "sport"}
+    kt.assigned_classes = {0 : "nature", 1 : "location",
+                           2 : "entertainment", 3 : "shop/offices", 4: "sport"}
 
     kt.predict(["the village of Puza is a very nice village in Italy"])
 
@@ -64,7 +65,7 @@ embedding model.
     # read the training data
     training = list(map(lambda x : x.strip(), open("train_data").readlines()))
 
-    # define kitty with a multilingual embedding model 
+    # define kitty with a multilingual embedding model
     kt = Kitty(embedding_model="paraphrase-multilingual-mpnet-base-v2",  contextual_size=768)
 
     kt.train(training, 5) # train a topic model with 5 topics
