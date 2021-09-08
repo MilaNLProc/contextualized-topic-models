@@ -4,8 +4,8 @@
 Kitty: Human-in-the-loop Classification with Contextualized Topic Models
 ========================================================================
 
-Kitty is a utility to generate a simple classifiers from a topic model. It first run
-a CTM instance on the data for you and you can then select a set of topics of interest. Once
+Kitty is a utility to generate a simple topic classifier from a topic model. It first runs
+a CTM instance on the data for you and you can then select and label a set of topics of interest. Once
 this is done, you can apply this selection to a wider range of documents.
 
 Usage
@@ -14,15 +14,16 @@ Usage
 .. code-block:: python
 
     from contextualized_topic_models.models.kitty_classifier import Kitty
-
-    training = list(map(lambda x : x.strip(), open("train_data").readlines()))
+    
+    # read the training data
+    training_set = list(map(lambda x : x.strip(), open("train_data").readlines()))
 
     kt = Kitty(language="english")
-    kt.train(training, 5)
+    kt.train(training_set, 5) # train a topic model with 5 topics
 
     print(kt.pretty_print_word_classes())
 
-This could probably output something like:
+This could probably output topics like these ones:
 
 .. code-block:: shell
 
@@ -51,8 +52,8 @@ Cross-Lingual Support
 =====================
 
 A nice feature of Kitty is that it can be used to filter documents in different
-languages. Assume you have access to a large corpora of Italian documents and
-a smaller corpora of English documents. You can run Kitty on the English documents,
+languages. Assume you have access to a large corpus of Italian documents and
+a smaller corpus of English documents. You can run Kitty on the English documents,
 map the labels and apply Kitty on the Italian documents. It is enough to change the
 embedding model.
 
@@ -60,11 +61,13 @@ embedding model.
 
     from contextualized_topic_models.models.kitty_classifier import Kitty
 
+    # read the training data
     training = list(map(lambda x : x.strip(), open("train_data").readlines()))
 
+    # define kitty with a multilingual embedding model 
     kt = Kitty(embedding_model="paraphrase-multilingual-mpnet-base-v2",  contextual_size=768)
 
-    kt.train(training, 5)
+    kt.train(training, 5) # train a topic model with 5 topics
 
     print(kt.pretty_print_word_classes())
 
@@ -82,7 +85,6 @@ if the languages you want to use are supported by SBERT.
 What Makes Kitty Different Other Topic Models?
 ==============================================
 
-Nothing! it's just offer an user friendly utility that makes
-use of the ZeroShotTM model in the backend.
+Nothing! It just offers a user-friendly utility that makes use of the ZeroShotTM model in the backend.
 
 
