@@ -7,7 +7,7 @@ from contextualized_topic_models.utils.data_preparation import bert_embeddings_f
 import numpy as np
 from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
 from contextualized_topic_models.datasets.dataset import CTMDataset
-from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing, SimplePreprocessing
+from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing
 import os
 import pytest
 import nltk
