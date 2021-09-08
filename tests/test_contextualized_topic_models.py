@@ -3,10 +3,7 @@
 """Tests for `contextualized_topic_models` package."""
 
 from contextualized_topic_models.models.ctm import CTM, ZeroShotTM, CombinedTM
-from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file, bert_embeddings_from_list
-import numpy as np
 from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
-from contextualized_topic_models.datasets.dataset import CTMDataset
 from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing
 import os
 import pytest
