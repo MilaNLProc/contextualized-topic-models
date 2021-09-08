@@ -6,6 +6,8 @@ Welcome to Contextualized Topic Models's documentation!
    :caption: Contents:
 
    readme
+   combined
+   zeroshot
    kitty
    extensions
    installation

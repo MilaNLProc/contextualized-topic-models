@@ -145,7 +145,7 @@ and the BoW (CombinedTM) or the one that just uses contextualized embeddings (Ze
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
 
-We also have :code:`Kitty`: an utility you can use to do a simpler human in the loop classification of your
+We also have :code:`Kitty`: a utility you can use to do a simpler human in the loop classification of your
 documents. This can be very useful to do document filtering. It also works in cross-lingual setting and
 thus you might be able to filter documents in a language you don't know!
 
