@@ -1,10 +1,18 @@
-==========
-ZeroShotTM
-==========
+============================================================================
+ZeroShotTM: Topic Modeling with Missing Words and Cross-Lingual Capabilities
+============================================================================
 
 
-Our ZeroShotTM can be used for zero-shot topic modeling. It can handle words that are not used during the training phase.
-More interestingly, this model can be used for cross-lingual topic modeling (See next sections)! See the paper (https://www.aclweb.org/anthology/2021.eacl-main.143)
+Our ZeroShotTM can be used for zero-shot topic modeling. This is because the entire document is encoded
+into an embedding using a contextualized model. Thus, we are not limited by the usual problems you might
+encounter with bag of words: at test time, words that are missing from the training set will be
+encoded using the contextualized model, thus providing a reliable topic model even in sparse context!
+
+More interestingly, this model can be used for cross-lingual topic modeling (See next sections)!
+You can also read  paper (https://www.aclweb.org/anthology/2021.eacl-main.143)
+
+Usage
+=====
 
 .. code-block:: python
 
@@ -61,6 +69,11 @@ way to do this is to pass just the text that is going to be given in input to th
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20)
 
+Warning
+~~~~~~~
+
+Note that the way we use the transform method here is different from what we do for CombinedTM!
+This is very important!
 
 Cross-Lingual Topic Modeling
 ============================

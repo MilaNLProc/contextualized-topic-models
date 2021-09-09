@@ -1,6 +1,6 @@
-==========
-CombinedTM
-==========
+=================================
+CombinedTM: Coherent Topic Models
+=================================
 
 Combined TM combines the BoW with SBERT, a process that seems to increase
 the coherence of the predicted topics (https://arxiv.org/pdf/2004.03974.pdf).
@@ -47,3 +47,9 @@ If you use **CombinedTM** you need to include the test text for the BOW:
 
     # n_sample how many times to sample the distribution (see the doc)
     ctm.get_doc_topic_distribution(testing_dataset, n_samples=20) # returns a (n_documents, n_topics) matrix with the topic distribution of each document
+
+Warning
+~~~~~~~
+
+Note that the way we use the transform method here is different from what we do for ZeroShotTM!
+This is very important!

@@ -43,13 +43,15 @@ support topic modeling. See the papers for details:
    :align: center
    :width: 200px
 
-.. contents:: Table of Contents
-   :depth: 1
-
 Topic Modeling with Contextualized Embeddings
 ---------------------------------------------
 
 Our new topic modeling family supports many different languages (i.e., the one supported by HuggingFace models) and comes in two versions: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with muliglingual embeddings, inherits the property of being a multilingual topic model!
+CombinedTM has been accepted at ACL2021 and ZeroShotTM  has been accepted at EACL2021!
+If you want to replicate our results, you can use our code.
+You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
+
+
 
 We also have kitty! a new submodule that can be used to quickly create an human in the loop
 classifier to quickly classify your documents and create named clusters.
@@ -83,35 +85,6 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 +--------------------------------------------------------------------------------+------------------+
 
 
-Published Papers
-~~~~~~~~~~~~~~~~
-
-CombinedTM has been accepted at ACL2021 and ZeroShotTM  has been accepted at EACL2021!
-
-If you want to replicate our results, you can use our code.
-You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
-
-.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/ctm_both.jpeg
-   :align: center
-   :width: 600px
-
-
-**Note:** Thanks to Camille DeJarnett (Stanford/CMU),  Xinyi Wang (CMU), and Graham Neubig (CMU) we found out that with the current version of the package and all the dependencies (e.g., the sentence transformers embedding model, CUDA version, PyTorch version), results with the model *distiluse-base-multilingual-cased* are lower than what appears in the paper. We suggest to use *paraphrase-multilingual-mpnet-base-v2* which is a newer multilingual model that has results that are higher than those in the paper.
-
-See for example the results on the matches metric for Italian in the following table.
-
-+---------------------------------------+---------------------------------------+
-| Model Name                            |              Matches                  |
-+=======================================+=======================================+
-| paraphrase-multilingual-mpnet-base-v2 |               **0.67**                |
-+---------------------------------------+---------------------------------------+
-| distiluse-base-multilingual-cased     |               0.57                    |
-+---------------------------------------+---------------------------------------+
-| paper                                 |               0.62                    |
-+---------------------------------------+---------------------------------------+
-
-Thus, if you use ZeroShotTM for a multilingual task, we suggest the use of *paraphrase-multilingual-mpnet-base-v2*.
-
 
 Overview
 --------
@@ -136,8 +109,8 @@ Install the package using pip
 
     pip install -U contextualized_topic_models
 
-Using
-~~~~~
+Features
+~~~~~~~~
 
 An important aspect to take into account is which network you want to use:
 the one that combines contextualized embeddings
