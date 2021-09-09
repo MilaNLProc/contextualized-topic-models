@@ -53,3 +53,13 @@ Warning
 
 Note that the way we use the transform method here is different from what we do for ZeroShotTM!
 This is very important!
+
+
+Tutorial
+~~~~~~~~
+
+.. |colab1_2| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1fXJjr_rwqvpp1IdNQ4dxqN4Dp88cxO97?usp=sharing
+    :alt: Open In Colab
+
+You can find a tutorial here: |colab1_2| it will show you how you can use CombinedTM.

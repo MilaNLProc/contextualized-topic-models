@@ -10,10 +10,11 @@ Welcome to Contextualized Topic Models's documentation!
    zeroshot
    kitty
    extensions
+   evaluation
    language
    papers
+   visualize
    installation
-   contributing
    authors
    history
 
