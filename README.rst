@@ -320,7 +320,7 @@ Kitty
 
 Kitty is an easy to use utility that allows you to run topic modeling on a set of documents,
 manually assign some topics to labels and apply the classifiers to novel documents. It is
-very easy to use. See the documentaiton.
+very easy to use. See the documentation.
 
 New Models
 ~~~~~~~~~~
