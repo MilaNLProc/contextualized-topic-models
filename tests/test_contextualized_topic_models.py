@@ -103,13 +103,6 @@ def test_preprocessing(data_dir):
 
     assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
 
-    sp = SimplePreprocessing(docs)
-    prep_corpus, unprepr_corpus, vocab = sp.preprocess()
-
-    assert len(prep_corpus) == len(unprepr_corpus)  # prep docs must have the same size as the unprep docs
-    assert len(prep_corpus) <= len(docs)  # preprocessed docs must be less than or equal the original docs
-
-    assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
 
 
 
