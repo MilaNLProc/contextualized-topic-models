@@ -2,9 +2,24 @@
 Visualization
 =============
 
+We offer two main plots to show your topics. The first one is based on PyLDAvis, a great
+package to analyze how your topic model is behaving. You can take a look to the
+`PyLDAvis Github Page <https://github.com/bmabey/pyLDAvis>`_ to get a better idea on how
+to interpret the different components.
 
-PyLda Visualization
-===================
+The second visualization is a very simple topic visualization with a wordcloud.
+
+
+PyLdaVis Visualization
+======================
+
+If you already know how to use that, you'll see that using PyLDAvis is very simple. First of all
+you need to install pyldavis.
+
+
+.. code-block:: shell
+    pip install pyldavis
+
 
 We support pyLDA visualizations with few lines of code!
 
