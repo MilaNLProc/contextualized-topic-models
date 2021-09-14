@@ -2,7 +2,9 @@ from contextualized_topic_models.models.ctm import ZeroShotTM
 from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing
 from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
 import numpy as np
-
+import pickle
+import ipywidgets as widgets
+from IPython.display import display
 
 class Kitty:
     """
@@ -49,6 +51,7 @@ class Kitty:
                               num_epochs=epochs)
 
         self.ctm.fit(training_dataset)  # run the model
+        self.widgetss = None
 
     def get_word_classes(self) -> list:
         return self.ctm.get_topic_lists(5)
@@ -81,6 +84,51 @@ class Kitty:
         topic_ids = np.argmax(self.ctm.get_doc_topic_distribution(data), axis=1)
 
         return [self._assigned_classes[k] for k in topic_ids]
+
+    def save(self, path):
+        """
+        :param path:  path to the file to save
+        """
+        with open(path, "wb") as filino:
+            pickle.dump(self, filino)
+
+    @classmethod
+    def load(cls, path):
+        """
+        :param path: path to the file to load
+        """
+        with open(path, "rb") as filino:
+            return pickle.load(filino)
+
+    def widget_annotation(self):
+        """
+        Displays a widget that can be used to define the mapping between the topics and the labels
+        """
+        style = {'description_width': 'initial'}
+        self.widgetss = []
+        for idx, topic in enumerate(self.ctm.get_topic_lists()):
+            description = str(idx) + " -  " + ", ".join(topic)
+            a = widgets.Text(value='',
+                             placeholder='Topic',
+                             description=description,
+                             display='flex',
+                             flex_flow='column',
+                             align_items='stretch',
+                             disabled=False, layout={'width': 'max-content', }, style=style)
+            self.widgetss.append(a)
+            display(a)
+
+        button = widgets.Button(description="Save")
+        button.style.button_color = 'lightgreen'
+        display(button)
+
+        def on_button_clicked(b):
+            self._assigned_classes = {k: "other" for k in range(0, self.topics_num)}
+            for idx in range(0, self.topics_num):
+                if self.widgetss[idx].value != "":
+                    self._assigned_classes[idx] = self.widgetss[idx].value
+
+        button.on_click(on_button_clicked)
 
 
 
