@@ -1,6 +1,15 @@
-============================
+==========================
 Frequently Asked Questions
-============================
+==========================
+
+I am getting very poor results. What can I do?
+***********************************************
+There are many elements that can influence the final results in a topic model.
+A good preprocessing is fundamental for obtaining meaningful topics.
+`On this link <https://github.com/MilaNLProc/contextualized-topic-models#tldr>`_
+you can find some suggestions on how to preprocess your data,
+but be careful because each dataset may have their pecularities.
+If you still get poor results, don't hesitate to `contact us <https://github.com/MilaNLProc/contextualized-topic-models#development-team>`_! We would be happy to help you :)
 
 
 Am I forced to use the SBERT Embeddings?
@@ -21,12 +30,23 @@ that allows us to get the topics.
 
 ZeroShotTM or CombinedTM? Which one should I use?
 *************************************************
-If your objective is to do `cross-lingual topic modeling`_ (i.e. train a topic model on a dataset in one language and predict the topics for data in other languages), then ZeroShotTM is the model for you. If you just aim at extracting topics from a corpus, you can use either the CombinedTM or the ZeroShotTM. We have designed the Combined topic model for the purpose of obtaining more coherent topics, so we suggest you use this. Yet, as you can read in `this paper <https://www.aclweb.org/anthology/2021.eacl-main.143/>`_, the ZeroShotTM model still gets results that are very similar to the ones of the combinedTM.
+
+ZeroShotTm and CombinedTM can be basically used for the same tasks. ZeroShotTM has two main pros:
+
+1) it can handle unseen words in the test phase. This makes it very useful to be used in our
+Kitty module, for example.
+
+2) If your objective is to do `cross-lingual topic modeling`_
+(i.e. train a topic model on a dataset in one language and predict the topics for data in other languages),
+then ZeroShotTM is the model for you.
+
+If you just aim at extracting topics from a corpus, you can use either the CombinedTM or the ZeroShotTM.
+We have designed the CombinedTM for the purpose of obtaining more coherent topics,
+so we suggest you use this for more general topic extraction.
+Yet, as you can read in `this paper <https://www.aclweb.org/anthology/2021.eacl-main.143/>`_,
+the ZeroShotTM model still gets results that are very similar to the ones of the CombinedTM.
 
 
-I am getting very poor results. What can I do?
-***********************************************
-There are many elements that can influence the final results in a topic model. A good preprocessing is fundamental for obtaining meaningful topics. `Here <https://github.com/MilaNLProc/contextualized-topic-models#tldr>`_ you can find some suggestions on how to preprocess your data, but be careful because each dataset may have their pecularities. If you still get poor results, don't hesitate to `contact us <https://github.com/MilaNLProc/contextualized-topic-models#development-team>`_! We would be happy to help you :)
 
 How do I choose the correct number of topics?
 ***********************************************
