@@ -23,7 +23,7 @@ that allows us to get the topics.
 
 ZeroShotTM or CombinedTM? Which one should I use?
 *************************************************
-If your objective is to do `cross-lingual topic modeling`_ (i.e. train a topic model on a dataset in one language and predict the topics for data in other languages), then ZeroShotTM is the model for you. If you just aim at extracting topics from a corpus, you can use either the CombinedTM or the ZeroShotTM. We have designed the Combined topic model for the purpose of obtaining more coherent topics, so we suggest you use this. Yet, as you can read in `this paper<https://www.aclweb.org/anthology/2021.eacl-main.143/>`_, the ZeroShotTM model still gets results that are very similar to the ones of the combinedTM.   
+If your objective is to do `cross-lingual topic modeling`_ (i.e. train a topic model on a dataset in one language and predict the topics for data in other languages), then ZeroShotTM is the model for you. If you just aim at extracting topics from a corpus, you can use either the CombinedTM or the ZeroShotTM. We have designed the Combined topic model for the purpose of obtaining more coherent topics, so we suggest you use this. Yet, as you can read in `this paper <https://www.aclweb.org/anthology/2021.eacl-main.143/>`_, the ZeroShotTM model still gets results that are very similar to the ones of the combinedTM.   
 
 
 
