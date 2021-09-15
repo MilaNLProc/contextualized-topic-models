@@ -6,6 +6,7 @@ import pickle
 import ipywidgets as widgets
 from IPython.display import display
 
+
 class Kitty:
     """
     Kitty is a utility to generate a simple classifiers from a topic model. It first run
@@ -18,6 +19,7 @@ class Kitty:
         self.ctm = None
         self.qt = None
         self.topics_num = 0
+        self.widget_holder = None
 
     def train(self, documents,
               topics=10,
@@ -51,7 +53,6 @@ class Kitty:
                               num_epochs=epochs)
 
         self.ctm.fit(training_dataset)  # run the model
-        self.widgetss = None
 
     def get_word_classes(self) -> list:
         return self.ctm.get_topic_lists(5)
@@ -105,7 +106,7 @@ class Kitty:
         Displays a widget that can be used to define the mapping between the topics and the labels
         """
         style = {'description_width': 'initial'}
-        self.widgetss = []
+        self.widget_holder = []
         for idx, topic in enumerate(self.ctm.get_topic_lists()):
             description = str(idx) + " -  " + ", ".join(topic)
             a = widgets.Text(value='',
@@ -115,7 +116,7 @@ class Kitty:
                              flex_flow='column',
                              align_items='stretch',
                              disabled=False, layout={'width': 'max-content', }, style=style)
-            self.widgetss.append(a)
+            self.widget_holder.append(a)
             display(a)
 
         button = widgets.Button(description="Save")
@@ -125,8 +126,8 @@ class Kitty:
         def on_button_clicked(b):
             self._assigned_classes = {k: "other" for k in range(0, self.topics_num)}
             for idx in range(0, self.topics_num):
-                if self.widgetss[idx].value != "":
-                    self._assigned_classes[idx] = self.widgetss[idx].value
+                if self.widget_holder[idx].value != "":
+                    self._assigned_classes[idx] = self.widget_holder[idx].value
 
         button.on_click(on_button_clicked)
 
