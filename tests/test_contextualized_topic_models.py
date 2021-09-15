@@ -46,7 +46,7 @@ def test_kitty(data_dir):
     with open(data_dir + '/gnews/GoogleNews.txt') as filino:
         training = filino.readlines()
 
-    kt.train(training, 5, epochs=1)
+    kt.train(training, topics=5, epochs=1)
 
     kt.assigned_classes = {0: "nature", 3: "shop/offices", 4: "sport"}
 
