@@ -59,7 +59,7 @@ def test_kitty(data_dir):
 
 def test_validation_set(data_dir):
 
-    with open(data_dir + '/gnews/GoogleNews.txt') as filino:
+    with open(data_dir + '/sample_text_document') as filino:
         data = filino.readlines()
 
     tp = TopicModelDataPreparation("distiluse-base-multilingual-cased")
