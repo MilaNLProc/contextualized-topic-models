@@ -77,14 +77,20 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
     :target: https://colab.research.google.com/drive/1upTRu4zSm1VMbl633n9qkIDA526l22E_?usp=sharing
     :alt: Open In Colab
 
+.. |kitty_colab| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1ZO6y-laPMnIT6boMwNXK4WNiyAUWUK4L?usp=sharing
+    :alt: Open In Colab
+
 +--------------------------------------------------------------------------------+------------------+
 | Name                                                                           | Link             |
 +================================================================================+==================+
-| Combined TM on Wikipedia Data (Preproc+Saving+Viz) (stable **v2.0.0**)         | |colab1_2|       |
+| Combined TM on Wikipedia Data (Preproc+Saving+Viz) (stable **v2.2.0**)         | |colab1_2|       |
 +--------------------------------------------------------------------------------+------------------+
-| Zero-Shot Cross-lingual Topic Modeling (Preproc+Viz) (stable **v2.0.0**)       | |colab2_2|       |
+| Zero-Shot Cross-lingual Topic Modeling (Preproc+Viz) (stable **v2.2.0**)       | |colab2_2|       |
 +--------------------------------------------------------------------------------+------------------+
-| SuperCTM and  β-CTM (High-level usage) (stable **v2.1.0**)                     | |colab3_3|       |
+| Kitty: Human in the loop Classifier (High-level usage) (stable **v2.2.0**)     | |kitty_colab|    |
++--------------------------------------------------------------------------------+------------------+
+| SuperCTM and  β-CTM (High-level usage) (stable **v2.2.0**)                     | |colab3_3|       |
 +--------------------------------------------------------------------------------+------------------+
 
 

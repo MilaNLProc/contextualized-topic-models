@@ -2,6 +2,12 @@
 History
 =======
 
+2.2.0 (2021-09-??)
+------------------
+
+* introducing kitty
+* improving the documentation a lot
+
 2.1.2 (2021-09-03)
 ------------------
 
