@@ -39,7 +39,7 @@ def test_labels_set(data_dir):
     ctm.fit(training_dataset)
 
 
-def test_kitty():
+def test_kitty(data_dir):
 
     kt = Kitty()
 
