@@ -321,29 +321,6 @@ is covered by **paraphrase-multilingual-mpnet-base-v2**).
 **Advanced Notes:** We do not need to pass the Spanish bag of word: the bag of words of the two languages will not be comparable! We are passing it to the model for compatibility reasons, but you cannot get
 the output of the model (i.e., the predicted BoW of the trained language) and compare it with the testing language one.
 
-Extensions
-----------
-
-Kitty
-~~~~~
-
-Kitty is an easy to use utility that allows you to run topic modeling on a set of documents,
-manually assign some topics to labels and apply the classifiers to novel documents. It is
-very easy to use. See the documentation.
-
-New Models
-~~~~~~~~~~
-
-We have developed different extensions to CTM, one that supports supervision and another one that
-uses a weight on the KL loss to generate disentangled representations.
-
-**NOTE**: Super and β-CTM model haven't been thoroughly validated. Use them with care and let us know if you find something cool!
-
-You can find more details about these two models in the documentation.
-
-Visualization
--------------
-
 More Advanced Stuff
 -------------------
 
@@ -373,10 +350,6 @@ For example:
         train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, "chosen_contextualized_model")
         vocab = vectorizer.get_feature_names()
         id2token = {k: v for k, v in zip(range(0, len(vocab)), vocab)}
-
-Evaluation
-~~~~~~~~~~
-
 
 Preprocessing
 ~~~~~~~~~~~~~
