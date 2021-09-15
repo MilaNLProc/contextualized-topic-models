@@ -55,6 +55,13 @@ example, topic 0 seems to be describing nature related things.
 
     >> sport
 
+
+If you are using a jupyter notebook, you can use the widget to fill in the labels.
+
+.. code-block:: python
+
+    kt.widget_annotation()
+
 Cross-Lingual Support
 =====================
 
