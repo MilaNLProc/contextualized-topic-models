@@ -5,10 +5,17 @@ Welcome to Contextualized Topic Models's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   readme
+   introduction
+   combined
+   zeroshot
+   kitty
+   extensions
+   evaluation
+   language
+   papers
+   visualize
    installation
-   usage
-   contributing
+   faq
    authors
    history
 

@@ -3,12 +3,10 @@
 """Tests for `contextualized_topic_models` package."""
 
 from contextualized_topic_models.models.ctm import CTM, ZeroShotTM, CombinedTM
-from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file, bert_embeddings_from_list
-import numpy as np
 from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
-from contextualized_topic_models.datasets.dataset import CTMDataset
-from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing, SimplePreprocessing
+from contextualized_topic_models.utils.preprocessing import WhiteSpacePreprocessing
 import os
+from contextualized_topic_models.models.kitty_classifier import Kitty
 import pytest
 import nltk
 
@@ -37,8 +35,26 @@ def test_labels_set(data_dir):
     training_dataset = tp.fit(data[:100], data[:100], labels[:100])
 
     ctm = CombinedTM(reduce_on_plateau=True, solver='sgd', bow_size=len(tp.vocab),
-                     contextual_size=512, num_epochs=2, n_components=5, batch_size=2, label_size=len(set(labels[:100])))
+                     contextual_size=512, num_epochs=1, n_components=5, batch_size=2, label_size=len(set(labels[:100])))
     ctm.fit(training_dataset)
+
+
+def test_kitty(data_dir):
+
+    kt = Kitty()
+
+    with open(data_dir + '/sample_text_document') as filino:
+        training = filino.readlines()
+
+    kt.train(training, topics=5, epochs=1)
+
+    kt.assigned_classes = {0: "nature", 3: "shop/offices", 4: "sport"}
+
+    topic = kt.predict(["test sentence"])
+
+    assert topic[0] in kt.assigned_classes.values()
+
+    kt.pretty_print_word_classes()
 
 
 def test_validation_set(data_dir):
@@ -51,7 +67,7 @@ def test_validation_set(data_dir):
     training_dataset = tp.fit(data[:100], data[:100])
     validation_dataset = tp.transform(data[100:105], data[100:105])
 
-    ctm = CombinedTM(reduce_on_plateau=True, solver='sgd', bow_size=len(tp.vocab), contextual_size=512, num_epochs=100, n_components=5)
+    ctm = CombinedTM(reduce_on_plateau=True, solver='sgd', bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5)
     ctm.fit(training_dataset, validation_dataset=validation_dataset, patience=5, save_dir=data_dir+'test_checkpoint')
 
     assert os.path.exists(data_dir+"test_checkpoint")
@@ -106,13 +122,6 @@ def test_preprocessing(data_dir):
 
     assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
 
-    sp = SimplePreprocessing(docs)
-    prep_corpus, unprepr_corpus, vocab = sp.preprocess()
-
-    assert len(prep_corpus) == len(unprepr_corpus)  # prep docs must have the same size as the unprep docs
-    assert len(prep_corpus) <= len(docs)  # preprocessed docs must be less than or equal the original docs
-
-    assert len(vocab) <= sp.vocabulary_size  # check vocabulary size
 
 
 
