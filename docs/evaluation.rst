@@ -15,8 +15,13 @@ The metrics we cover are the one we also describe in our papers.
 + Matches
 + Centroid Distance
 
+You can take a look at the `evaluation measures file <https://github.com/MilaNLProc/contextualized-topic-models/blob/master/contextualized_topic_models/evaluation/measures.py>`_
+to get a better idea on how to add them to your code.
+
 Example
 =======
+
+If you want to compute the NPMI coherence you can simply do as follows:
 
 .. code-block:: python
 

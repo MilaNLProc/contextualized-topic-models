@@ -72,7 +72,7 @@ way to do this is to pass just the text that is going to be given in input to th
 Warning
 ~~~~~~~
 
-Note that the way we use the transform method here is different from what we do for CombinedTM!
+Note that the way we use the transform method here is different from what we do for `CombinedTM <https://contextualized-topic-models.readthedocs.io/en/latest/combined.html>`_!
 This is very important!
 
 Cross-Lingual Topic Modeling

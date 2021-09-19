@@ -3,7 +3,7 @@ CombinedTM: Coherent Topic Models
 =================================
 
 Combined TM combines the BoW with SBERT, a process that seems to increase
-the coherence of the predicted topics (https://arxiv.org/pdf/2004.03974.pdf).
+the coherence of the predicted topics (https://aclanthology.org/2021.acl-short.96/).
 
 Usage
 =====
@@ -51,7 +51,7 @@ If you use **CombinedTM** you need to include the test text for the BOW:
 Warning
 ~~~~~~~
 
-Note that the way we use the transform method here is different from what we do for ZeroShotTM!
+Note that the way we use the transform method here is different from what we do for `ZeroShotTM <https://contextualized-topic-models.readthedocs.io/en/latest/zeroshot.html>`_!
 This is very important!
 
 

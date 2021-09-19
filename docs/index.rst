@@ -14,7 +14,6 @@ Welcome to Contextualized Topic Models's documentation!
    language
    papers
    visualize
-   installation
    faq
    authors
    history
