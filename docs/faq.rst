@@ -46,10 +46,36 @@ so we suggest you use this for more general topic extraction.
 Yet, as you can read in `this paper <https://www.aclweb.org/anthology/2021.eacl-main.143/>`_,
 the ZeroShotTM model still gets results that are very similar to the ones of the CombinedTM.
 
+Can I load my own embeddings?
+*****************************
+
+Sure, here is a snippet that can help you. You need to create the embeddings (for bow and contextualized) and you also need
+to have the vocab and an id2token dictionary (maps integers ids to words).
+
+.. code-block:: python
+
+    qt = TopicModelDataPreparation()
+
+    training_dataset = qt.load(contextualized_embeddings, bow_embeddings, id2token)
+    ctm = CombinedTM(bow_size=len(vocab), contextual_size=768, n_components=50)
+    ctm.fit(training_dataset) # run the model
+    ctm.get_topics()
+
+You can give a look at the code we use in the TopicModelDataPreparation object to get an idea on how to create everything from scratch.
+For example:
+
+.. code-block:: python
+
+        vectorizer = CountVectorizer() #from sklearn
+
+        train_bow_embeddings = vectorizer.fit_transform(text_for_bow)
+        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, "chosen_contextualized_model")
+        vocab = vectorizer.get_feature_names()
+        id2token = {k: v for k, v in zip(range(0, len(vocab)), vocab)}
 
 
 How do I choose the correct number of topics?
-***********************************************
+*********************************************
 
 The "n_component" parameter represents the number of topics for CTM. There is not a "right" answer about the choice of the number of topics. Usually, researchers try a different number of topics (10, 30, 50, etc, depending on the prior knowledge on the dataset) and select the number of topics that guarantees the highest average `topic coherence`_. We also suggest you take into consideration the `topic diversity`_.
 

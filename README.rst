@@ -53,10 +53,7 @@ The big advantage is that you can use different embeddings for CTMs. Thus, when 
 embedding method comes out you can use it in the code and improve your results. We are not limited
 by the BoW anymore.
 
-If you want to replicate our results, you can use our code.
-You will find the W1 dataset in the colab and here: https://github.com/vinid/data, if you need the W2 dataset, send us an email (it is a bit bigger than W1 and we could not upload it on github).
-
-We also have kitty! a new submodule that can be used to quickly create an human in the loop
+We also have `Kitty <https://contextualized-topic-models.readthedocs.io/en/latest/kitty.html>`_! a new submodule that can be used to quickly create an human in the loop
 classifier to quickly classify your documents and create named clusters.
 
 Tutorials
@@ -123,11 +120,11 @@ Features
 
 An important aspect to take into account is which network you want to use:
 the one that combines contextualized embeddings
-and the BoW (CombinedTM) or the one that just uses contextualized embeddings (ZeroShotTM)
+and the BoW (`CombinedTM <https://contextualized-topic-models.readthedocs.io/en/latest/combined.html>`_) or the one that just uses contextualized embeddings (`ZeroShotTM <https://contextualized-topic-models.readthedocs.io/en/latest/zeroshot.html>`_)
 
-But remember that you can do zero-shot cross-lingual topic modeling only with the :code:`ZeroShotTM` model. See cross-lingual-topic-modeling_
+But remember that you can do zero-shot cross-lingual topic modeling only with the `ZeroShotTM <https://contextualized-topic-models.readthedocs.io/en/latest/zeroshot.html>`_ model.
 
-We also have :code:`Kitty`: a utility you can use to do a simpler human in the loop classification of your
+We also have `Kitty <https://contextualized-topic-models.readthedocs.io/en/latest/kitty.html>`_: a utility you can use to do a simpler human in the loop classification of your
 documents. This can be very useful to do document filtering. It also works in cross-lingual setting and
 thus you might be able to filter documents in a language you don't know!
 
@@ -183,8 +180,13 @@ However you might need a broader coverage of languages or just one specific lang
 Refer to the page in the documentation to see how to choose a model for another language.
 In that case, you can check `SBERT`_ to find the perfect model to use.
 
-Topic Models
-------------
+Here, you can read more about `language-specific and mulitlingual <https://contextualized-topic-models.readthedocs.io/en/latest/language.html>`_.
+
+Quick Overview
+--------------
+
+You should definitely take a look at the `documentation <https://contextualized-topic-models.readthedocs.io/en/latest/introduction.html>`_
+to better understand how these topic models work.
 
 Combined Topic Model
 ~~~~~~~~~~~~~~~~~~~~
@@ -324,32 +326,7 @@ the output of the model (i.e., the predicted BoW of the trained language) and co
 More Advanced Stuff
 -------------------
 
-Can I load my own embeddings?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Sure, here is a snippet that can help you. You need to create the embeddings (for bow and contextualized) and you also need
-to have the vocab and an id2token dictionary (maps integers ids to words).
-
-.. code-block:: python
-
-    qt = TopicModelDataPreparation()
-
-    training_dataset = qt.load(contextualized_embeddings, bow_embeddings, id2token)
-    ctm = CombinedTM(bow_size=len(vocab), contextual_size=768, n_components=50)
-    ctm.fit(training_dataset) # run the model
-    ctm.get_topics()
-
-You can give a look at the code we use in the TopicModelDataPreparation object to get an idea on how to create everything from scratch.
-For example:
-
-.. code-block:: python
-
-        vectorizer = CountVectorizer() #from sklearn
-
-        train_bow_embeddings = vectorizer.fit_transform(text_for_bow)
-        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, "chosen_contextualized_model")
-        vocab = vectorizer.get_feature_names()
-        id2token = {k: v for k, v in zip(range(0, len(vocab)), vocab)}
 
 Preprocessing
 ~~~~~~~~~~~~~

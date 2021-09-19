@@ -13,6 +13,15 @@ Please cite the following papers if you use Kitty:
 * Bianchi, F., Terragni, S., & Hovy, D. (2021). `Pre-training is a Hot Topic: Contextualized Document Embeddings Improve Topic Coherence`. ACL. https://aclanthology.org/2021.acl-short.96/
 * Bianchi, F., Terragni, S., Hovy, D., Nozza, D., & Fersini, E. (2021). `Cross-lingual Contextualized Topic Models with Zero-shot Learning`. EACL. https://www.aclweb.org/anthology/2021.eacl-main.143/
 
+To simply put it, Kitty makes use of `ZeroShotTM <https://contextualized-topic-models.readthedocs.io/en/latest/zeroshot.html>`_ to extract topic from your data. Kitty runs some very simple
+preprocessing on your data to remove words that might not be too useful. We also have a google colab tutorial.
+
+.. |kitty_colab| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/drive/1ZO6y-laPMnIT6boMwNXK4WNiyAUWUK4L?usp=sharing
+    :alt: Open In Colab
+
+|kitty_colab|
+
 
 Usage
 =====
@@ -24,8 +33,8 @@ Usage
     # read the training data
     training_set = list(map(lambda x : x.strip(), open("train_data").readlines()))
 
-    kt = Kitty(language="english")
-    kt.train(training_set, 5) # train a topic model with 5 topics
+    kt = Kitty()
+    kt.train(training_set, language="english", embedding_model="paraphrase-distilroberta-base-v2", topics=5) # train a topic model with 5 topics
 
     print(kt.pretty_print_word_classes())
 
