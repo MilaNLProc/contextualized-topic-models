@@ -58,7 +58,7 @@ classifier to quickly classify your documents and create named clusters.
 
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/logo_kitty.png
    :align: center
-   :width: 100px
+   :width: 200px
 
 
 Tutorials
@@ -131,7 +131,7 @@ But remember that you can do zero-shot cross-lingual topic modeling only with th
 
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/ctm_both.jpeg
    :align: center
-   :width: 600px
+   :width: 800px
 
 We also have `Kitty <https://contextualized-topic-models.readthedocs.io/en/latest/kitty.html>`_: a utility you can use to do a simpler human in the loop classification of your
 documents. This can be very useful to do document filtering. It also works in cross-lingual setting and
