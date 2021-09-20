@@ -129,6 +129,8 @@ and the BoW (`CombinedTM <https://contextualized-topic-models.readthedocs.io/en/
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the `ZeroShotTM <https://contextualized-topic-models.readthedocs.io/en/latest/zeroshot.html>`_ model.
 
+Contextualized Topic Models also support supervision (SuperCTM). You can read more about this on the `documentation <https://contextualized-topic-models.readthedocs.io/en/latest/introduction.html>`_.
+
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/ctm_both.jpeg
    :align: center
    :width: 800px
