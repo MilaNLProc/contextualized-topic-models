@@ -56,6 +56,11 @@ by the BoW anymore.
 We also have `Kitty <https://contextualized-topic-models.readthedocs.io/en/latest/kitty.html>`_! a new submodule that can be used to quickly create an human in the loop
 classifier to quickly classify your documents and create named clusters.
 
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/logo_kitty.png
+   :align: center
+   :width: 100px
+
+
 Tutorials
 ---------
 
@@ -115,14 +120,18 @@ Install the package using pip
 
     pip install -U contextualized_topic_models
 
-Features
-~~~~~~~~
+Models
+~~~~~~
 
 An important aspect to take into account is which network you want to use:
 the one that combines contextualized embeddings
 and the BoW (`CombinedTM <https://contextualized-topic-models.readthedocs.io/en/latest/combined.html>`_) or the one that just uses contextualized embeddings (`ZeroShotTM <https://contextualized-topic-models.readthedocs.io/en/latest/zeroshot.html>`_)
 
 But remember that you can do zero-shot cross-lingual topic modeling only with the `ZeroShotTM <https://contextualized-topic-models.readthedocs.io/en/latest/zeroshot.html>`_ model.
+
+.. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/ctm_both.jpeg
+   :align: center
+   :width: 600px
 
 We also have `Kitty <https://contextualized-topic-models.readthedocs.io/en/latest/kitty.html>`_: a utility you can use to do a simpler human in the loop classification of your
 documents. This can be very useful to do document filtering. It also works in cross-lingual setting and
