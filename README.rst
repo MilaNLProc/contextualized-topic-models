@@ -53,7 +53,7 @@ The big advantage is that you can use different embeddings for CTMs. Thus, when 
 embedding method comes out you can use it in the code and improve your results. We are not limited
 by the BoW anymore.
 
-We also have `Kitty <https://contextualized-topic-models.readthedocs.io/en/latest/kitty.html>`_! a new submodule that can be used to quickly create an human in the loop
+We also have `Kitty <https://contextualized-topic-models.readthedocs.io/en/latest/kitty.html>`_! A new submodule that can be used to create a human-in-the-loop
 classifier to quickly classify your documents and create named clusters.
 
 .. image:: https://raw.githubusercontent.com/MilaNLProc/contextualized-topic-models/master/img/logo_kitty.png
