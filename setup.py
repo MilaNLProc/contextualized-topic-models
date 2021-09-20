@@ -44,6 +44,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/MilaNLProc/contextualized-topic-models',
-    version='2.1.2',
+    version='2.2.0',
     zip_safe=False,
 )
