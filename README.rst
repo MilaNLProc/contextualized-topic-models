@@ -95,8 +95,6 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 | SuperCTM and  β-CTM (High-level usage) (stable **v2.2.0**)                     | |colab3_3|       |
 +--------------------------------------------------------------------------------+------------------+
 
-
-
 Overview
 --------
 
