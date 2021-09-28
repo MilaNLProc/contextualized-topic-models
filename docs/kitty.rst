@@ -26,6 +26,9 @@ preprocessing on your data to remove words that might not be too useful. We also
 Usage
 =====
 
+In this example we use an english embedding model, however you might need langauge-specific models to do this, check out the `related section of the documentation <https://contextualized-topic-models.readthedocs.io/en/latest/language.html>`_
+
+
 .. code-block:: python
 
     from contextualized_topic_models.models.kitty_classifier import Kitty
