@@ -9,6 +9,7 @@ History
 * adding a new preprocessing function that supports passing the stopwords as a list
 * deprecating whitespace preprocessing
 * minor fixes to kitty API
+* breaking change to kitty API, now uses WhiteSpacePreprocessingStopwords.
 
 2.2.0 (2021-09-20)
 ------------------
