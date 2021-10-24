@@ -6,6 +6,9 @@ History
 ------------------
 
 * solving a bug in the whitespace preprocessing function
+* adding a new preprocessing function that supports passing the stopwords as a list
+* deprecating whitespace preprocessing
+* minor fixes to kitty API
 
 2.2.0 (2021-09-20)
 ------------------
