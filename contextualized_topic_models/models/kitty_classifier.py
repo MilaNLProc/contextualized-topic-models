@@ -47,7 +47,7 @@ class Kitty:
         training_dataset = self.qt.fit(text_for_contextual=unpreprocessed_documents,
                                        text_for_bow=preprocessed_documents)
 
-        self.ctm = ZeroShotTM(bow_size=len(vocab),
+        self.ctm = ZeroShotTM(bow_size=len(self.qt.vocab),
                               contextual_size=contextual_size,
                               n_components=topics,
                               num_epochs=epochs)
