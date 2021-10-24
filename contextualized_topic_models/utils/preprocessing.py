@@ -1,12 +1,15 @@
 from sklearn.feature_extraction.text import CountVectorizer
 import string
 from nltk.corpus import stopwords as stop_words
-import warnings
+from gensim.utils import deaccent
+
+
 
 class WhiteSpacePreprocessing():
     """
     Provides a very simple preprocessing script that filters infrequent tokens from text
     """
+
     def __init__(self, documents, stopwords_language="english", vocabulary_size=2000):
         """
 
@@ -26,16 +29,17 @@ class WhiteSpacePreprocessing():
         :return: preprocessed documents, unpreprocessed documents and the vocabulary list
         """
         preprocessed_docs_tmp = self.documents
-        preprocessed_docs_tmp = [doc.lower() for doc in preprocessed_docs_tmp]
+        preprocessed_docs_tmp = [deaccent(doc.lower()) for doc in preprocessed_docs_tmp]
         preprocessed_docs_tmp = [doc.translate(
             str.maketrans(string.punctuation, ' ' * len(string.punctuation))) for doc in preprocessed_docs_tmp]
         preprocessed_docs_tmp = [' '.join([w for w in doc.split() if len(w) > 0 and w not in self.stopwords])
-                             for doc in preprocessed_docs_tmp]
+                                 for doc in preprocessed_docs_tmp]
 
-        vectorizer = CountVectorizer(max_features=self.vocabulary_size, token_pattern=r'\b[a-zA-Z]{2,}\b')
+        vectorizer = CountVectorizer(max_features=self.vocabulary_size)
         vectorizer.fit_transform(preprocessed_docs_tmp)
-        vocabulary = set(vectorizer.get_feature_names())
-        preprocessed_docs_tmp = [' '.join([w for w in doc.split() if w in vocabulary])
+        temp_vocabulary = set(vectorizer.get_feature_names())
+
+        preprocessed_docs_tmp = [' '.join([w for w in doc.split() if w in temp_vocabulary])
                                  for doc in preprocessed_docs_tmp]
 
         preprocessed_docs, unpreprocessed_docs = [], []
@@ -44,5 +48,11 @@ class WhiteSpacePreprocessing():
                 preprocessed_docs.append(doc)
                 unpreprocessed_docs.append(self.documents[i])
 
-        return preprocessed_docs, unpreprocessed_docs, list(vocabulary)
+        vocabulary = list(set([item for doc in preprocessed_docs for item in doc.split()]))
+
+        return preprocessed_docs, unpreprocessed_docs, vocabulary
+
+
+
+
 

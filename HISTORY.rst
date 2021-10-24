@@ -2,6 +2,11 @@
 History
 =======
 
+2.2.1 (2021-09-20)
+------------------
+
+* solving a bug in the whitespace preprocessing function
+
 2.2.0 (2021-09-20)
 ------------------
 
