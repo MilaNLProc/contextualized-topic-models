@@ -72,17 +72,22 @@ class Kitty:
         self._assigned_classes = {k: "other" for k in range(0, self.topics_num)}
         self._assigned_classes.update(classes)
 
-    def predict(self, texts):
+    def get_raw_class_topic_distribution(self, texts):
         """
         :param texts: a list of texts to be classified
         """
-
         if set(self._assigned_classes.values()) == set("other"):
             raise Exception("Only ``other'' classes are present, did you assign the topics to the assigned_class "
                             "property?")
 
         data = self.qt.transform(texts)
-        topic_ids = np.argmax(self.ctm.get_doc_topic_distribution(data), axis=1)
+        return self.ctm.get_doc_topic_distribution(data)
+
+    def predict(self, texts):
+        """
+        :param texts: a list of texts to be classified
+        """
+        topic_ids = np.argmax(self.get_raw_class_topic_distribution(texts), axis=1)
 
         return [self._assigned_classes[k] for k in topic_ids]
 
