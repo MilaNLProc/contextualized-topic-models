@@ -54,8 +54,8 @@ class Kitty:
 
         self.ctm.fit(training_dataset)  # run the model
 
-    def get_word_classes(self) -> list:
-        return self.ctm.get_topic_lists(5)
+    def get_word_classes(self, number_of_words=5) -> list:
+        return self.ctm.get_topic_lists(number_of_words)
 
     def pretty_print_word_classes(self):
         return "\n".join(str(a) + "\t" + ", ".join(b) for a, b in enumerate(self.get_word_classes()))
