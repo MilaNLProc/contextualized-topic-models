@@ -69,7 +69,11 @@ class WhiteSpacePreprocessingStopwords():
         :param vocabulary_size: the number of most frequent words to include in the documents. Infrequent words will be discarded from the list of preprocessed documents
         """
         self.documents = documents
-        self.stopwords = set(stopwords_list)
+        if stopwords_list is not None:
+            self.stopwords = set(stopwords_list)
+        else:
+            self.stopwords = []
+
         self.vocabulary_size = vocabulary_size
 
     def preprocess(self):
