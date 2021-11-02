@@ -61,7 +61,8 @@ class WhiteSpacePreprocessingStopwords():
     Provides a very simple preprocessing script that filters infrequent tokens from text
     """
 
-    def __init__(self, documents, stopwords_list=None, vocabulary_size=2000, max_df=1.0, min_words=1):
+    def __init__(self, documents, stopwords_list=None, vocabulary_size=2000, max_df=1.0, min_words=1,
+                 remove_numbers=True):
         """
 
         :param documents: list of strings
@@ -76,6 +77,7 @@ class WhiteSpacePreprocessingStopwords():
         This parameter is ignored if vocabulary is not None.
         :param min_words: int, default=1. Documents with less words than the parameter
         will be removed
+        :param remove_numbers: bool, default=True. If true, numbers are removed from docs
         """
         self.documents = documents
         if stopwords_list is not None:
@@ -86,6 +88,7 @@ class WhiteSpacePreprocessingStopwords():
         self.vocabulary_size = vocabulary_size
         self.max_df = max_df
         self.min_words = min_words
+        self.remove_numbers = remove_numbers
 
     def preprocess(self):
         """
@@ -98,6 +101,9 @@ class WhiteSpacePreprocessingStopwords():
         preprocessed_docs_tmp = [deaccent(doc.lower()) for doc in preprocessed_docs_tmp]
         preprocessed_docs_tmp = [doc.translate(
             str.maketrans(string.punctuation, ' ' * len(string.punctuation))) for doc in preprocessed_docs_tmp]
+        if self.remove_numbers:
+            preprocessed_docs_tmp = [doc.translate(str.maketrans("0123456789", ' ' * len("0123456789")))
+                                     for doc in preprocessed_docs_tmp]
         preprocessed_docs_tmp = [' '.join([w for w in doc.split() if len(w) > 0 and w not in self.stopwords])
                                  for doc in preprocessed_docs_tmp]
 
