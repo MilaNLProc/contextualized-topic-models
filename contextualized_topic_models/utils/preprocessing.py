@@ -61,12 +61,21 @@ class WhiteSpacePreprocessingStopwords():
     Provides a very simple preprocessing script that filters infrequent tokens from text
     """
 
-    def __init__(self, documents, stopwords_list=None, vocabulary_size=2000):
+    def __init__(self, documents, stopwords_list=None, vocabulary_size=2000, max_df=1.0, min_words=1):
         """
 
         :param documents: list of strings
         :param stopwords_list: list of the stopwords to remove
         :param vocabulary_size: the number of most frequent words to include in the documents. Infrequent words will be discarded from the list of preprocessed documents
+        :param max_df : float or int, default=1.0
+        When building the vocabulary ignore terms that have a document
+        frequency strictly higher than the given threshold (corpus-specific
+        stop words).
+        If float in range [0.0, 1.0], the parameter represents a proportion of
+        documents, integer absolute counts.
+        This parameter is ignored if vocabulary is not None.
+        :param min_words: int, default=1. Documents with less words than the parameter
+        will be removed
         """
         self.documents = documents
         if stopwords_list is not None:
@@ -75,6 +84,8 @@ class WhiteSpacePreprocessingStopwords():
             self.stopwords = []
 
         self.vocabulary_size = vocabulary_size
+        self.max_df = max_df
+        self.min_words = min_words
 
     def preprocess(self):
         """
@@ -90,7 +101,7 @@ class WhiteSpacePreprocessingStopwords():
         preprocessed_docs_tmp = [' '.join([w for w in doc.split() if len(w) > 0 and w not in self.stopwords])
                                  for doc in preprocessed_docs_tmp]
 
-        vectorizer = CountVectorizer(max_features=self.vocabulary_size)
+        vectorizer = CountVectorizer(max_features=self.vocabulary_size, max_df=self.max_df)
         vectorizer.fit_transform(preprocessed_docs_tmp)
         temp_vocabulary = set(vectorizer.get_feature_names())
 
@@ -99,7 +110,7 @@ class WhiteSpacePreprocessingStopwords():
 
         preprocessed_docs, unpreprocessed_docs = [], []
         for i, doc in enumerate(preprocessed_docs_tmp):
-            if len(doc) > 0:
+            if len(doc) > 0 and len(doc) >= self.min_words:
                 preprocessed_docs.append(doc)
                 unpreprocessed_docs.append(self.documents[i])
 
