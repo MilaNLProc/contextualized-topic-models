@@ -600,7 +600,7 @@ class CTM:
         res = []
         for i in ind:
             res.append((unpreprocessed_corpus[i], document_topic_distributions[i][topic_id]))
-
+        return res
 
 class ZeroShotTM(CTM):
     """ZeroShotTM, as described in https://arxiv.org/pdf/2004.07737v1.pdf
