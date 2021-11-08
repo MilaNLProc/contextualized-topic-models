@@ -94,6 +94,7 @@ class CTM:
         self.num_epochs = num_epochs
         self.reduce_on_plateau = reduce_on_plateau
         self.num_data_loader_workers = num_data_loader_workers
+        self.training_doc_topic_distributions = None
 
         if loss_weights:
             self.weights = loss_weights
@@ -217,7 +218,8 @@ class CTM:
 
         return samples_processed, train_loss
 
-    def fit(self, train_dataset, validation_dataset=None, save_dir=None, verbose=False, patience=5, delta=0):
+    def fit(self, train_dataset, validation_dataset=None, save_dir=None, verbose=False, patience=5, delta=0,
+            n_samples=20):
         """
         Train the CTM model.
 
@@ -227,6 +229,7 @@ class CTM:
         :param verbose: verbose
         :param patience: How long to wait after last time validation loss improved. Default: 5
         :param delta: Minimum change in the monitored quantity to qualify as an improvement. Default: 0
+        :param n_samples: int, number of samples of the document topic distribution (default: 20)
 
         """
         # Print settings to output file
@@ -306,6 +309,7 @@ class CTM:
                 len(self.train_data) * self.num_epochs, train_loss, e - s))
 
         pbar.close()
+        self.training_doc_topic_distributions = self.get_doc_topic_distribution(train_dataset, n_samples)
 
     def _validation(self, loader):
         """Validation epoch."""
@@ -417,7 +421,6 @@ class CTM:
         :param doc_topic_distribution: ndarray representing the topic distribution of each document
         """
         return np.argmax(doc_topic_distribution, axis=0)
-
 
     def get_topics(self, k=10):
         """
@@ -590,6 +593,13 @@ class CTM:
                 'term_frequency': term_frequency}
 
         return data
+
+    def get_top_documents_per_topic_id(self, unpreprocessed_corpus, document_topic_distributions, topic_id, k=5):
+        probability_list = document_topic_distributions.T[topic_id]
+        ind = probability_list.argsort()[-k:][::-1]
+        res = []
+        for i in ind:
+            res.append((unpreprocessed_corpus[i], document_topic_distributions[i][topic_id]))
 
 
 class ZeroShotTM(CTM):
