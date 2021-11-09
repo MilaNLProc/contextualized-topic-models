@@ -2,6 +2,13 @@
 History
 =======
 
+
+2.2.2 (2021-11-09)
+------------------
+
+* kitty now takes in input a stopword list instead of a language (from which it gathered the stopwords)
+* some other minor fixes
+
 2.2.1 (2021-09-20)
 ------------------
 
