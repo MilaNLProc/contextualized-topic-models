@@ -37,7 +37,7 @@ In this example we use an english embedding model, however you might need langau
     training_set = list(map(lambda x : x.strip(), open("train_data").readlines()))
 
     kt = Kitty()
-    kt.train(training_set, language="english", embedding_model="paraphrase-distilroberta-base-v2", topics=5) # train a topic model with 5 topics
+    kt.train(training, topics=5, epochs=1, stopwords_list=["stop", "words"], embedding_model="paraphrase-distilroberta-base-v2")
 
     print(kt.pretty_print_word_classes())
 
@@ -93,7 +93,7 @@ embedding model.
     # define kitty with a multilingual embedding model
     kt = Kitty(embedding_model="paraphrase-multilingual-mpnet-base-v2",  contextual_size=768)
 
-    kt.train(training, 5) # train a topic model with 5 topics
+    kt.train(training, 5, stopwords_list=["stopwords"]) # train a topic model with 5 topics
 
     print(kt.pretty_print_word_classes())
 

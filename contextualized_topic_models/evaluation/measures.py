@@ -57,9 +57,10 @@ class CoherenceNPMI(Coherence):
     def __init__(self, topics, texts):
         super().__init__(topics, texts)
 
-    def score(self, topk=10):
+    def score(self, topk=10, per_topic=False):
         """
         :param topk: how many most likely words to consider in the evaluation
+        :param per_topic: if True, returns the coherence value for each topic (default: False)
         :return: NPMI coherence
         """
         if topk > len(self.topics[0]):
@@ -67,16 +68,19 @@ class CoherenceNPMI(Coherence):
         else:
             npmi = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
                                   coherence='c_npmi', topn=topk)
-            return npmi.get_coherence()
-
+            if per_topic:
+                return npmi.get_coherence_per_topic()
+            else:
+                return npmi.get_coherence()
 
 class CoherenceUMASS(Coherence):
     def __init__(self, topics, texts):
         super().__init__(topics, texts)
 
-    def score(self, topk=10):
+    def score(self, topk=10, per_topic=False):
         """
         :param topk: how many most likely words to consider in the evaluation
+        :param per_topic: if True, returns the coherence value for each topic (default: False)
         :return: UMass coherence
         """
         if topk > len(self.topics[0]):
@@ -84,16 +88,19 @@ class CoherenceUMASS(Coherence):
         else:
             umass = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
                                    coherence='u_mass', topn=topk)
-            return umass.get_coherence()
-
+            if per_topic:
+                return umass.get_coherence_per_topic()
+            else:
+                return umass.get_coherence()
 
 class CoherenceUCI(Coherence):
     def __init__(self, topics, texts):
         super().__init__(topics, texts)
 
-    def score(self, topk=10):
+    def score(self, topk=10, per_topic=False):
         """
         :param topk: how many most likely words to consider in the evaluation
+        :param per_topic: if True, returns the coherence value for each topic (default: False)
         :return: UCI coherence
         """
         if topk > len(self.topics[0]):
@@ -101,24 +108,30 @@ class CoherenceUCI(Coherence):
         else:
             uci = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
                                  coherence='c_uci', topn=topk)
-            return uci.get_coherence()
-
+            if per_topic:
+                return uci.get_coherence_per_topic()
+            else:
+                return uci.get_coherence()
 
 class CoherenceCV(Coherence):
     def __init__(self, topics, texts):
         super().__init__(topics, texts)
 
-    def score(self, topk=10):
+    def score(self, topk=10, per_topic=False):
         """
         :param topk: how many most likely words to consider in the evaluation
+        :param per_topic: if True, returns the coherence value for each topic (default: False)
         :return: C_V coherence
         """
         if topk > len(self.topics[0]):
             raise Exception('Words in topics are less than topk')
         else:
             cv = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
-                                   coherence='c_v', topn=topk)
-            return cv.get_coherence()
+                                coherence='c_v', topn=topk)
+            if per_topic:
+                return cv.get_coherence_per_topic()
+            else:
+                return cv.get_coherence()
 
 
 class CoherenceWordEmbeddings(Measure):
