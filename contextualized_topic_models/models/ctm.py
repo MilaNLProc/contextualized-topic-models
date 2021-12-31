@@ -581,8 +581,8 @@ class CTM:
         Returns the data that can be used in input to pyldavis to plot
         the topics
         """
-        term_frequency = dataset.X_bow.toarray().sum(axis=0)
-        doc_lengths = dataset.X_bow.toarray().sum(axis=1)
+        term_frequency = np.ravel(dataset.X_bow.sum(axis=0))
+        doc_lengths = np.ravel(dataset.X_bow.sum(axis=1))
         term_topic = self.get_topic_word_distribution()
         doc_topic_distribution = self.get_doc_topic_distribution(dataset, n_samples=n_samples)
 
