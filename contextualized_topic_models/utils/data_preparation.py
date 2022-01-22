@@ -49,24 +49,31 @@ class TopicModelDataPreparation:
     def load(self, contextualized_embeddings, bow_embeddings, id2token, labels=None):
         return CTMDataset(contextualized_embeddings, bow_embeddings, id2token, labels)
 
-    def fit(self, text_for_contextual, text_for_bow, labels=None):
+    def fit(self, text_for_contextual, text_for_bow, contextualized_embeddings=None, labels=None):
         """
         This method fits the vectorizer and gets the embeddings from the contextual model
 
         :param text_for_contextual: list of unpreprocessed documents to generate the contextualized embeddings
         :param text_for_bow: list of preprocessed documents for creating the bag-of-words
+        :param contextualized_embeddings: np.ndarray type object to use custom embeddings (optional).
         :param labels: list of labels associated with each document (optional).
 
         """
 
-        if self.contextualized_model is None:
-            raise Exception("You should define a contextualized model if you want to create the embeddings")
+        if self.contextualized_model is None and contextualized_embeddings is None:
+            raise Exception("A contextualized model or contextualized embeddings must be defined")
+
+        if contextualized_embeddings and type(contextualized_embeddings).__module__ != 'numpy':
+            raise TypeError("contextualized_embeddings must be a numpy.ndarray type object")
 
         # TODO: this count vectorizer removes tokens that have len = 1, might be unexpected for the users
         self.vectorizer = CountVectorizer()
 
         train_bow_embeddings = self.vectorizer.fit_transform(text_for_bow)
-        train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
+        if contextualized_embeddings is None:
+            train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
+        else:
+            train_contextualized_embeddings = contextualized_embeddings
         self.vocab = self.vectorizer.get_feature_names()
         self.id2token = {k: v for k, v in zip(range(0, len(self.vocab)), self.vocab)}
 
@@ -78,7 +85,7 @@ class TopicModelDataPreparation:
 
         return CTMDataset(train_contextualized_embeddings, train_bow_embeddings, self.id2token, encoded_labels)
 
-    def transform(self, text_for_contextual, text_for_bow=None, labels=None):
+    def transform(self, text_for_contextual, text_for_bow=None, contextualized_embeddings=None, labels=None):
         """
         This methods create the input for the prediction. Essentially, it creates the embeddings with the contextualized
         model of choice and with trained vectorizer.
@@ -99,7 +106,10 @@ class TopicModelDataPreparation:
                           "are using ZeroShotTM in a cross-lingual setting")
 
             test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
-        test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
+        if contextualized_embeddings is None:
+            test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
+        else:
+            test_contextualized_embeddings = contextualized_embeddings
 
         if labels:
             encoded_labels = self.label_encoder.transform(np.array([labels]).reshape(-1, 1))

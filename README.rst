@@ -352,6 +352,26 @@ We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of
     documents = [line.strip() for line in open("unpreprocessed_documents.txt").readlines()]
     sp = WhiteSpacePreprocessing(documents, "english")
     preprocessed_documents, unpreprocessed_documents, vocab = sp.preprocess()
+	
+
+Using Custom Embeddings with Kitty
+~~~~~~~~~~~~~
+
+Do you have custom embeddings and wants to use it for faster results? Just give your custom embeddings to Kitty 
+and get the results.
+
+.. code-block:: python
+
+	from contextualized_topic_models.models.kitty_classifier import Kitty
+
+	# read the training data
+	training = list(map(lambda x : x.strip(), open("train_data").readlines()))
+	my_embeddings = np.load('my_embeddings.npy')
+
+	kt = Kitty()
+	kt.train(training, custom_embeddings=my_embeddings stopwords_list=["stopwords"]) # train a topic model with 5 topics
+
+	print(kt.pretty_print_word_classes())
 
 
 Development Team
