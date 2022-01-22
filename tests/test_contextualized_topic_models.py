@@ -32,7 +32,7 @@ def test_labels_set(data_dir):
 
     tp = TopicModelDataPreparation("distiluse-base-multilingual-cased")
 
-    training_dataset = tp.fit(data[:100], data[:100], labels[:100])
+    training_dataset = tp.fit(data[:100], data[:100], labels=labels[:100])
 
     ctm = CombinedTM(reduce_on_plateau=True, solver='sgd', bow_size=len(tp.vocab),
                      contextual_size=512, num_epochs=1, n_components=5, batch_size=2, label_size=len(set(labels[:100])))
@@ -115,7 +115,7 @@ def test_training_all_classes_ctm(data_dir):
 def test_preprocessing(data_dir):
     docs = [line.strip() for line in open(data_dir + "gnews/GoogleNews.txt", 'r').readlines()]
     sp = WhiteSpacePreprocessing(docs, "english")
-    prep_corpus, unprepr_corpus, vocab = sp.preprocess()
+    prep_corpus, unprepr_corpus, vocab, retained_indices = sp.preprocess()
 
     assert len(prep_corpus) == len(unprepr_corpus)  # prep docs must have the same size as the unprep docs
     assert len(prep_corpus) <= len(docs)  # preprocessed docs must be less than or equal the original docs

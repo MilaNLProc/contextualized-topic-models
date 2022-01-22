@@ -49,7 +49,7 @@ class TopicModelDataPreparation:
     def load(self, contextualized_embeddings, bow_embeddings, id2token, labels=None):
         return CTMDataset(contextualized_embeddings, bow_embeddings, id2token, labels)
 
-    def fit(self, text_for_contextual, text_for_bow, contextualized_embeddings=None, labels=None):
+    def fit(self, text_for_contextual, text_for_bow, labels=None, contextualized_embeddings=None):
         """
         This method fits the vectorizer and gets the embeddings from the contextual model
 
