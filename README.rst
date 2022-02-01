@@ -29,7 +29,7 @@ Contextualized Topic Models
     :alt: Open In Colab
 
 .. image:: https://raw.githubusercontent.com/aleen42/badges/master/src/medium.svg
-    :target: https://towardsdatascience.com/how-to-train-your-clip-45a451dcd303
+    :target: https://medium.com/towards-data-science/contextualized-topic-modeling-with-python-eacl2021-eacf6dfa576
     :alt: Medium Blog Post
 
 Contextualized Topic Models (CTM) are a family of topic models that use pre-trained representations of language (e.g., BERT) to
