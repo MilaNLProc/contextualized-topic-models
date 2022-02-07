@@ -45,15 +45,18 @@ class WhiteSpacePreprocessing():
         preprocessed_docs_tmp = [' '.join([w for w in doc.split() if w in temp_vocabulary])
                                  for doc in preprocessed_docs_tmp]
 
-        preprocessed_docs, unpreprocessed_docs = [], []
+        # the size of the preprocessed or unpreprocessed_docs might be less than given docs
+        # for that reason, we need to return retained indices to change the shape of given custom embeddings.
+        preprocessed_docs, unpreprocessed_docs, retained_indices = [], [], []
         for i, doc in enumerate(preprocessed_docs_tmp):
             if len(doc) > 0:
                 preprocessed_docs.append(doc)
                 unpreprocessed_docs.append(self.documents[i])
+                retained_indices.append(i)
 
         vocabulary = list(set([item for doc in preprocessed_docs for item in doc.split()]))
 
-        return preprocessed_docs, unpreprocessed_docs, vocabulary
+        return preprocessed_docs, unpreprocessed_docs, vocabulary, retained_indices
 
 
 class WhiteSpacePreprocessingStopwords():
@@ -114,14 +117,15 @@ class WhiteSpacePreprocessingStopwords():
         preprocessed_docs_tmp = [' '.join([w for w in doc.split() if w in temp_vocabulary])
                                  for doc in preprocessed_docs_tmp]
 
-        preprocessed_docs, unpreprocessed_docs = [], []
+        preprocessed_docs, unpreprocessed_docs, retained_indices = [], [], []
         for i, doc in enumerate(preprocessed_docs_tmp):
             if len(doc) > 0 and len(doc) >= self.min_words:
                 preprocessed_docs.append(doc)
                 unpreprocessed_docs.append(self.documents[i])
+                retained_indices.append(i)
 
         vocabulary = list(set([item for doc in preprocessed_docs for item in doc.split()]))
 
-        return preprocessed_docs, unpreprocessed_docs, vocabulary
+        return preprocessed_docs, unpreprocessed_docs, vocabulary, retained_indices
 
 
