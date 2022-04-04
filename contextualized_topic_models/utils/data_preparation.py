@@ -65,14 +65,14 @@ class TopicModelDataPreparation:
             if text_for_bow is not None:
                 assert len(custom_embeddings) == len(text_for_bow)
 
+            if type(custom_embeddings).__module__ != 'numpy':
+                raise TypeError("contextualized_embeddings must be a numpy.ndarray type object")
+
         if text_for_bow is not None:
             assert len(text_for_contextual) == len(text_for_bow)
 
         if self.contextualized_model is None and custom_embeddings is None:
             raise Exception("A contextualized model or contextualized embeddings must be defined")
-
-        if custom_embeddings and type(custom_embeddings).__module__ != 'numpy':
-            raise TypeError("contextualized_embeddings must be a numpy.ndarray type object")
 
         # TODO: this count vectorizer removes tokens that have len = 1, might be unexpected for the users
         self.vectorizer = CountVectorizer()

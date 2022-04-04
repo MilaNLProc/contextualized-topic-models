@@ -9,7 +9,7 @@ import os
 from contextualized_topic_models.models.kitty_classifier import Kitty
 import pytest
 import nltk
-
+import numpy as np
 
 nltk.download("stopwords")
 
@@ -55,6 +55,22 @@ def test_kitty(data_dir):
     assert topic[0] in kt.assigned_classes.values()
 
     kt.pretty_print_word_classes()
+
+
+def test_custom_embeddings(data_dir):
+
+    with open(data_dir + "/custom_embeddings/sample_text.txt") as filino:
+        training = filino.read().splitlines()
+
+    embeddings = np.load(data_dir + "/custom_embeddings/sample_embeddings.npy")
+
+    turkish_stopwords = nltk.corpus.stopwords.words('turkish')
+
+    kt = Kitty()
+    kt.train(training, custom_embeddings=embeddings, topics=5, epochs=1,
+             stopwords_list=turkish_stopwords, hidden_sizes=(200, 200))
+
+    kt.get_ldavis_data_format()
 
 
 def test_validation_set(data_dir):
