@@ -108,8 +108,30 @@ You can then apply the mapping as we did before and predict in different languag
 You should refer to `SBERT Pretrained Models <https://www.sbert.net/docs/pretrained_models.html>`_ to know
 if the languages you want to use are supported by SBERT.
 
-What Makes Kitty Different Other Topic Models?
-==============================================
+
+
+Using Custom Embeddings with Kitty
+===================================
+
+Do you have custom embeddings and want to use them for faster results? Just give them to Kitty!
+
+.. code-block:: python
+
+    from contextualized_topic_models.models.kitty_classifier import Kitty
+    import numpy as np
+
+    # read the training data
+    training_data = list(map(lambda x : x.strip(), open("train_data").readlines()))
+    customer_embeddings = np.load('customer_embeddings.npy')
+
+    kt = Kitty()
+    kt.train(training_data, custom_embeddings=customer_embeddings, stopwords_list=["stopwords"])
+
+    print(kt.pretty_print_word_classes())
+
+
+What Makes Kitty Different from Other Topic Models?
+====================================================
 
 Nothing! It just offers a user-friendly utility that makes use of the ZeroShotTM model in the backend.
 
