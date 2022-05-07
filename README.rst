@@ -85,7 +85,7 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
     :alt: Open In Colab
 
 .. |kitty_colab| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://colab.research.google.com/drive/1ZO6y-laPMnIT6boMwNXK4WNiyAUWUK4L?usp=sharing
+    :target: https://colab.research.google.com/drive/18mKzaKnmBlBOHb1oiS5MtaTSyq47ys2X?usp=sharing
     :alt: Open In Colab
 
 +--------------------------------------------------------------------------------+------------------+
