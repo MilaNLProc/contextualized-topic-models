@@ -29,16 +29,11 @@ def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200, ma
         model.max_seq_length = max_seq_length
 
     with open(text_file, encoding="utf-8") as filino:
-        train_text = list(map(lambda x: x, filino.readlines()))
+        texts = list(map(lambda x: x, filino.readlines()))
 
-    max_local_length = np.max([len(t.split()) for t in train_text])
+    check_max_local_length(max_seq_length, texts)
 
-    if max_local_length > max_seq_length:
-        warnings.simplefilter('always', DeprecationWarning)
-        warnings.warn(f"the longest document in your collection has {max_local_length} words, the model instead "
-                      f"truncates to {model.max_seq_length} tokens.")
-
-    return np.array(model.encode(train_text, show_progress_bar=True, batch_size=batch_size))
+    return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
 
 
 def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200, max_seq_length=None):
@@ -50,14 +45,17 @@ def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200, max_se
     if max_seq_length is not None:
         model.max_seq_length = max_seq_length
 
-    max_local_length = np.max([len(t.split()) for t in texts])
+    check_max_local_length(max_seq_length, texts)
 
+    return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
+
+
+def check_max_local_length(max_seq_length, texts):
+    max_local_length = np.max([len(t.split()) for t in texts])
     if max_local_length > max_seq_length:
         warnings.simplefilter('always', DeprecationWarning)
         warnings.warn(f"the longest document in your collection has {max_local_length} words, the model instead "
-                      f"truncates to {model.max_seq_length} tokens.")
-
-    return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
+                      f"truncates to {max_seq_length} tokens.")
 
 
 class TopicModelDataPreparation:
