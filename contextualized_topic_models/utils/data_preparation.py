@@ -29,16 +29,11 @@ def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200, ma
         model.max_seq_length = max_seq_length
 
     with open(text_file, encoding="utf-8") as filino:
-        train_text = list(map(lambda x: x, filino.readlines()))
+        texts = list(map(lambda x: x, filino.readlines()))
 
-    max_local_length = np.max([len(t.split()) for t in train_text])
+    check_max_local_length(max_seq_length, texts)
 
-    if max_local_length > max_seq_length:
-        warnings.simplefilter('always', DeprecationWarning)
-        warnings.warn(f"the longest document in your collection has {max_local_length} words, the model instead "
-                      f"truncates to {model.max_seq_length} tokens.")
-
-    return np.array(model.encode(train_text, show_progress_bar=True, batch_size=batch_size))
+    return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
 
 
 def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200, max_seq_length=None):
@@ -50,14 +45,17 @@ def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200, max_se
     if max_seq_length is not None:
         model.max_seq_length = max_seq_length
 
-    max_local_length = np.max([len(t.split()) for t in texts])
+    check_max_local_length(max_seq_length, texts)
 
+    return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
+
+
+def check_max_local_length(max_seq_length, texts):
+    max_local_length = np.max([len(t.split()) for t in texts])
     if max_local_length > max_seq_length:
         warnings.simplefilter('always', DeprecationWarning)
         warnings.warn(f"the longest document in your collection has {max_local_length} words, the model instead "
-                      f"truncates to {model.max_seq_length} tokens.")
-
-    return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
+                      f"truncates to {max_seq_length} tokens.")
 
 
 class TopicModelDataPreparation:
@@ -72,7 +70,8 @@ class TopicModelDataPreparation:
         self.max_seq_length = max_seq_length
 
     def load(self, contextualized_embeddings, bow_embeddings, id2token, labels=None):
-        return CTMDataset(contextualized_embeddings, bow_embeddings, id2token, labels)
+        return CTMDataset(
+            X_contextual=contextualized_embeddings, X_bow=bow_embeddings, idx2token=id2token, labels=labels)
 
     def fit(self, text_for_contextual, text_for_bow, labels=None, custom_embeddings=None):
         """
@@ -107,8 +106,8 @@ class TopicModelDataPreparation:
         # if the user is passing custom embeddings we don't need to create the embeddings using the model
 
         if custom_embeddings is None:
-            train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model,
-                                                                        max_seq_length=self.max_seq_length)
+            train_contextualized_embeddings = bert_embeddings_from_list(
+                text_for_contextual, sbert_model_to_load=self.contextualized_model, max_seq_length=self.max_seq_length)
         else:
             train_contextualized_embeddings = custom_embeddings
         self.vocab = self.vectorizer.get_feature_names()
@@ -119,8 +118,9 @@ class TopicModelDataPreparation:
             encoded_labels = self.label_encoder.fit_transform(np.array([labels]).reshape(-1, 1))
         else:
             encoded_labels = None
-
-        return CTMDataset(train_contextualized_embeddings, train_bow_embeddings, self.id2token, encoded_labels)
+        return CTMDataset(
+            X_contextual=train_contextualized_embeddings, X_bow=train_bow_embeddings,
+            idx2token=self.id2token, labels=encoded_labels)
 
     def transform(self, text_for_contextual, text_for_bow=None, custom_embeddings=None, labels=None):
         """
@@ -161,9 +161,8 @@ class TopicModelDataPreparation:
             test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
 
         if custom_embeddings is None:
-            test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual,
-                                                                       self.contextualized_model,
-                                                                       max_seq_length=self.max_seq_length)
+            test_contextualized_embeddings = bert_embeddings_from_list(
+                text_for_contextual, sbert_model_to_load=self.contextualized_model, max_seq_length=self.max_seq_length)
         else:
             test_contextualized_embeddings = custom_embeddings
 
@@ -172,4 +171,5 @@ class TopicModelDataPreparation:
         else:
             encoded_labels = None
 
-        return CTMDataset(test_contextualized_embeddings, test_bow_embeddings, self.id2token, encoded_labels)
+        return CTMDataset(X_contextual=test_contextualized_embeddings, X_bow=test_bow_embeddings,
+                          idx2token=self.id2token, labels=encoded_labels)
