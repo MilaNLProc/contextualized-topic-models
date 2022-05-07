@@ -361,17 +361,17 @@ Do you have custom embeddings and want to use them for faster results? Just give
 
 .. code-block:: python
 
-	from contextualized_topic_models.models.kitty_classifier import Kitty
+    from contextualized_topic_models.models.kitty_classifier import Kitty
     import numpy as np
 
-	# read the training data
-	training = list(map(lambda x : x.strip(), open("train_data").readlines()))
-	my_embeddings = np.load('my_embeddings.npy')
+    # read the training data
+    training = list(map(lambda x : x.strip(), open("train_data").readlines()))
+    my_embeddings = np.load('my_embeddings.npy')
 
-	kt = Kitty()
-	kt.train(training, custom_embeddings=my_embeddings stopwords_list=["stopwords"])
+    kt = Kitty()
+    kt.train(training, custom_embeddings=my_embeddings stopwords_list=["stopwords"])
 
-	print(kt.pretty_print_word_classes())
+    print(kt.pretty_print_word_classes())
 
 
 Development Team

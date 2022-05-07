@@ -30,11 +30,13 @@ class Kitty:
               topics=10,
               epochs=10,
               contextual_size=768,
+              hidden_sizes=(100, 100),
+              dropout=0.2,
               n_words=2000):
         """
         :param documents: list of documents to train the topic model
         :param embedding_model: the embedding model used to create the embeddings
-        :param embeddings: custom embeddings
+        :param custom_embeddings: custom embeddings you want to use
         :param stopwords_list: list of the stopwords to use
         :param topics: number of topics to use to fit the topic model
         :param epochs: number of epochs used to train the model
@@ -44,10 +46,10 @@ class Kitty:
         if embedding_model is None and custom_embeddings is None:
             raise Exception('Either embedding_model or custom_embeddings must be defined')
 
-        if custom_embeddings and type(custom_embeddings).__module__ != 'numpy':
-            raise TypeError("custom_embeddings must be a numpy.ndarray type object")
+        if custom_embeddings is not None:
+            if type(custom_embeddings).__module__ != 'numpy':
+                raise TypeError("custom_embeddings must be a numpy.ndarray type object")
 
-        if custom_embeddings:
             # in order to prevent an error caused from embedding size
             contextual_size = custom_embeddings.shape[1]
 
@@ -57,11 +59,11 @@ class Kitty:
         sp = WhiteSpacePreprocessingStopwords(documents, stopwords_list, n_words)
         preprocessed_documents, unpreprocessed_documents, vocab, retained_indices = sp.preprocess()
 
-        if self.show_warning and custom_embeddings and len(preprocessed_documents) != custom_embeddings:
+        if self.show_warning and custom_embeddings is not None and len(preprocessed_documents) != len(custom_embeddings):
             custom_embeddings = custom_embeddings[retained_indices]
             warnings.simplefilter('always', UserWarning)
             warnings.warn(f"The size of the embeddings ({custom_embeddings.shape[0]}) you provide doesn't match with "
-                         f"the preprocessed_documents ({len(preprocessed_documents)}) and reshaped accordingly."
+                         f"the preprocessed_documents ({len(preprocessed_documents)})."
                          "Please check the size of your embeddings if you are not sure.")
 
         self.qt = TopicModelDataPreparation(embedding_model, show_warning=self.show_warning)
@@ -72,6 +74,8 @@ class Kitty:
         self.ctm = ZeroShotTM(bow_size=len(self.qt.vocab),
                               contextual_size=contextual_size,
                               n_components=topics,
+                              hidden_sizes=hidden_sizes,
+                              dropout=dropout,
                               num_epochs=epochs)
 
         self.ctm.fit(training_dataset)  # run the model
@@ -127,6 +131,15 @@ class Kitty:
         """
         with open(path, "rb") as filino:
             return pickle.load(filino)
+
+    def get_ldavis_data_format(self, n_samples=20):
+        """
+        :param n_samples: number of samples to use
+        """
+        if self.ctm is None:
+            raise Exception("You must train the model before using this method.")
+
+        return self.ctm.get_ldavis_data_format(self.qt.vocab, self.ctm.train_data, n_samples)
 
     def widget_annotation(self):
         """

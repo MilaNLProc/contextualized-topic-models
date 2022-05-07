@@ -1,0 +1,3 @@
+Bu yazı dökümanı kullanıcı tarafından verilen embeddingleri test etmek amacıyla oluşturulmuştur.
+Custom embeddingler sayesinde kullanıcılar embeddinglerin tekrar oluşturulmasına gerek duymadan önceden oluşturdukları embeddingleri kullanabilirler.
+Custom Embeddingleri koda eklediği için Huzeyfe Ayaz'a teşekkürler.
