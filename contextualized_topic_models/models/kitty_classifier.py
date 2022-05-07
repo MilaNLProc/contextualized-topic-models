@@ -36,7 +36,7 @@ class Kitty:
         """
         :param documents: list of documents to train the topic model
         :param embedding_model: the embedding model used to create the embeddings
-        :param embeddings: custom embeddings
+        :param custom_embeddings: custom embeddings you want to use
         :param stopwords_list: list of the stopwords to use
         :param topics: number of topics to use to fit the topic model
         :param epochs: number of epochs used to train the model
@@ -49,7 +49,7 @@ class Kitty:
         if custom_embeddings is not None:
             if type(custom_embeddings).__module__ != 'numpy':
                 raise TypeError("custom_embeddings must be a numpy.ndarray type object")
-            
+
             # in order to prevent an error caused from embedding size
             contextual_size = custom_embeddings.shape[1]
 
@@ -63,7 +63,7 @@ class Kitty:
             custom_embeddings = custom_embeddings[retained_indices]
             warnings.simplefilter('always', UserWarning)
             warnings.warn(f"The size of the embeddings ({custom_embeddings.shape[0]}) you provide doesn't match with "
-                         f"the preprocessed_documents ({len(preprocessed_documents)}) and reshaped accordingly."
+                         f"the preprocessed_documents ({len(preprocessed_documents)})."
                          "Please check the size of your embeddings if you are not sure.")
 
         self.qt = TopicModelDataPreparation(embedding_model, show_warning=self.show_warning)
@@ -138,7 +138,7 @@ class Kitty:
         """
         if self.ctm is None:
             raise Exception("You must train the model before using this method.")
-        
+
         return self.ctm.get_ldavis_data_format(self.qt.vocab, self.ctm.train_data, n_samples)
 
     def widget_annotation(self):

@@ -17,34 +17,39 @@ def get_bag_of_words(data, min_length):
     return vect
 
 
-def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200):
+def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200, max_seq_length=128):
     """
-    Creates SBERT Embeddings from an input file
+    Creates SBERT Embeddings from an input file, assumes one document per line
     """
+
+
     model = SentenceTransformer(sbert_model_to_load)
+    model.max_seq_length = max_seq_length
     with open(text_file, encoding="utf-8") as filino:
         train_text = list(map(lambda x: x, filino.readlines()))
 
     return np.array(model.encode(train_text, show_progress_bar=True, batch_size=batch_size))
 
 
-def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200):
+def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200, max_seq_length=128):
     """
     Creates SBERT Embeddings from a list
     """
     model = SentenceTransformer(sbert_model_to_load)
+    model.max_seq_length = max_seq_length
     return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
 
 
 class TopicModelDataPreparation:
 
-    def __init__(self, contextualized_model=None, show_warning=True):
+    def __init__(self, contextualized_model=None, show_warning=True, max_seq_length=128):
         self.contextualized_model = contextualized_model
         self.vocab = []
         self.id2token = {}
         self.vectorizer = None
         self.label_encoder = None
         self.show_warning = show_warning
+        self.max_seq_length = max_seq_length
 
     def load(self, contextualized_embeddings, bow_embeddings, id2token, labels=None):
         return CTMDataset(contextualized_embeddings, bow_embeddings, id2token, labels)
@@ -78,8 +83,12 @@ class TopicModelDataPreparation:
         self.vectorizer = CountVectorizer()
 
         train_bow_embeddings = self.vectorizer.fit_transform(text_for_bow)
+
+        # if the user is passing custom embeddings we don't need to create the embeddings using the model
+
         if custom_embeddings is None:
-            train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
+            train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model,
+                                                                        self.max_seq_length)
         else:
             train_contextualized_embeddings = custom_embeddings
         self.vocab = self.vectorizer.get_feature_names()
@@ -131,7 +140,8 @@ class TopicModelDataPreparation:
             test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
 
         if custom_embeddings is None:
-            test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model)
+            test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model,
+                                                                       self.max_seq_length)
         else:
             test_contextualized_embeddings = custom_embeddings
 
