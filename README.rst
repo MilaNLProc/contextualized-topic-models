@@ -105,8 +105,7 @@ TL;DR
 + CTMs work better when the size of the bag of words **has been restricted to a number of terms** that does not go over **2000 elements**. This is because we have a neural model that reconstructs the input bag of word, Moreover, in CombinedTM we project the contextualized embedding to the vocab space, the bigger the vocab the more parameters you get, with the training being more difficult and prone to bad fitting. This is **NOT** a strict limit, however, consider preprocessing your dataset. We have a preprocessing_ pipeline that can help you in dealing with this.
 + Check the contextual model you are using, the **multilingual model one used on English data might not give results that are as good** as the pure English trained one.
 + **Preprocessing is key**. If you give a contextual model like BERT preprocessed text, it might be difficult to get out a good representation. What we usually do is use the preprocessed text for the bag of word creating and use the NOT preprocessed text for BERT embeddings. Our preprocessing_ class can take care of this for you.
-+ CTM uses `SBERT`_, you should check it out to better understand how we create embeddings. SBERT allows us to use any
-embedding model. You might want to check things like `max length <https://www.sbert.net/examples/applications/computing-embeddings/README.html#input-sequence-length>`_.
++ CTM uses `SBERT`_, you should check it out to better understand how we create embeddings. SBERT allows us to use any embedding model. You might want to check things like `max length <https://www.sbert.net/examples/applications/computing-embeddings/README.html#input-sequence-length>`_.
 
 Installing
 ~~~~~~~~~~
