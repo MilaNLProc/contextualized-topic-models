@@ -1,6 +1,9 @@
 name: Python package
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+    - '**.rst'
 
 jobs:
   build:
