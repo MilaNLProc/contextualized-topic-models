@@ -357,8 +357,7 @@ We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of
 
     documents = [line.strip() for line in open("unpreprocessed_documents.txt").readlines()]
     sp = WhiteSpacePreprocessing(documents, "english")
-    preprocessed_documents, unpreprocessed_documents, vocab = sp.preprocess()
-
+    preprocessed_documents, unpreprocessed_corpus, vocab, retained_indices = sp.preprocess()
 
 Using Custom Embeddings with Kitty
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
