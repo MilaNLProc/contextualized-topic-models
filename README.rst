@@ -356,7 +356,7 @@ We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of
 
 
 Using Custom Embeddings with Kitty
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Do you have custom embeddings and want to use them for faster results? Just give them to Kitty!
 
