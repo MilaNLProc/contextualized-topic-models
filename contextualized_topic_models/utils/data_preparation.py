@@ -17,26 +17,45 @@ def get_bag_of_words(data, min_length):
     return vect
 
 
-def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200, max_seq_length=128):
+def bert_embeddings_from_file(text_file, sbert_model_to_load, batch_size=200, max_seq_length=None):
     """
     Creates SBERT Embeddings from an input file, assumes one document per line
     """
 
-
     model = SentenceTransformer(sbert_model_to_load)
-    model.max_seq_length = max_seq_length
+
+    if max_seq_length is not None:
+        model.max_seq_length = max_seq_length
+
     with open(text_file, encoding="utf-8") as filino:
         train_text = list(map(lambda x: x, filino.readlines()))
+
+    max_local_length = np.max([len(t.split()) for t in train_text])
+
+    if max_local_length > max_seq_length:
+        warnings.simplefilter('always', DeprecationWarning)
+        warnings.warn(f"the longest document in your collection has {max_local_length} words, the model instead "
+                      f"truncates to {model.max_seq_length} tokens.")
 
     return np.array(model.encode(train_text, show_progress_bar=True, batch_size=batch_size))
 
 
-def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200, max_seq_length=128):
+def bert_embeddings_from_list(texts, sbert_model_to_load, batch_size=200, max_seq_length=None):
     """
     Creates SBERT Embeddings from a list
     """
     model = SentenceTransformer(sbert_model_to_load)
-    model.max_seq_length = max_seq_length
+
+    if max_seq_length is not None:
+        model.max_seq_length = max_seq_length
+
+    max_local_length = np.max([len(t.split()) for t in texts])
+
+    if max_local_length > max_seq_length:
+        warnings.simplefilter('always', DeprecationWarning)
+        warnings.warn(f"the longest document in your collection has {max_local_length} words, the model instead "
+                      f"truncates to {model.max_seq_length} tokens.")
+
     return np.array(model.encode(texts, show_progress_bar=True, batch_size=batch_size))
 
 
@@ -88,7 +107,7 @@ class TopicModelDataPreparation:
 
         if custom_embeddings is None:
             train_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model,
-                                                                        self.max_seq_length)
+                                                                        max_seq_length=self.max_seq_length)
         else:
             train_contextualized_embeddings = custom_embeddings
         self.vocab = self.vectorizer.get_feature_names()
@@ -140,8 +159,9 @@ class TopicModelDataPreparation:
             test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
 
         if custom_embeddings is None:
-            test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual, self.contextualized_model,
-                                                                       self.max_seq_length)
+            test_contextualized_embeddings = bert_embeddings_from_list(text_for_contextual,
+                                                                       self.contextualized_model,
+                                                                       max_seq_length=self.max_seq_length)
         else:
             test_contextualized_embeddings = custom_embeddings
 

@@ -6,6 +6,7 @@ Welcome to Contextualized Topic Models's documentation!
    :caption: Contents:
 
    introduction
+   data_preparation
    combined
    zeroshot
    kitty
