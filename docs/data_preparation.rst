@@ -48,6 +48,14 @@ To generate the embeddings you can simply run
 Using Custom Embeddings
 =======================
 
+Note that you can also use your own Custom Embeddings if you want. You just need to change
+the way you fit the TopicModelDataPreparation object. Setting custom_embeddings to an array will skip the
+use of the contextual model to generate the embeddings and the embedding you will pass will be used.
+
+.. code-block:: python
+
+        def fit(self, text_for_contextual, text_for_bow, labels=None, custom_embeddings=None):
+
 SBERT
 =====
 
