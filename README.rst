@@ -354,7 +354,7 @@ We generally use the unpreprocessed for BERT and the preprocessed for the Bag Of
     documents = [line.strip() for line in open("unpreprocessed_documents.txt").readlines()]
     sp = WhiteSpacePreprocessing(documents, "english")
     preprocessed_documents, unpreprocessed_documents, vocab = sp.preprocess()
-	
+
 
 Using Custom Embeddings with Kitty
 ~~~~~~~~~~~~~
@@ -367,14 +367,16 @@ Do you have custom embeddings and want to use them for faster results? Just give
     import numpy as np
 
     # read the training data
-    training = list(map(lambda x : x.strip(), open("train_data").readlines()))
-    my_embeddings = np.load('my_embeddings.npy')
+    training_data = list(map(lambda x : x.strip(), open("train_data").readlines()))
+    custom_embeddings = np.load('custom_embeddings.npy')
 
     kt = Kitty()
-    kt.train(training, custom_embeddings=my_embeddings stopwords_list=["stopwords"])
+    kt.train(training_data, custom_embeddings=custom_embeddings, stopwords_list=["stopwords"])
 
     print(kt.pretty_print_word_classes())
 
+
+Note: Custom embeddings must be numpy.arrays.
 
 Development Team
 ----------------

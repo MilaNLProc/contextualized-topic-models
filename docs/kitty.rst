@@ -130,6 +130,9 @@ Do you have custom embeddings and want to use them for faster results? Just give
     print(kt.pretty_print_word_classes())
 
 
+Note: Custom embeddings must be numpy.arrays.
+
+
 What Makes Kitty Different from Other Topic Models?
 ====================================================
 
