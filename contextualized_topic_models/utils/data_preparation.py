@@ -6,6 +6,7 @@ from contextualized_topic_models.datasets.dataset import CTMDataset
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import OneHotEncoder
 
+
 def get_bag_of_words(data, min_length):
     """
     Creates the bag of words
@@ -152,8 +153,9 @@ class TopicModelDataPreparation:
             # dummy matrix
             if self.show_warning:
                 warnings.simplefilter('always', DeprecationWarning)
-                warnings.warn("The method did not have in input the text_for_bow parameter. This IS EXPECTED if you "
-                          "are using ZeroShotTM in a cross-lingual setting")
+                warnings.warn(
+                    "The method did not have in input the text_for_bow parameter. This IS EXPECTED if you "
+                    "are using ZeroShotTM in a cross-lingual setting")
 
             # we just need an object that is matrix-like so that pytorch does not complain
             test_bow_embeddings = scipy.sparse.csr_matrix(np.zeros((len(text_for_contextual), 1)))
