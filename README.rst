@@ -91,9 +91,9 @@ You can look at our `medium`_ blog post or start from one of our Colab Tutorials
 +--------------------------------------------------------------------------------+------------------+
 | Name                                                                           | Link             |
 +================================================================================+==================+
-| Combined TM on Wikipedia Data (Preproc+Saving+Viz) (stable **v2.2.0**)         | |colab1_2|       |
+| Combined TM on Wikipedia Data (Preproc+Saving+Viz) (stable **v2.3.0**)         | |colab1_2|       |
 +--------------------------------------------------------------------------------+------------------+
-| Zero-Shot Cross-lingual Topic Modeling (Preproc+Viz) (stable **v2.2.0**)       | |colab2_2|       |
+| Zero-Shot Cross-lingual Topic Modeling (Preproc+Viz) (stable **v2.3.0**)       | |colab2_2|       |
 +--------------------------------------------------------------------------------+------------------+
 | Kitty: Human in the loop Classifier (High-level usage) (stable **v2.2.0**)     | |kitty_colab|    |
 +--------------------------------------------------------------------------------+------------------+
