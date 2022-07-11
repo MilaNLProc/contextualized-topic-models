@@ -215,7 +215,7 @@ n_components=50 specifies the number of topics.
     from contextualized_topic_models.utils.data_preparation import TopicModelDataPreparation
     from contextualized_topic_models.utils.data_preparation import bert_embeddings_from_file
 
-    qt = TopicModelDataPreparation("paraphrase-distilroberta-base-v2")
+    qt = TopicModelDataPreparation("all-mpnet-base-v2")
 
     training_dataset = qt.fit(text_for_contextual=list_of_unpreprocessed_documents, text_for_bow=list_of_preprocessed_documents)
 
