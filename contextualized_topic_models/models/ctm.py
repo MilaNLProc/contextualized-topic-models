@@ -259,7 +259,7 @@ class CTM:
             self.early_stopping = EarlyStopping(patience=patience, verbose=verbose, path=save_dir, delta=delta)
         train_loader = DataLoader(
             self.train_data, batch_size=self.batch_size, shuffle=True,
-            num_workers=self.num_data_loader_workers)
+            num_workers=self.num_data_loader_workers, drop_last=True)
 
         # init training variables
         train_loss = 0
@@ -278,7 +278,7 @@ class CTM:
 
             if self.validation_data is not None:
                 validation_loader = DataLoader(self.validation_data, batch_size=self.batch_size, shuffle=True,
-                                               num_workers=self.num_data_loader_workers)
+                                               num_workers=self.num_data_loader_workers, drop_last=True)
                 # train epoch
                 s = datetime.datetime.now()
                 val_samples_processed, val_loss = self._validation(validation_loader)
@@ -380,7 +380,7 @@ class CTM:
 
         loader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=False,
-            num_workers=self.num_data_loader_workers)
+            num_workers=self.num_data_loader_workers, drop_last=True)
         pbar = tqdm(n_samples, position=0, leave=True)
         final_thetas = []
         for sample_index in range(n_samples):
