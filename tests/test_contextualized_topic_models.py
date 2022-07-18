@@ -83,7 +83,7 @@ def test_validation_set(data_dir):
     training_dataset = tp.fit(data[:100], data[:100])
     validation_dataset = tp.transform(data[100:105], data[100:105])
 
-    ctm = CombinedTM(reduce_on_plateau=True, solver='sgd', bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5)
+    ctm = CombinedTM(reduce_on_plateau=True, solver='sgd',  batch_size=2, bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5)
     ctm.fit(training_dataset, validation_dataset=validation_dataset, patience=5, save_dir=data_dir+'test_checkpoint')
 
     assert os.path.exists(data_dir+"test_checkpoint")
@@ -97,7 +97,7 @@ def test_training_all_classes_ctm(data_dir):
     tp = TopicModelDataPreparation("distiluse-base-multilingual-cased")
 
     training_dataset = tp.fit(data, data)
-    ctm = ZeroShotTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5)
+    ctm = ZeroShotTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5, batch_size=2)
     ctm.fit(training_dataset)  # run the model
 
     testing_dataset = tp.transform(data)
@@ -109,13 +109,13 @@ def test_training_all_classes_ctm(data_dir):
     assert len(topics) == 5
 
     training_dataset = tp.fit(data, data)
-    ctm = CombinedTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5)
+    ctm = CombinedTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5, batch_size=2)
     ctm.fit(training_dataset)  # run the model
 
     topics = ctm.get_topic_lists(2)
     assert len(topics) == 5
 
-    ctm = CombinedTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5,loss_weights={"beta": 10})
+    ctm = CombinedTM(bow_size=len(tp.vocab), contextual_size=512, num_epochs=1, n_components=5,loss_weights={"beta": 10}, batch_size=2)
     ctm.fit(training_dataset)  # run the model
     assert ctm.weights == {"beta": 10}
 

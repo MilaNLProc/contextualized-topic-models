@@ -33,7 +33,8 @@ class Kitty:
               hidden_sizes=(100, 100),
               dropout=0.2,
               activation='softplus',
-              max_words=2000):
+              max_words=2000,
+              batch_size=2):
         """
         :param documents: list of documents to train the topic model
         :param embedding_model: the embedding model used to create the embeddings
@@ -46,6 +47,7 @@ class Kitty:
         :param hidden_sizes: tuple, length = n_layers, (default (100, 100))
         :param activation: string, 'softplus', 'relu', (default 'softplus')
         :param dropout: float, dropout to use (default 0.2)
+        :param batch_size: int, batch_size used to train the model
         """
         if embedding_model is None and custom_embeddings is None:
             raise Exception('Either embedding_model or custom_embeddings must be defined')
@@ -84,7 +86,8 @@ class Kitty:
                               hidden_sizes=hidden_sizes,
                               dropout=dropout,
                               activation=activation,
-                              num_epochs=epochs)
+                              num_epochs=epochs,
+                              batch_size=batch_size                              )
 
         self.ctm.fit(training_dataset)  # run the model
 
