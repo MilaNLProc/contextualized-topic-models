@@ -70,8 +70,6 @@ def test_custom_embeddings(data_dir):
     kt.train(training, custom_embeddings=embeddings, topics=5, epochs=1,
              stopwords_list=turkish_stopwords, hidden_sizes=(200, 200))
 
-    kt.get_ldavis_data_format()
-
 
 def test_validation_set(data_dir):
 

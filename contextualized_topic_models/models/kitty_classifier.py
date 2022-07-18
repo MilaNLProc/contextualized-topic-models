@@ -143,15 +143,6 @@ class Kitty:
         with open(path, "rb") as filino:
             return pickle.load(filino)
 
-    def get_ldavis_data_format(self, n_samples=20):
-        """
-        :param n_samples: number of samples to use
-        """
-        if self.ctm is None:
-            raise Exception("You must train the model before using this method.")
-
-        return self.ctm.get_ldavis_data_format(self.qt.vocab, self.ctm.train_data, n_samples)
-
     def widget_annotation(self):
         """
         Displays a widget that can be used to define the mapping between the topics and the labels
