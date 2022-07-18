@@ -124,7 +124,6 @@ class CTM:
 
         # training attributes
         self.model_dir = None
-        self.train_data = None
         self.nn_epoch = None
 
         # validation attributes
@@ -253,12 +252,13 @@ class CTM:
                 self.lr, self.momentum, self.reduce_on_plateau, save_dir))
 
         self.model_dir = save_dir
-        self.train_data = train_dataset
+        self.idx2token = self.train_data.idx2token
+        train_data = train_dataset
         self.validation_data = validation_dataset
         if self.validation_data is not None:
             self.early_stopping = EarlyStopping(patience=patience, verbose=verbose, path=save_dir, delta=delta)
         train_loader = DataLoader(
-            self.train_data, batch_size=self.batch_size, shuffle=True,
+            train_data, batch_size=self.batch_size, shuffle=True,
             num_workers=self.num_data_loader_workers, drop_last=True)
 
         # init training variables
@@ -292,7 +292,7 @@ class CTM:
 
                 pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tValid Loss: {}\tTime: {}".format(
                     epoch + 1, self.num_epochs, samples_processed,
-                    len(self.train_data) * self.num_epochs, train_loss, val_loss, e - s))
+                    len(train_data) * self.num_epochs, train_loss, val_loss, e - s))
 
                 self.early_stopping(val_loss, self)
                 if self.early_stopping.early_stop:
@@ -306,7 +306,7 @@ class CTM:
                     self.save(save_dir)
             pbar.set_description("Epoch: [{}/{}]\t Seen Samples: [{}/{}]\tTrain Loss: {}\tTime: {}".format(
                 epoch + 1, self.num_epochs, samples_processed,
-                len(self.train_data) * self.num_epochs, train_loss, e - s))
+                len(train_data) * self.num_epochs, train_loss, e - s))
 
         pbar.close()
         self.training_doc_topic_distributions = self.get_doc_topic_distribution(train_dataset, n_samples)
@@ -433,7 +433,7 @@ class CTM:
         topics = defaultdict(list)
         for i in range(self.n_components):
             _, idxs = torch.topk(component_dists[i], k)
-            component_words = [self.train_data.idx2token[idx]
+            component_words = [self.idx2token[idx]
                                for idx in idxs.cpu().numpy()]
             topics[i] = component_words
         return topics
@@ -450,7 +450,7 @@ class CTM:
         topics = []
         for i in range(self.n_components):
             _, idxs = torch.topk(component_dists[i], k)
-            component_words = [self.train_data.idx2token[idx]
+            component_words = [self.idx2token[idx]
                                for idx in idxs.cpu().numpy()]
             topics.append(component_words)
         return topics
@@ -535,7 +535,7 @@ class CTM:
             raise Exception('Topic id must be lower than the number of topics')
         else:
             wd = self.get_topic_word_distribution()
-            t = [(word, wd[topic][idx]) for idx, word in self.train_data.idx2token.items()]
+            t = [(word, wd[topic][idx]) for idx, word in self.idx2token.items()]
             t = sorted(t, key=lambda x: -x[1])
         return t
 
