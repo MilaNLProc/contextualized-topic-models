@@ -252,7 +252,7 @@ class CTM:
                 self.lr, self.momentum, self.reduce_on_plateau, save_dir))
 
         self.model_dir = save_dir
-        self.idx2token = self.train_data.idx2token
+        self.idx2token = train_dataset.idx2token
         train_data = train_dataset
         self.validation_data = validation_dataset
         if self.validation_data is not None:
