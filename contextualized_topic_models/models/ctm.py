@@ -380,7 +380,7 @@ class CTM:
 
         loader = DataLoader(
             dataset, batch_size=self.batch_size, shuffle=False,
-            num_workers=self.num_data_loader_workers, drop_last=True)
+            num_workers=self.num_data_loader_workers)
         pbar = tqdm(n_samples, position=0, leave=True)
         final_thetas = []
         for sample_index in range(n_samples):
