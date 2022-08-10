@@ -107,10 +107,10 @@ class CombinedInferenceNetwork(nn.Module):
         elif activation == 'relu':
             self.activation = nn.ReLU()
 
+        self.adapt_vocab = nn.Linear(input_size, 500)
+        self.adapt_bert = nn.Linear(bert_size, 500)
 
-        self.adapt_bert = nn.Linear(bert_size, input_size)
-        #self.bert_layer = nn.Linear(hidden_sizes[0], hidden_sizes[0])
-        self.input_layer = nn.Linear(input_size + input_size + label_size, hidden_sizes[0])
+        self.input_layer = nn.Linear(500 + 500 + label_size, hidden_sizes[0])
 
         self.hiddens = nn.Sequential(OrderedDict([
             ('l_{}'.format(i), nn.Sequential(nn.Linear(h_in, h_out), self.activation))
@@ -127,6 +127,7 @@ class CombinedInferenceNetwork(nn.Module):
     def forward(self, x, x_bert, labels=None):
         """Forward pass."""
         x_bert = self.adapt_bert(x_bert)
+        x = self.adapt_vocab(x)
 
         x = torch.cat((x, x_bert), 1)
 

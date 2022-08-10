@@ -160,8 +160,6 @@ class CTM:
         # Reconstruction term
         RL = -torch.sum(inputs * torch.log(word_dists + 1e-10), dim=1)
 
-        #loss = self.weights["beta"]*KL + RL
-
         return KL, RL
 
     def _train_epoch(self, loader):
@@ -257,6 +255,7 @@ class CTM:
         self.validation_data = validation_dataset
         if self.validation_data is not None:
             self.early_stopping = EarlyStopping(patience=patience, verbose=verbose, path=save_dir, delta=delta)
+
         train_loader = DataLoader(
             train_data, batch_size=self.batch_size, shuffle=True,
             num_workers=self.num_data_loader_workers, drop_last=True)

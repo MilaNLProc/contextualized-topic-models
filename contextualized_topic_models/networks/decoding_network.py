@@ -122,8 +122,7 @@ class DecoderNetwork(nn.Module):
         else:
             raise NotImplementedError("Model Type Not Implemented")
 
-        # classify labels
-
+        # classify labels (only needed if there are labels in training)
         estimated_labels = None
 
         if labels is not None:
