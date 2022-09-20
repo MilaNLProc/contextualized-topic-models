@@ -211,8 +211,6 @@ class CTM:
             # compute train loss
             samples_processed += X_bow.size()[0]
 
-
-
             train_loss += loss.item()
 
         train_loss /= samples_processed
