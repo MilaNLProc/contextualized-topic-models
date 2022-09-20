@@ -163,7 +163,7 @@ class CoherenceWordEmbeddings(Measure):
                 if len(topic) > 0:
                     local_simi = []
                     for word1, word2 in itertools.combinations(topic[0:topk], 2):
-                        if word1 in self.wv.vocab and word2 in self.wv.vocab:
+                        if word1 in self.wv.index_to_key and word2 in self.wv.index_to_key:
                             local_simi.append(self.wv.similarity(word1, word2))
                     arrays.append(np.mean(local_simi))
             return np.mean(arrays)
@@ -295,7 +295,7 @@ class CentroidDistance(Measure):
     def get_centroid(self, word_list):
         vector_list = []
         for word in word_list:
-            if word in self.wv.vocab:
+            if word in self.wv.index_to_key:
                 vector_list.append(self.wv.get_vector(word))
         vec = sum(vector_list)
         return vec / np.linalg.norm(vec)
