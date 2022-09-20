@@ -45,7 +45,7 @@ class CTM:
     def __init__(self, bow_size, contextual_size, inference_type="combined", n_components=10, model_type='prodLDA',
                  hidden_sizes=(100, 100), activation='softplus', dropout=0.2, learn_priors=True, batch_size=64,
                  lr=2e-3, momentum=0.99, solver='adam', num_epochs=100, reduce_on_plateau=False,
-                 num_data_loader_workers=mp.cpu_count(), label_size=0, loss_weights=None):
+                 num_data_loader_workers=mp.cpu_count(), label_size=0, loss_weights=None, constraints=None):
 
         self.device = (
                 torch.device("cuda")
@@ -95,6 +95,7 @@ class CTM:
         self.reduce_on_plateau = reduce_on_plateau
         self.num_data_loader_workers = num_data_loader_workers
         self.training_doc_topic_distributions = None
+        self.constraints = constraints
 
         if loss_weights:
             self.weights = loss_weights
@@ -209,6 +210,9 @@ class CTM:
 
             # compute train loss
             samples_processed += X_bow.size()[0]
+
+
+
             train_loss += loss.item()
 
         train_loss /= samples_processed
@@ -250,7 +254,10 @@ class CTM:
                 self.lr, self.momentum, self.reduce_on_plateau, save_dir))
 
         self.model_dir = save_dir
+
         self.idx2token = train_dataset.idx2token
+        self.token2id = {v:k for k, v in self.idx2token}
+
         train_data = train_dataset
         self.validation_data = validation_dataset
         if self.validation_data is not None:
