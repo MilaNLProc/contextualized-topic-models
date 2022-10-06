@@ -41,7 +41,8 @@ class TopicDiversity(Measure):
 class Coherence(abc.ABC):
     """
     :param topics: a list of lists of the top-k words
-    :param texts: (list of lists of strings) represents the corpus on which the empirical frequencies of words are computed
+    :param texts: (list of lists of strings) represents the corpus on which
+     the empirical frequencies of words are computed
     """
     def __init__(self, topics, texts):
         self.topics = topics
@@ -60,18 +61,22 @@ class CoherenceNPMI(Coherence):
     def score(self, topk=10, per_topic=False):
         """
         :param topk: how many most likely words to consider in the evaluation
-        :param per_topic: if True, returns the coherence value for each topic (default: False)
+        :param per_topic: if True, returns the coherence value for each topic
+         (default: False)
         :return: NPMI coherence
         """
         if topk > len(self.topics[0]):
             raise Exception('Words in topics are less than topk')
         else:
-            npmi = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
-                                  coherence='c_npmi', topn=topk)
+            npmi = CoherenceModel(
+                topics=self.topics, texts=self.texts,
+                dictionary=self.dictionary,
+                coherence='c_npmi', topn=topk)
             if per_topic:
                 return npmi.get_coherence_per_topic()
             else:
                 return npmi.get_coherence()
+
 
 class CoherenceUMASS(Coherence):
     def __init__(self, topics, texts):
@@ -80,18 +85,22 @@ class CoherenceUMASS(Coherence):
     def score(self, topk=10, per_topic=False):
         """
         :param topk: how many most likely words to consider in the evaluation
-        :param per_topic: if True, returns the coherence value for each topic (default: False)
+        :param per_topic: if True, returns the coherence value for each topic
+         (default: False)
         :return: UMass coherence
         """
         if topk > len(self.topics[0]):
             raise Exception('Words in topics are less than topk')
         else:
-            umass = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
-                                   coherence='u_mass', topn=topk)
+            umass = CoherenceModel(
+                topics=self.topics, texts=self.texts,
+                dictionary=self.dictionary,
+                coherence='u_mass', topn=topk)
             if per_topic:
                 return umass.get_coherence_per_topic()
             else:
                 return umass.get_coherence()
+
 
 class CoherenceUCI(Coherence):
     def __init__(self, topics, texts):
@@ -100,18 +109,22 @@ class CoherenceUCI(Coherence):
     def score(self, topk=10, per_topic=False):
         """
         :param topk: how many most likely words to consider in the evaluation
-        :param per_topic: if True, returns the coherence value for each topic (default: False)
+        :param per_topic: if True, returns the coherence value for each topic
+         (default: False)
         :return: UCI coherence
         """
         if topk > len(self.topics[0]):
             raise Exception('Words in topics are less than topk')
         else:
-            uci = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
-                                 coherence='c_uci', topn=topk)
+            uci = CoherenceModel(
+                topics=self.topics, texts=self.texts,
+                dictionary=self.dictionary,
+                coherence='c_uci', topn=topk)
             if per_topic:
                 return uci.get_coherence_per_topic()
             else:
                 return uci.get_coherence()
+
 
 class CoherenceCV(Coherence):
     def __init__(self, topics, texts):
@@ -120,14 +133,17 @@ class CoherenceCV(Coherence):
     def score(self, topk=10, per_topic=False):
         """
         :param topk: how many most likely words to consider in the evaluation
-        :param per_topic: if True, returns the coherence value for each topic (default: False)
+        :param per_topic: if True, returns the coherence value for each topic
+        (default: False)
         :return: C_V coherence
         """
         if topk > len(self.topics[0]):
             raise Exception('Words in topics are less than topk')
         else:
-            cv = CoherenceModel(topics=self.topics, texts=self.texts, dictionary=self.dictionary,
-                                coherence='c_v', topn=topk)
+            cv = CoherenceModel(
+                topics=self.topics, texts=self.texts,
+                dictionary=self.dictionary,
+                coherence='c_v', topn=topk)
             if per_topic:
                 return cv.get_coherence_per_topic()
             else:
@@ -138,8 +154,9 @@ class CoherenceWordEmbeddings(Measure):
     def __init__(self, topics, word2vec_path=None, binary=False):
         """
         :param topics: a list of lists of the top-n most likely words
-        :param word2vec_path: if word2vec_file is specified, it retrieves the word embeddings file (in word2vec format) to
-         compute similarities between words, otherwise 'word2vec-google-news-300' is downloaded
+        :param word2vec_path: if word2vec_file is specified, it retrieves the
+         word embeddings file (in word2vec format) to compute similarities
+         between words, otherwise 'word2vec-google-news-300' is downloaded
         :param binary: if the word2vec file is binary
         """
         super().__init__()
@@ -148,9 +165,10 @@ class CoherenceWordEmbeddings(Measure):
         if word2vec_path is None:
             self.wv = api.load('word2vec-google-news-300')
         else:
-            self.wv = KeyedVectors.load_word2vec_format(word2vec_path, binary=binary)
+            self.wv = KeyedVectors.load_word2vec_format(
+                word2vec_path, binary=binary)
 
-    def score(self, topk=10, binary= False):
+    def score(self, topk=10):
         """
         :param topk: how many most likely words to consider in the evaluation
         :return: topic coherence computed on the word embeddings similarities
@@ -162,8 +180,10 @@ class CoherenceWordEmbeddings(Measure):
             for index, topic in enumerate(self.topics):
                 if len(topic) > 0:
                     local_simi = []
-                    for word1, word2 in itertools.combinations(topic[0:topk], 2):
-                        if word1 in self.wv.index_to_key and word2 in self.wv.index_to_key:
+                    for word1, word2 in itertools.combinations(
+                            topic[:topk], 2):
+                        if (word1 in self.wv.index_to_key
+                                and word2 in self.wv.index_to_key):
                             local_simi.append(self.wv.similarity(word1, word2))
                     arrays.append(np.mean(local_simi))
             return np.mean(arrays)
@@ -177,10 +197,11 @@ class InvertedRBO(Measure):
         super().__init__()
         self.topics = topics
 
-    def score(self, topk = 10, weight=0.9):
+    def score(self, topk=10, weight=0.9):
         """
-        :param weight: p (float), default 1.0: Weight of each agreement at depth d:
-        p**(d-1). When set to 1.0, there is no weight, the rbo returns to average overlap.
+        :param weight: p (float), default 1.0: Weight of each agreement at
+         depth d: p**(d-1). When set to 1.0, there is no weight, the rbo
+         returns to average overlap.
         :return: rank_biased_overlap over the topics
         """
         if topk > len(self.topics[0]):
@@ -194,23 +215,30 @@ class InvertedRBO(Measure):
 
 
 class Matches(Measure):
-    def __init__(self, doc_distribution_original_language, doc_distribution_unseen_language):
+    def __init__(
+        self, doc_distribution_original_language,
+            doc_distribution_unseen_language):
         """
-         :param doc_distribution_original_language: numpy array of the topical distribution of
-         the documents in the original language (dim: num docs x num topics)
-         :param doc_distribution_unseen_language: numpy array of the topical distribution of the
-          documents in an unseen language (dim: num docs x num topics)
+         :param doc_distribution_original_language: numpy array of the topical
+         distribution of the documents in the original language
+         (dim: num docs x num topics)
+         :param doc_distribution_unseen_language: numpy array of the topical
+          distribution of the documents in an unseen language
+          (dim: num docs x num topics)
          """
         super().__init__()
         self.orig_lang_docs = doc_distribution_original_language
         self.unseen_lang_docs = doc_distribution_unseen_language
         if len(self.orig_lang_docs) != len(self.unseen_lang_docs):
-            raise Exception('Distributions of the comparable documents must have the same length')
+            raise Exception(
+                'Distributions of the comparable documents must'
+                ' have the same length')
 
     def score(self):
         """
-        :return: proportion of matches between the predicted topic in the original language and
-        the predicted topic in the unseen language of the document distributions
+        :return: proportion of matches between the predicted topic in the
+         original language and the predicted topic in the unseen language of
+         the document distributions
         """
         matches = 0
         for d1, d2 in zip(self.orig_lang_docs, self.unseen_lang_docs):
@@ -220,18 +248,24 @@ class Matches(Measure):
 
 
 class KLDivergence(Measure):
-    def __init__(self, doc_distribution_original_language, doc_distribution_unseen_language):
+    def __init__(
+        self, doc_distribution_original_language,
+            doc_distribution_unseen_language):
         """
-         :param doc_distribution_original_language: numpy array of the topical distribution of
-         the documents in the original language (dim: num docs x num topics)
-         :param doc_distribution_unseen_language: numpy array of the topical distribution of the
-          documents in an unseen language (dim: num docs x num topics)
+         :param doc_distribution_original_language: numpy array of the topical
+         distribution of the documents in the original language
+         (dim: num docs x num topics)
+         :param doc_distribution_unseen_language: numpy array of the topical
+          distribution of the documents in an unseen language
+          (dim: num docs x num topics)
          """
         super().__init__()
         self.orig_lang_docs = doc_distribution_original_language
         self.unseen_lang_docs = doc_distribution_unseen_language
         if len(self.orig_lang_docs) != len(self.unseen_lang_docs):
-            raise Exception('Distributions of the comparable documents must have the same length')
+            raise Exception(
+                'Distributions of the comparable documents must'
+                ' have the same length')
 
     def score(self):
         """
@@ -250,16 +284,21 @@ def kl_div(a, b):
 
 
 class CentroidDistance(Measure):
-    def __init__(self, doc_distribution_original_language, doc_distribution_unseen_language, topics, word2vec_path=None,
-                 binary=True, topk=10):
+    def __init__(
+        self, doc_distribution_original_language,
+        doc_distribution_unseen_language, topics, word2vec_path=None,
+            binary=True, topk=10):
         """
-         :param doc_distribution_original_language: numpy array of the topical distribution of the
-         documents in the original language (dim: num docs x num topics)
-         :param doc_distribution_unseen_language: numpy array of the topical distribution of the
-         documents in an unseen language (dim: num docs x num topics)
+         :param doc_distribution_original_language: numpy array of the topical
+         distribution of the documents in the original language
+         (dim: num docs x num topics)
+         :param doc_distribution_unseen_language: numpy array of the topical
+         distribution of the documents in an unseen language
+         (dim: num docs x num topics)
          :param topics: a list of lists of the top-n most likely words
-         :param word2vec_path: if word2vec_file is specified, it retrieves the word embeddings
-         file (in word2vec format) to compute similarities between words, otherwise
+         :param word2vec_path: if word2vec_file is specified, it retrieves the
+         word embeddings file (in word2vec format) to compute similarities
+         between words, otherwise
          'word2vec-google-news-300' is downloaded
          :param binary: if the word2vec file is binary
          :param topk: max number of topical words
@@ -269,17 +308,20 @@ class CentroidDistance(Measure):
         self.orig_lang_docs = doc_distribution_original_language
         self.unseen_lang_docs = doc_distribution_unseen_language
         if len(self.orig_lang_docs) != len(self.unseen_lang_docs):
-            raise Exception('Distributions of the comparable documents must have the same length')
+            raise Exception(
+                'Distributions of the comparable documents must'
+                ' have the same length')
 
         if word2vec_path is None:
             self.wv = api.load('word2vec-google-news-300')
         else:
-            self.wv = KeyedVectors.load_word2vec_format(word2vec_path, binary=binary)
+            self.wv = KeyedVectors.load_word2vec_format(
+                word2vec_path, binary=binary)
 
     def score(self):
         """
-        :return: average centroid distance between the words of the most likely topic of the
-        document distributions
+        :return: average centroid distance between the words of the most
+         likely topic of the document distributions
         """
         cd = 0
         for d1, d2 in zip(self.orig_lang_docs, self.unseen_lang_docs):
@@ -299,4 +341,3 @@ class CentroidDistance(Measure):
                 vector_list.append(self.wv.get_vector(word))
         vec = sum(vector_list)
         return vec / np.linalg.norm(vec)
-
