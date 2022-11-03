@@ -22,6 +22,7 @@ class Kitty:
         self.topics_num = 0
         self.widget_holder = None
         self.show_warning = show_warning
+        self.training_dataset = None
 
     def train(self, documents,
               embedding_model=None,
@@ -76,7 +77,7 @@ class Kitty:
 
         self.qt = TopicModelDataPreparation(
             embedding_model, show_warning=self.show_warning)
-        training_dataset = self.qt.fit(text_for_contextual=unpreprocessed_documents,
+        self.training_dataset = self.qt.fit(text_for_contextual=unpreprocessed_documents,
                                        text_for_bow=preprocessed_documents,
                                        custom_embeddings=custom_embeddings)
 
@@ -87,9 +88,9 @@ class Kitty:
                               dropout=dropout,
                               activation=activation,
                               num_epochs=epochs,
-                              batch_size=batch_size                              )
+                              batch_size=batch_size)
 
-        self.ctm.fit(training_dataset)  # run the model
+        self.ctm.fit(self.training_dataset)  # run the model
 
     def get_word_classes(self, number_of_words=5) -> list:
         return self.ctm.get_topic_lists(number_of_words)
