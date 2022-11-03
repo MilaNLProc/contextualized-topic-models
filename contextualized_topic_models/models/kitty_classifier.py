@@ -35,7 +35,8 @@ class Kitty:
               dropout=0.2,
               activation='softplus',
               max_words=2000,
-              batch_size=2):
+              batch_size=2,
+              return_training_dataset=False):
         """
         :param documents: list of documents to train the topic model
         :param embedding_model: the embedding model used to create the embeddings
@@ -77,7 +78,7 @@ class Kitty:
 
         self.qt = TopicModelDataPreparation(
             embedding_model, show_warning=self.show_warning)
-        self.training_dataset = self.qt.fit(text_for_contextual=unpreprocessed_documents,
+        training_dataset = self.qt.fit(text_for_contextual=unpreprocessed_documents,
                                        text_for_bow=preprocessed_documents,
                                        custom_embeddings=custom_embeddings)
 
@@ -90,7 +91,10 @@ class Kitty:
                               num_epochs=epochs,
                               batch_size=batch_size)
 
-        self.ctm.fit(self.training_dataset)  # run the model
+        self.ctm.fit(training_dataset)  # run the model
+
+        if return_training_dataset:
+            return training_dataset
 
     def get_word_classes(self, number_of_words=5) -> list:
         return self.ctm.get_topic_lists(number_of_words)
