@@ -40,7 +40,7 @@ class WhiteSpacePreprocessing():
 
         vectorizer = CountVectorizer(max_features=self.vocabulary_size)
         vectorizer.fit_transform(preprocessed_docs_tmp)
-        temp_vocabulary = set(vectorizer.get_feature_names())
+        temp_vocabulary = set(vectorizer.get_feature_names_out())
 
         preprocessed_docs_tmp = [' '.join([w for w in doc.split() if w in temp_vocabulary])
                                  for doc in preprocessed_docs_tmp]
@@ -112,7 +112,7 @@ class WhiteSpacePreprocessingStopwords():
 
         vectorizer = CountVectorizer(max_features=self.vocabulary_size, max_df=self.max_df)
         vectorizer.fit_transform(preprocessed_docs_tmp)
-        temp_vocabulary = set(vectorizer.get_feature_names())
+        temp_vocabulary = set(vectorizer.get_feature_names_out())
 
         preprocessed_docs_tmp = [' '.join([w for w in doc.split() if w in temp_vocabulary])
                                  for doc in preprocessed_docs_tmp]

@@ -29,7 +29,7 @@ class CTMDataset(Dataset):
 
     def __getitem__(self, i):
         """Return sample from dataset at index i."""
-        if type(self.X_bow[i]) == scipy.sparse.csr.csr_matrix:
+        if type(self.X_bow[i]) == scipy.sparse.csr_matrix:
             X_bow = torch.FloatTensor(self.X_bow[i].todense())
             X_contextual = torch.FloatTensor(self.X_contextual[i])
         else:
@@ -40,7 +40,7 @@ class CTMDataset(Dataset):
 
         if self.labels is not None:
             labels = self.labels[i]
-            if type(labels) == scipy.sparse.csr.csr_matrix:
+            if type(labels) == scipy.sparse.csr_matrix:
                 return_dict["labels"] = torch.FloatTensor(labels.todense())
             else:
                 return_dict["labels"] = torch.FloatTensor(labels)
