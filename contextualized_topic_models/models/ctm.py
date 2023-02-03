@@ -294,7 +294,7 @@ class CTM:
         :param patience: How long to wait after last time validation loss improved. Default: 5
         :param delta: Minimum change in the monitored quantity to qualify as an improvement. Default: 0
         :param n_samples: int, number of samples of the document topic distribution (default: 20)
-
+        :param do_train_predictions: bool, whether to compute train predictions after fitting (default: True)
         """
         # Print settings to output file
         if verbose:
@@ -418,7 +418,7 @@ class CTM:
             )
 
         pbar.close()
-        if do_train_predictions:
+        if do_train_predictions
             self.training_doc_topic_distributions = self.get_doc_topic_distribution(
                 train_dataset, n_samples
             )
