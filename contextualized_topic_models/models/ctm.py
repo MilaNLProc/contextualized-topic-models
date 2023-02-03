@@ -554,7 +554,7 @@ class CTM:
             num_workers=self.num_data_loader_workers,
         )
         with torch.no_grad():
-            for batch_samples in tqdm(loader, position=0, leave=True):
+            for batch_samples in tqdm(loader):
                 # batch_size x vocab_size
                 X_bow = batch_samples["X_bow"]
                 X_bow = X_bow.reshape(X_bow.shape[0], -1)
