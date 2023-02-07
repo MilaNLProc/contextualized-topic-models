@@ -418,7 +418,7 @@ class CTM:
             )
 
         pbar.close()
-        if do_train_predictions
+        if do_train_predictions:
             self.training_doc_topic_distributions = self.get_doc_topic_distribution(
                 train_dataset, n_samples
             )
