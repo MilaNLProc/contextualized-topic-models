@@ -532,8 +532,8 @@ class CTM:
 
                 # forward pass
                 self.model.zero_grad()
-                mu, log_sig = self.model.get_posterior(X_bow, X_contextual, labels)
-                thetas = self.model.sample(mu, log_sig, n_samples).cpu().numpy()
+                mu, log_var = self.model.get_posterior(X_bow, X_contextual, labels)
+                thetas = self.model.sample(mu, log_var, n_samples).cpu().numpy()
                 final_thetas.append(thetas)
         return np.concatenate(final_thetas, axis=0)
 
@@ -573,8 +573,8 @@ class CTM:
 
                 # forward pass
                 self.model.zero_grad()
-                mu, log_sig = self.model.get_posterior(X_bow, X_contextual, labels)
-                thetas = self.model.sample(mu, log_sig, n_samples).cpu().numpy()
+                mu, log_var = self.model.get_posterior(X_bow, X_contextual, labels)
+                thetas = self.model.sample(mu, log_var, n_samples).cpu().numpy()
                 for theta in thetas:
                     yield theta
 
