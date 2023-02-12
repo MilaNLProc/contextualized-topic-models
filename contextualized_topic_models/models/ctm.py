@@ -344,7 +344,6 @@ class CTM:
         )
 
         # init training variables
-        train_loss = 0
         samples_processed = 0
 
         # train loop
@@ -741,7 +740,7 @@ class CTM:
 
     def get_predicted_topics(self, dataset, n_samples):
         """
-        Return the a list containing the predicted topic for each document (length: number of documents).
+        Return the list containing the predicted topic for each document (length: number of documents).
 
         :param dataset: CTMDataset to infer topics
         :param n_samples: number of sampling of theta
