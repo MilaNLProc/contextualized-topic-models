@@ -182,15 +182,6 @@ class DecoderNetwork(nn.Module):
 
             return theta
 
-    def get_sample(self, posterior_mu, posterior_log_sigma):
-        with torch.no_grad():
-            # generate samples from theta
-            theta = F.softmax(
-                self.reparameterize(posterior_mu, posterior_log_sigma), dim=1
-            )
-
-            return theta
-
     def sample(self, posterior_mu, posterior_log_sigma, n_samples: int = 20):
         with torch.no_grad():
             posterior_mu = posterior_mu.unsqueeze(0).repeat(n_samples, 1, 1)
