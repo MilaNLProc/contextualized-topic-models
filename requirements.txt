@@ -1,7 +1,7 @@
 numpy>=1.19.1
 torchvision>=0.7.0
 torch>=1.6.0
-gensim>=4.0.0
+gensim==4.2.0
 sentence-transformers>=2.1.1
 wordcloud>=1.8.1
 matplotlib>=3.1.3
