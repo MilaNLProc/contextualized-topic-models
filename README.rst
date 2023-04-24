@@ -52,7 +52,7 @@ support topic modeling. See the papers for details:
 Topic Modeling with Contextualized Embeddings
 ---------------------------------------------
 
-Our new topic modeling family supports many different languages (i.e., the one supported by HuggingFace models) and comes in two versions: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with muliglingual embeddings, inherits the property of being a multilingual topic model!
+Our new topic modeling family supports many different languages (i.e., the one supported by HuggingFace models) and comes in two versions: **CombinedTM** combines contextual embeddings with the good old bag of words to make more coherent topics; **ZeroShotTM** is the perfect topic model for task in which you might have missing words in the test data and also, if trained with multilingual embeddings, inherits the property of being a multilingual topic model!
 
 The big advantage is that you can use different embeddings for CTMs. Thus, when a new
 embedding method comes out you can use it in the code and improve your results. We are not limited
