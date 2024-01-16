@@ -1,5 +1,5 @@
 numpy>=1.26.1
-torchvision>=0.7.0
+torchvision
 torch>=1.6.0
 gensim==4.2.0
 sentence-transformers>=2.1.1
