@@ -49,8 +49,8 @@ class ContextualInferenceNetwork(nn.Module):
         self.f_mu = nn.Linear(hidden_sizes[-1], output_size)
         self.f_mu_batchnorm = nn.BatchNorm1d(output_size, affine=False)
 
-        self.f_sigma = nn.Linear(hidden_sizes[-1], output_size)
-        self.f_sigma_batchnorm = nn.BatchNorm1d(output_size, affine=False)
+        self.f_variance = nn.Linear(hidden_sizes[-1], output_size)
+        self.f_variance_batchnorm = nn.BatchNorm1d(output_size, affine=False)
 
         self.dropout_enc = nn.Dropout(p=self.dropout)
 
@@ -67,9 +67,9 @@ class ContextualInferenceNetwork(nn.Module):
         x = self.hiddens(x)
         x = self.dropout_enc(x)
         mu = self.f_mu_batchnorm(self.f_mu(x))
-        log_sigma = self.f_sigma_batchnorm(self.f_sigma(x))
+        log_variance = self.f_variance_batchnorm(self.f_variance(x))
 
-        return mu, log_sigma
+        return mu, log_variance
 
 
 class CombinedInferenceNetwork(nn.Module):
@@ -119,8 +119,8 @@ class CombinedInferenceNetwork(nn.Module):
         self.f_mu = nn.Linear(hidden_sizes[-1], output_size)
         self.f_mu_batchnorm = nn.BatchNorm1d(output_size, affine=False)
 
-        self.f_sigma = nn.Linear(hidden_sizes[-1], output_size)
-        self.f_sigma_batchnorm = nn.BatchNorm1d(output_size, affine=False)
+        self.f_variance = nn.Linear(hidden_sizes[-1], output_size)
+        self.f_variance_batchnorm = nn.BatchNorm1d(output_size, affine=False)
 
         self.dropout_enc = nn.Dropout(p=self.dropout)
 
@@ -139,6 +139,6 @@ class CombinedInferenceNetwork(nn.Module):
         x = self.hiddens(x)
         x = self.dropout_enc(x)
         mu = self.f_mu_batchnorm(self.f_mu(x))
-        log_sigma = self.f_sigma_batchnorm(self.f_sigma(x))
+        log_variance = self.f_variance_batchnorm(self.f_variance(x))
 
-        return mu, log_sigma
+        return mu, log_variance
