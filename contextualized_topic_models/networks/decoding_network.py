@@ -121,11 +121,11 @@ class DecoderNetwork(nn.Module):
     def forward(self, x, x_bert, labels=None):
         """Forward pass."""
         # batch_size x n_components
-        posterior_mu, posterior_log_sigma = self.inf_net(x, x_bert, labels)
-        posterior_sigma = torch.exp(posterior_log_sigma)
+        posterior_mu, posterior_log_variance = self.inf_net(x, x_bert, labels)
+        posterior_variance = torch.exp(posterior_log_variance)
 
         # generate samples from theta
-        theta = F.softmax(self.reparameterize(posterior_mu, posterior_log_sigma), dim=1)
+        theta = F.softmax(self.reparameterize(posterior_mu, posterior_log_variance), dim=1)
         theta = self.drop_theta(theta)
 
         # prodLDA vs LDA
@@ -156,8 +156,8 @@ class DecoderNetwork(nn.Module):
             self.prior_mean,
             self.prior_variance,
             posterior_mu,
-            posterior_sigma,
-            posterior_log_sigma,
+            posterior_variance,
+            posterior_log_variance,
             word_dist,
             estimated_labels,
         )
@@ -165,30 +165,30 @@ class DecoderNetwork(nn.Module):
     def get_posterior(self, x, x_bert, labels=None):
         """Get posterior distribution."""
         # batch_size x n_components
-        posterior_mu, posterior_log_sigma = self.inf_net(x, x_bert, labels)
+        posterior_mu, posterior_log_variance = self.inf_net(x, x_bert, labels)
 
-        return posterior_mu, posterior_log_sigma
+        return posterior_mu, posterior_log_variance
 
     def get_theta(self, x, x_bert, labels=None):
         with torch.no_grad():
             # batch_size x n_components
-            posterior_mu, posterior_log_sigma = self.get_posterior(x, x_bert, labels)
-            # posterior_sigma = torch.exp(posterior_log_sigma)
+            posterior_mu, posterior_log_variance = self.get_posterior(x, x_bert, labels)
+            # posterior_variance = torch.exp(posterior_log_variance)
 
             # generate samples from theta
             theta = F.softmax(
-                self.reparameterize(posterior_mu, posterior_log_sigma), dim=1
+                self.reparameterize(posterior_mu, posterior_log_variance), dim=1
             )
 
             return theta
 
-    def sample(self, posterior_mu, posterior_log_sigma, n_samples: int = 20):
+    def sample(self, posterior_mu, posterior_log_variance, n_samples: int = 20):
         with torch.no_grad():
             posterior_mu = posterior_mu.unsqueeze(0).repeat(n_samples, 1, 1)
-            posterior_log_sigma = posterior_log_sigma.unsqueeze(0).repeat(n_samples, 1, 1)
+            posterior_log_variance = posterior_log_variance.unsqueeze(0).repeat(n_samples, 1, 1)
             # generate samples from theta
             theta = F.softmax(
-                self.reparameterize(posterior_mu, posterior_log_sigma), dim=-1
+                self.reparameterize(posterior_mu, posterior_log_variance), dim=-1
             )
 
             return theta.mean(dim=0)
