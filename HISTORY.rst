@@ -2,7 +2,7 @@
 History
 =======
 
-2.5.1 (2025-07-23)
+2.6.0 (2025-07-23)
 ------------------
 
 * making the package run on modern python
