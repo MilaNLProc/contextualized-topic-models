@@ -9,5 +9,4 @@ nltk>=3.8.0
 tqdm>=4.64.0
 scipy>=1.10.0
 ipywidgets>=8.0.0
-ipython>=8.12.0
 ipython_genutils>=0.2.0
