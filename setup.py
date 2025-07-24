@@ -20,16 +20,15 @@ test_requirements = ['pytest>=3', ]
 setup(
     author="Federico Bianchi",
     author_email='f.bianchi@unibocconi.it',
-    python_requires='>=3.5',
+    python_requires='>=3.10',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
     description="Contextualized Topic Models",
     install_requires=requirements,
@@ -44,6 +43,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/MilaNLProc/contextualized-topic-models',
-    version='2.5.0',
+    version='2.5.1',
     zip_safe=False,
 )
