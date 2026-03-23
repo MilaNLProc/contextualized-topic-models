@@ -616,7 +616,7 @@ class CTM:
         return topics
 
     def _format_file(self):
-        model_dir = "contextualized_topic_model_nc_{}_tpm_{}_tpv_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}".format(
+        model_dir = "contextualized_topic_model_nc_{}_tpm_{}_tpv_{}_mt_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}".format(
             self.n_components,
             0.0,
             1 - (1.0 / self.n_components),
