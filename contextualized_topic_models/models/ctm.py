@@ -40,6 +40,7 @@ class CTM:
     :param num_data_loader_workers: int, number of data loader workers (default cpu_count). set it to 0 if you are using Windows
     :param label_size: int, number of total labels (default: 0)
     :param loss_weights: dict, it contains the name of the weight parameter (key) and the weight (value) for each loss.
+    :param prior_alpha: float, fixed symmetric alpha for the Dirichlet prior. if learn_priors == True, only used to initialize prior_variance (default 1.0)
     It supports only the weight parameter beta for now. If None, then the weights are set to 1 (default: None).
 
     """
@@ -64,6 +65,7 @@ class CTM:
         num_data_loader_workers=mp.cpu_count(),
         label_size=0,
         loss_weights=None,
+        prior_alpha=1.0,
     ):
 
         self.device = (
@@ -101,6 +103,9 @@ class CTM:
         assert (
             isinstance(num_data_loader_workers, int) and num_data_loader_workers >= 0
         ), "num_data_loader_workers must by type int >= 0. set 0 if you are using windows"
+        assert (
+            isinstance(prior_alpha, float) and prior_alpha > 0
+        ), "prior_alpha must be type float > 0."
 
         self.bow_size = bow_size
         self.n_components = n_components
@@ -118,6 +123,7 @@ class CTM:
         self.reduce_on_plateau = reduce_on_plateau
         self.num_data_loader_workers = num_data_loader_workers
         self.training_doc_topic_distributions = None
+        self.prior_alpha = prior_alpha
 
         if loss_weights:
             self.weights = loss_weights
@@ -135,6 +141,7 @@ class CTM:
             dropout,
             learn_priors,
             label_size=label_size,
+            prior_alpha=prior_alpha,
         )
 
         self.early_stopping = None
@@ -308,18 +315,20 @@ class CTM:
                    Activation: {}\n\
                    Dropout: {}\n\
                    Learn Priors: {}\n\
+                   Prior Alpha: {}\n\
                    Learning Rate: {}\n\
                    Momentum: {}\n\
                    Reduce On Plateau: {}\n\
                    Save Dir: {}".format(
                     self.n_components,
                     0.0,
-                    1.0 - (1.0 / self.n_components),
+                    (1.0 / self.prior_alpha) * (1.0 - (1.0 / self.n_components)),
                     self.model_type,
                     self.hidden_sizes,
                     self.activation,
                     self.dropout,
                     self.learn_priors,
+                    self.prior_alpha,
                     self.lr,
                     self.momentum,
                     self.reduce_on_plateau,
@@ -619,7 +628,7 @@ class CTM:
         model_dir = "contextualized_topic_model_nc_{}_tpm_{}_tpv_{}_hs_{}_ac_{}_do_{}_lr_{}_mo_{}_rp_{}".format(
             self.n_components,
             0.0,
-            1 - (1.0 / self.n_components),
+            (1.0 / self.prior_alpha) * (1.0 - (1.0 / self.n_components)),
             self.model_type,
             self.hidden_sizes,
             self.activation,
